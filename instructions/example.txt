@@ -1,0 +1,6 @@
+l.d f6 34+ s2
+l.d f2 45+ s3
+mul.d f0 f2 f4
+sub.d f8 f6 f2
+div.d f10 f0 f6
+add.d f6 f8 f2

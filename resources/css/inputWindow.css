@@ -1,0 +1,111 @@
+.cInputContainer {
+    position: relative;
+    height: 40%;
+    border: 2px solid rgb(192, 204, 211);
+    background-color: rgb(247, 250, 248);
+
+}
+
+.cInputBody {
+    position: relatives;
+    height: 86%;
+    background-color: rgb(241, 246, 247);
+    text-align: left;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.cInputActionButton {
+    position: absolute;
+    width: 100%;
+    top: 92%;
+    height: 8%;
+    background-color: rgb(201, 220, 214);
+}
+
+.cNextButton {
+    position: relative;
+    left: 88%;
+}
+
+.cLeftInputButton {
+    position: relative;
+    left: -10%;
+}
+
+.cInstructionActionButton {
+    float: left;
+}
+
+#rowButton img {
+    width: 1.5vw;
+    height: 1.5vw;
+    margin-top: .2vw;
+}
+
+
+.cConfigContainer {
+    position: inherit;
+    top: 34%;
+    height: 29%;
+    width: 31%;
+    background-color: rgb(112, 119, 118);
+    border: 2px solid rgb(192, 204, 211);
+    ;
+}
+
+.cConfigBody {
+    position: inherit;
+    height: 24.6%;
+    width: 30.8%;
+    background-color: rgb(241, 246, 247);
+    text-align: left;
+}
+
+
+
+.cCycleSettings {
+    position: relative;
+    width: 45%;
+    float: left;
+    padding: 2%;
+}
+
+.cFUnitSettings {
+    position: relative;
+    float: right;
+    width: 45%;
+    padding: 2%;
+}
+
+.cIinsInputTable #insNumber {
+    width: 10%;
+    text-align: center;
+}
+
+.cFUnitsInput {
+    padding-top: 5%;
+}
+
+select {
+    height: 1%;
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+
+#cCyclesFormText {
+    width: 60%;
+    height: 10%;
+    left: 40%;
+    margin-left: 30%;
+    font-family: "Roboto Slab", serif;
+    text-align: center;
+}
+
+#cUnitsFormText {
+    width: 60%;
+    height: 10%;
+    left: 40%;
+    margin-left: 30%;
+    font-family: "Roboto Slab", serif;
+    text-align: center;
+}

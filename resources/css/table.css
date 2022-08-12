@@ -1,0 +1,36 @@
+table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+table th {
+  background-color: rgb(204, 215, 211);
+  text-align: center;
+  font-size: 15px;
+  font-family: "Lucida Console", "Courier New", monospace;
+  color: rgb(2, 2, 2);
+  text-transform: uppercase;
+  border-bottom: 2px solid  rgb(92, 147, 132);
+  padding: 1%;
+  line-height: 90%;
+}
+
+table td {
+  width: 10%;
+  padding: .2%;
+  text-align: center;
+  font-family: "Lucida Console", "Courier New", monospace;
+
+}
+
+table tr {
+  line-height: 120%;
+}
+
+.cFUnitSettingsTable {
+  table-layout: fixed;
+}
+
+#FUnitsCycleTable td {
+  height: 40%;
+}

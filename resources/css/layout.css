@@ -1,0 +1,234 @@
+#wrapper {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(239, 242, 244, 0.099);
+}
+
+#container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 99%;
+  width: 99%;
+  margin: .5%;
+  background-color: rgb(247, 250, 248);
+  border: 3px solid rgb(0, 0, 0);
+}
+
+
+.cHeadrContainer {
+  position: fixed;
+  left: 1%;
+  right: 1%;
+  height: 6%;
+  width: 98%;
+  text-align: center;
+}
+
+.cTab {
+  position: relative;
+  text-align: left;
+  padding: 5px;
+  border-bottom: 2.5px solid rgb(92, 147, 132);
+  background-color: rgb(190, 217, 204);
+}
+
+.cTabButton {
+  position: relative;
+  border: none;
+  padding-left: 1%;
+  display: inline-flex;
+
+}
+
+.cLContainer {
+  position: fixed;
+  top: 6%;
+  left: 1%;
+  bottom: 6%;
+  height: 84%;
+  width: 32%;
+  text-align: center;
+}
+
+.cDataContainer {
+  position: relative;
+  margin-top: 1%;
+  height: 58.5%;
+  background-color: rgb(241, 246, 247);
+  border: 2px solid rgb(192, 204, 211);
+  ;
+}
+
+.cDataBody {
+  position: relative;
+  background-color: rgb(241, 246, 247);
+  text-align: left;
+}
+
+.cCContainer {
+  position: fixed;
+  top: 6%;
+  left: 33.2%;
+  bottom: 6%;
+  height: 84%;
+  width: 54%;
+  text-align: left;
+  z-index: -1;
+
+}
+
+.cReservationContainer {
+  position: relative;
+  height: 40%;
+  border: 2px solid rgb(192, 204, 211);
+  ;
+}
+
+.cReservationBody {
+  position: relative;
+  height: 86.5%;
+  background-color: rgb(241, 246, 247);
+  overflow-x: auto;
+  overflow-y: auto;
+
+}
+
+.cArchContainer {
+  position: relative;
+  margin-top: .7%;
+  height: 58.5%;
+  border: 2px solid rgb(192, 204, 211);
+  background-color: rgb(241, 246, 247);
+}
+
+.cArchBody {
+  position: relative;
+  height: 91%;
+}
+
+.cRContainer {
+  position: fixed;
+  left: 87.5%;
+  height: 78%;
+  width: 18%;
+  text-align: left;
+
+}
+
+.cCycle {
+  position: relative;
+  height: 18%;
+  width: 47%;
+  margin: 5%;
+  top: 2%;
+  margin-left: 10%;
+  font-size: 400%;
+  background-color: rgb(208, 224, 234);
+  border: 3px solid rgb(92, 147, 132);
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
+  display: flex;
+}
+
+#antCyclesEach {
+  position: relative;
+  height: 50%;
+  width: 10%;
+  margin-left: 2%;
+  border: 2px solid rgb(92, 147, 132);
+  align-items: center;
+  border-radius: 100%;
+  z-index: 10;
+}
+
+.cAntCycles {
+  position: relative;
+  margin-top: 10%;
+  height: 5%;
+  width: 64%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(238, 242, 245);
+}
+
+.cRatContainer {
+  position: relative;
+  margin-top: 10%;
+  height: 79.5%;
+  width: 64%;
+  border: 2px solid rgb(192, 204, 211);
+}
+
+.cRatBody {
+  position: inherit;
+  height: 93%;
+  background-color: rgb(241, 246, 247);
+  text-align: left;
+}
+
+.cActionBtn img {
+  width: 2vw;
+  height: 2vw;
+  margin-top: 10px;
+  ;
+}
+
+
+.cActionButtonGroup {
+  padding-left: 45%;
+}
+
+.cActionBtn {
+  border: 1px solid grey;
+  float: left;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  white-space: nowrap;
+  height: 3vw;
+  width: 3vw;
+  border-radius: 50%;
+  margin-left: 1%;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  outline: 0;
+  background-color: white;
+}
+
+.cActionBtn:active {
+  box-shadow: inset 0 0 0 0.4vw #0592f0;
+}
+
+.cActionBtn:hover {
+  border: 5px solid rgb(92, 147, 132);
+}
+
+.cFooterContainer {
+  position: fixed;
+  margin-left: .4%;
+  margin-right: .4%;
+  padding: .5%;
+  top: 90%;
+  height: 9%;
+  width: 98%;
+  background-color: rgb(190, 217, 204);
+  text-align: left;
+  border: 3px solid rgb(92, 147, 132);
+  ;
+
+}
+
+canvas#blockCanvas {
+
+  position: relative;
+  padding-top: 5%;
+  padding-left: 5%;
+  padding-right: 0%;
+  width: 85%;
+  height: 100%;
+}

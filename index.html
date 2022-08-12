@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#009578">
+    <title>Tomasulo-Simulator</title>
+
+
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/6.0.0/introjs.min.css  " /> -->
+
+    <link rel="stylesheet" href="resources/css/main.css" />
+    <link rel="stylesheet" href="resources/css/table.css" />
+    <link rel="stylesheet" href="resources/css/layout.css" />
+    <link rel="stylesheet" href="resources/css/inputWindow.css" />
+
+    <script src="resources/jsLibrary/loadash.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/6.0.0/intro.min.js"></script> -->
+
+    <script src="resources/js/utils.js"></script>
+    <script src="resources/js/inputs.js"></script>
+    <script src="resources/js/settings.js"></script>
+    <script src="resources/js/reservation.js"></script>
+    <script src="resources/js/Funits.js"></script>
+    <script src="resources/js/registers.js"></script>
+    <script src="resources/js/controller.js"></script>
+    <script src="resources/js/Annotation.js"></script>
+    <script src="resources/js/antNode.js"></script>
+    <script src="resources/js/annotationTree.js"></script>
+    <script src="resources/js/instruction.js"></script>
+    <script src="resources/js/state.js"></script>
+    <script src="resources/js/resourceManager.js"></script>
+    <script src="resources/js/processManager.js"></script>
+    <script src="resources/js/diagram.js"></script>
+</head>
+
+
+<body onload="ShowComponents()">
+    <div class="cMainWrapper">
+        <div id="container">
+
+            <div id="hdrContainer" class="cHeadrContainer">
+                <h2>Tomasulo-Simulator</h2>
+            </div>
+
+            <div id="lContainer" class="cLContainer">
+
+                <div id="inputContainer" class="cInputContainer">
+
+
+                    <div class="cInputContainerTab cTab">
+                        <button class="cInputContainerTabItem cTabButton  cTab-red"
+                            onclick="TabSelection('InstructionsInput')">Instruction</button>
+                        <button class="cInputContainerTabItem cTabButton "
+                            onclick="TabSelection('FUnitsInput')">FUnits</button>
+                        <button class="cInputContainerTabItem cTabButton"
+                            onclick="TabSelection('Workload')">Workload</button>
+                    </div>
+
+                    <div id="InstructionsInput" class="cInstructionsInput cInputBody">
+                        <table id="insInputTable" class="cIinsInputTable">
+                            <tbody id="insInputTBody" class="cInsInputTBody">
+                            </tbody>
+                        </table>
+
+
+                        <div id="InstructionInputActionButton" class="cInstructionInputActionButton cInputActionButton">
+
+                            <button class="cInstructionActionButton cNextButton"
+                                onclick="ShowFunitSettings()">Next</button>
+
+                            <button class="cInstructionActionButton cLeftInputButton"
+                                onclick="LoadTestCase_1()">Test-01</button>
+                            <button class="cInstructionActionButton cLeftInputButton"
+                                onclick="LoadTestCase_2()">Test-02</button>
+
+                            <button type="button" for='file' class="cInstructionActionButton cLeftInputButton"
+                                onclick="LoadFromFile(this)">
+                                <!-- <img id="importimg" src="resources/images/icons/import.png"> -->
+                                load
+                                <input id="file" type="file" name="name" style="display:none;" />
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div id="FUnitsInput" class="cFUnitsInput cInputBody " style="display:none">
+                        <div class="cCycleSettings">
+                            <table id="FUnitsCycleTable" class="cFUnitSettingsTable">
+                                <thead>
+                                    <tr>
+                                        <th>OP</th>
+                                        <th>EX Cycles</th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody id="FUnitSettingsTableBody">
+                                    <tr>
+                                        <td>Load</td>
+
+                                        <td>
+                                            <input type="text" id="cCyclesFormText" name="ld" value="2">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>store</td>
+
+                                        <td>
+                                            <input type="text" id="cCyclesFormText" name="sd" value="2">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Add</td>
+                                        <td>
+                                            <input type="text" id="cCyclesFormText" name="add" value="2">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Sub</td>
+                                        <td>
+                                            <input type="text" id="cCyclesFormText" name="sub" value="2">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mul</td>
+                                        <td>
+                                            <input type="text" id="cCyclesFormText" name="mul" value="10">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Div</td>
+                                        <td>
+                                            <input type="text" id="cCyclesFormText" name="div" value="40">
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                        <div class="cFUnitSettings">
+                            <table id="FUnitsCycleTable" class="cFUnitSettingsTable">
+                                <thead>
+                                    <tr>
+                                        <th>F.Unit</th>
+                                        <th>Number</th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody id="FUnitSettingsTableBody">
+                                    <tr>
+                                        <td>Load/Store</td>
+                                        <td>
+                                            <input type="text" id="cUnitsFormText" name="FPLd" value="2">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Integer</td>
+                                        <td>
+                                            <input type="text" id="cUnitsFormText" name="FPAdd" value="3">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Multiplier</td>
+                                        <td>
+                                            <input type="text" id="cUnitsFormText" name="FPMul" value="2">
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                        <div id="FUnitsInputActionButton" class="cFUnitsInputActionButton cInputActionButton">
+                            <button class="cInstructionActionButton cNextButton" onclick="submitInput()">Submit</button>
+                        </div>
+
+
+                    </div>
+
+                    <div id="Workload" class="cWorkload cInputBody" style="display:none" data-intro='Hello step one!'>
+                        <canvas id="wLoadAntBox" style="display:none"></canvas>
+                        <table id="WLoadTable" class="cWLoadTable">
+                            <tbody id="WLoadTBody" class="cWLoadTBody">
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+                <div id="dataContainer" class="cDataContainer">
+
+                    <div class="cDataContainerTab cTab">
+                        <button class="cDataContainerTabItem cTabButton cDataTab cDataTabShow"
+                            onclick="showStatistics(event,'InEditor')">PlaceHolder</button>
+                    </div>
+
+                    <div id="statistics" class="cStatistics cDataBody"></div>
+                </div>
+
+            </div> <!-- Left container end-->
+
+            <div id="cContainer" class="cCContainer">
+
+                <div id="cReservationContainer" class="cReservationContainer">
+
+                    <div class="cReservationContainerTab cTab">
+                        <button class="cReservationContainerTabItem cTabButton" onclick="placeholder()">Reservations
+                            Units</button>
+                    </div>
+
+                    <div id="reservation" class="cReservation cReservationBody">
+                        <canvas id="rsAntBox" style="display:none"></canvas>
+                        <table id="RSTable" class="cRSTable">
+                            <tbody id="RSTBody" class="cRSTBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="archContainer" class="cArchContainer">
+                    <div class="cArchContainerTab cTab">
+                        <button class="cArchContainerTabItem cTabButton" onclick="placeholder()">Architectural
+                            Diagram</button>
+                    </div>
+                    <div id="architecture" class="cArchBody">
+                        <canvas id="blockCanvas"></canvas>
+                    </div>
+                </div>
+            </div>
+            <!-- Center container end-->
+
+            <div id="rContainer" class="cRContainer">
+
+                <div id="cycle" class="cCycle">
+                </div>
+
+                <div id="antCycles" class="cAntCycles">
+                </div>
+
+                <div id="ratContainer" class="cRatContainer">
+                    <div class="cRatContainerTab cTab">
+                        <button class="cRatContainerTabItem cTabButton cRatTab cRatTabShow"
+                            onclick="placeholder()">RAT</button>
+                    </div>
+                    <div id="rat" class="cRatBody">
+                        <canvas id="ratAntBox" style="display:none"></canvas>
+                        <table id="RATable" class="cRATable">
+                            <tbody id="RATBody" class="cRATBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+            <!-- Right container end-->
+
+            <div id="ftrContainer" class="cFooterContainer">
+                <div id="actionButtonGroup" class="cActionButtonGroup">
+                    <button type="button" id='stepForward' class="cActionBtn" onclick="executeStepBack()">
+                        <img src="resources/images/icons/icons8-double-left-48.png">
+                    </button>
+
+                    <button type="button" id='stepForward' class="cActionBtn" onclick="execAnnotation('Backward')">
+                        <img src="resources/images/icons/icons8-back-48.png">
+                    </button>
+                    <button type="button" id='stepForward' class="cActionBtn" onclick="execAnnotation('Forward')">
+                        <img src="resources/images/icons/icons8-forward-48.png">
+                    </button>
+                    <button type="button" id='stepForward' class="cActionBtn" onclick="executeStepBy()">
+                        <img src="resources/images/icons/icons8-double-right-48.png">
+                    </button>
+
+
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var mgtCtr = undefined;
+        var GAnnotationCOunter = 0;
+
+        function ShowComponents() {
+            showInputTable();
+            showRSView();
+            showRAT();
+            showWorkLoad();
+            showCycle(0);
+        }
+
+        function addRegSelectOption(id) {
+            var selectList = document.createElement("select");
+            selectList.id = id;
+            var regValue = Array(15).fill('S').map((x, y) => (x + y));
+            var regNumeric = [...Array(15).fill('F').map((x, y) => (x + y)),
+            ...Array(10).fill('+').map((x, y) => (x + (3 * y + 30)))];
+            var regValueList = [...regNumeric, ...regValue];
+
+            for (var i = 0; i < regValueList.length; i++) {
+                var option = document.createElement("option");
+                option.value = id + regValueList[i];
+                option.text = regValueList[i];
+                selectList.appendChild(option);
+            }
+
+            return selectList;
+        }
+
+        function addOPSelectOption(id) {
+
+            var selectList = document.createElement("select");
+            selectList.id = id;
+            var OPList = ["Add.d", "Sub.d", "Mul.d", "Div.d", "L.d", "S.d"]
+            for (var i = 0; i < OPList.length; i++) {
+                var option = document.createElement("option");
+                option.value = id + OPList[i];
+                option.text = OPList[i];
+                selectList.appendChild(option);
+            }
+
+            return selectList;
+        }
+
+        function createInputRow(tableElem) {
+            var rowCount = tableElem.rows.length;
+            if (rowCount > 0) {
+                tableElem.deleteRow(rowCount - 1);
+            }
+
+            let row = document.createElement("tr");
+            let rIndx = rowCount;
+            for (let indx = 0; indx < 6; ++indx) {
+                let cell = document.createElement("td");
+                let value = undefined;
+                switch (indx) {
+                    case 0:
+                        value = document.createTextNode(rIndx);
+                        break;
+                    case 1:
+                        value = addOPSelectOption("OP" + "-" + rIndx);
+                        break;
+
+                    case 2:
+                        value = addRegSelectOption("Dest" + "-" + rIndx);
+                        break;
+
+                    case 3:
+                        value = addRegSelectOption("Src1" + "-" + rIndx);
+                        break;
+
+                    case 4:
+                        value = addRegSelectOption("Src2" + "-" + rIndx);
+                        break;
+                    case 5:
+                        value = document.createElement("button");
+                        value.id = "rowButton";
+                        value.innerHTML = '<img src="resources/images/icons/delete.png">';
+                        value.addEventListener('click', function () {
+                            tableElem.deleteRow(row.rowIndex - 1);
+                        }, false);
+                        break;
+                }
+
+                cell.appendChild(value);
+                row.appendChild(cell);
+            }
+            tableElem.appendChild(row);
+            createBtnsRow(tableElem);
+            return row;
+        }
+
+        function createBtnsRow(tableElem) {
+
+            let cell;
+            let row = document.createElement("tr");
+            for (let indx = 0; indx < 5; ++indx) {
+                cell = document.createElement("td");
+                row.appendChild(cell);
+            }
+
+            let btn = document.createElement("button");
+            btn.id = "rowButton"
+            btn.innerHTML = '<img src="resources/images/icons/add.png">';
+            btn.addEventListener('click', function () {
+                createInputRow(tableElem);
+            }, false);
+            cell = document.createElement("td");
+            cell.appendChild(btn);
+            row.appendChild(cell);
+            tableElem.appendChild(row);
+        }
+
+        function selectOptionInCell(elem, value) {
+            let options = elem.childNodes;
+            if (isAddress(parseInt(value)) == true) {
+                value = "+45";
+            }
+            for (let indx = 0; indx < options.length; ++indx) {
+
+                if (options[indx].innerHTML.toLowerCase() == value) {
+                    elem.selectedIndex = indx;
+                    break;
+                }
+            }
+        }
+
+        function showAutoSelectionTable(instructions) {
+            var inputTable = document.getElementById("insInputTable");
+            var tBody = inputTable.tBodies[0];
+            createBtnsRow(tBody); //maintainance only
+
+            var rows = tBody.rows;
+            while (rows.length > 1) {
+                inputTable.deleteRow(1);
+            }
+
+            instructions.forEach(function (ins, indx) {
+                let row = createInputRow(tBody);
+                let cells = row.cells;
+                let elem = undefined;
+                let id = undefined;
+
+                for (let indx = 0; indx < 4; ++indx) {
+                    switch (indx) {
+                        case 0:
+                            id = cells[1].childNodes[0].id;
+                            elem = document.getElementById(id);
+                            selectOptionInCell(elem, ins.OP);
+                            break;
+
+                        case 1:
+                            id = cells[2].childNodes[0].id;
+                            elem = document.getElementById(id);
+                            selectOptionInCell(elem, ins.Dest);
+                            break;
+
+                        case 2:
+                            id = cells[3].childNodes[0].id;
+                            elem = document.getElementById(id);
+                            selectOptionInCell(elem, ins.Src1);
+                            break;
+
+                        case 3:
+                            id = cells[4].childNodes[0].id;
+                            elem = document.getElementById(id);
+                            selectOptionInCell(elem, ins.Src2);
+                            break;
+
+                    }
+
+                }
+            });
+
+        }
+
+        function addHeader(hdrElem, hdrList) {
+
+            if (hdrList == undefined) {
+                console.error("headers of " + hdrElem + "Empty");
+                return;
+            }
+
+            let hdrRow = document.createElement("tr");
+            hdrList.forEach(hdrElem => {
+                let th = document.createElement("th");
+                let thTxt = document.createTextNode(hdrElem);
+                th.appendChild(thTxt);
+                hdrRow.appendChild(th);
+            });
+            hdrElem.appendChild(hdrRow);
+        }
+
+        function completeTableCreation(tableId, hdrList) {
+            var tableElem = document.getElementById(tableId);
+            var tHead = tableElem.tHead;
+            var tBody = tableElem.tBodies[0];
+
+            if (tHead == null) {
+                tHead = document.createElement('thead');
+                addHeader(tHead, hdrList);
+                tableElem.appendChild(tHead);
+            }
+
+            if (tBody == null) {
+                tBody = document.createElement('tbody');
+                tableElem.appendChild(tBody);
+            }
+        }
+
+        function addTableRow(tBodyElem, cellsContentList, color = "", rowId = "") {
+            var row = document.createElement("tr");
+            row.id = rowId;
+            row.style.backgroundColor = color;
+            cellsContentList.forEach(cellcontext => {
+                let cell = document.createElement("td");
+                let cellTxt = document.createTextNode(cellcontext);
+                cell.appendChild(cellTxt);
+                row.appendChild(cell);
+            });
+            tBodyElem.appendChild(row);
+        }
+
+        function displayContents(contents) {
+            var element = document.getElementById('file-content');
+            element.textContent = contents;
+        }
+
+        function generateENV(instructions, execCycles, unitsSize) {
+            mgtCtr = new ProcessManager();
+            mgtCtr.setProcessEnv(instructions, execCycles, unitsSize);
+            updateWLoad();
+            updateRAT();
+            updateRSView();
+            showCycle(0);
+        }
+
+        function submitInput() {
+            document.getElementById("wLoadAntBox").style.display = "none";
+            document.getElementById("rsAntBox").style.display = "none";
+            document.getElementById("ratAntBox").style.display = "none";
+
+            var instructions = collectInstructionsFromUI();
+            var execCycles = collectExecCycleFromUI();
+            var unitsSize = collectUnitsSizeFromUI();
+
+            if (((instructions == undefined) || (instructions.length == 0))
+                ||
+                ((execCycles == undefined) || (execCycles.length == 0))
+                ||
+                ((unitsSize == undefined) || (unitsSize.length == 0))
+            ) {
+                console.error("Can not proceed because of input configuration empty");
+                return;
+            }
+
+            generateENV(instructions, execCycles, unitsSize);
+            TabSelection("Workload");
+            mgtCtr.getWLoadContent();
+            var unitsSize = collectUnitsSizeFromUI();
+            var IQContent = mgtCtr.getIQContent();
+            var rsContent = mgtCtr.getRSContent();
+            var fpContent = mgtCtr.getFPContent();
+            let insColors = mgtCtr.getAllInsColor();
+            showCanvas(unitsSize, IQContent, rsContent, fpContent, insColors);
+        }
+
+        function clearInstruction() {
+            var inputTable = document.getElementById("insInputTable");
+            var rows = inputTable.rows;
+
+            while (rows.length - 1 > 1) {
+                inputTable.deleteRow(1);
+            }
+        }
+
+        function updateRAT() {
+            var tableElem = document.getElementById("RATable");
+            var tBody = tableElem.tBodies[0];
+            var rows = tableElem.rows;
+
+            while (rows.length > 1) {
+                tableElem.deleteRow(1);
+            }
+
+            var ratContentList = mgtCtr.getRATContent();
+            for (let indx = 0; indx < ratContentList.length; ++indx) {
+                let ratContent = ratContentList[indx];
+                let rowcontextList = [];
+
+                rowcontextList.push(ratContent.Name);
+                rowcontextList.push(ratContent.Qi);
+                addTableRow(tBody, rowcontextList, ratContent.Color);
+            }
+
+        }
+
+        function updateRSView() {
+            var tableElem = document.getElementById("RSTable");
+            var tBody = tableElem.tBodies[0];
+            var rows = tableElem.rows;
+
+            while (rows.length > 1) {
+                tableElem.deleteRow(1);
+            }
+
+            var rsContentList = mgtCtr.getRSContent();
+            for (let indx = 0; indx < rsContentList.length; ++indx) {
+                let rsContent = rsContentList[indx];
+                let rowcontextList = [];
+
+                rowcontextList.push(rsContent.ReqCycle);
+                rowcontextList.push(rsContent.Name);
+                rowcontextList.push(rsContent.Status);
+                rowcontextList.push(rsContent.Operator);
+                rowcontextList.push(rsContent.Vj);
+                rowcontextList.push(rsContent.Vk);
+                rowcontextList.push(rsContent.Qj);
+                rowcontextList.push(rsContent.Qk);
+                addTableRow(tBody, rowcontextList, rsContent.Color, rsContent.Hash);
+            }
+
+        }
+
+        function updateWLoad() {
+
+            var tableElem = document.getElementById("WLoadTable");
+            var tBody = tableElem.tBodies[0];
+            var rows = tableElem.rows;
+
+            while (rows.length > 1) {
+                tableElem.deleteRow(1);
+            }
+
+            var wLoads = mgtCtr.getWLoadContent();
+            for (let indx = 0; indx < wLoads.length; ++indx) {
+                let insLoad = wLoads[indx];
+                let rowcontextList = [];
+
+                rowcontextList.push(indx + 1);
+                rowcontextList.push(insLoad.OP);
+                rowcontextList.push(insLoad.CyExecution);
+                rowcontextList.push(insLoad.Dest);
+                rowcontextList.push(insLoad.Src1);
+                rowcontextList.push(insLoad.Src2);
+                let issueCycle = (insLoad.CyIS == 0) ? "" : insLoad.CyIS;
+                insLoad.CyExecEnd = (insLoad.CyExecEnd == 0) ? "" : insLoad.CyExecEnd;
+                rowcontextList.push(issueCycle);
+                CyExecStart = (insLoad.CyExecStart != 0) ? (insLoad.CyExecStart + "-" + insLoad.CyExecEnd) : "";
+                rowcontextList.push(CyExecStart);
+                let CyWBack = (insLoad.CyWBack == 0) ? "" : insLoad.CyWBack;
+                rowcontextList.push(CyWBack);
+                addTableRow(tBody, rowcontextList, insLoad.Color);
+            }
+        }
+
+        function TabSelection(TabName) {
+            var i, x, tablinks;
+            x = document.getElementsByClassName("cInputBody");
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("cInputContainerTabItem");
+            for (i = 0; i < x.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace("cTab-red", "");
+            }
+            var currentTab = document.getElementById(TabName);
+            currentTab.style.display = "block";
+        }
+
+        function hightlighAntCycle(cycleNumber) {
+            var circles = document.querySelectorAll('#antCyclesEach');
+            circles.forEach(function (element, indx) {
+                if (indx == cycleNumber) {
+                    element.style.backgroundColor = "green";
+                }
+            })
+        }
+
+        function showAntCycles(cycleCounts = 1) {
+            var antCycleElem = document.getElementById("antCycles");
+            var circles = document.querySelectorAll('#antCyclesEach');
+            circles.forEach(element => {
+                antCycleElem.removeChild(element);
+            });
+
+            var parentElemWidth = antCycleElem.clientWidth;
+
+            for (let indx = 0; indx < cycleCounts; ++indx) {
+                var circles = document.createElement('div');
+                circles.id = "antCyclesEach";
+                antCycleElem.appendChild(circles);
+
+                if ((circles.clientWidth * cycleCounts) >= parentElemWidth) {
+                    circles.style.width = (circles.clientWidth / 2) + "px";
+                }
+            }
+        }
+
+        function showCycle(cycleNum) {
+            var divElem = document.getElementById("cycle");
+            if (cycleNum < 10) {
+                cycleNum = "0" + cycleNum;
+            }
+            divElem.textContent = cycleNum;
+        }
+
+        function showRAT() {
+            var hdrList = ["Register", "Value"];
+            completeTableCreation("RATable", hdrList);
+        }
+
+        function showRSView() {
+            var rsTable = document.getElementById("RSTable");
+            var hdrList = ["Time", "Name", "Busy", "OP", "Src1 Vj", "Src2 Vk", "Src2 RS Qj", "Src2 RS Qk"]
+            completeTableCreation("RSTable", hdrList);
+        }
+
+        function showWorkLoad() {
+            var hdrList = ["#", "OP", "Exec Cycle", "Dest", "Src1", "Src2", "IS", "EX", "WB"];
+            completeTableCreation("WLoadTable", hdrList);
+        }
+
+
+        function showInputTable() {
+            var inputTable = document.getElementById("insInputTable");
+            var tBody = inputTable.tBodies[0];
+            var hdrList = ["#", "OP", "Dest", "Src1", "Src2", ""];
+            completeTableCreation("insInputTable", hdrList);
+            createBtnsRow(tBody);
+        }
+
+        function ShowFunitSettings() {
+            TabSelection("FUnitsInput");
+        }
+
+        function placeholder() {
+            /*
+                this is a placeholder for function that are triggered based on user action
+            */
+            return 0;
+        }
+
+        function getRSViewRowPosition(insNumber) {
+            --insNumber;
+            var wLoads = mgtCtr.getWLoadContent();
+            var insHash = wLoads[insNumber].Id;
+            var tableElem = document.getElementById("RSTable");
+            var tBody = tableElem.tBodies[0];
+            var rows = tableElem.rows;
+
+            let indx = 0;
+            while (indx < rows.length) {
+                if (rows[indx].id == insHash) {
+                    break;
+                }
+                ++indx;
+            }
+
+            return indx;
+
+        }
+
+        function getRATRowPosition(insNumber) {
+            --insNumber;
+            var wLoads = mgtCtr.getWLoads();
+            var insHash = wLoads[insNumber].getID();
+            var rsType = getRSType(wLoads[insNumber].operator);
+            var rsName = mgtCtr.getRsName(rsType, insHash);
+            let regName = mgtCtr.getRegName(rsName);
+
+            var tableElem = document.getElementById("RATable");
+            var tBody = tableElem.tBodies[0];
+            var rows = tableElem.rows;
+
+            let indx = 0;
+
+            while (indx < rows.length) {
+                if (rows[indx].cells[0].innerText == regName) {
+                    break;
+                }
+                ++indx;
+            }
+
+            return indx;
+        }
+
+
+
+        function executeStepBy() {
+            document.getElementById("wLoadAntBox").style.display = "none";
+            document.getElementById("rsAntBox").style.display = "none";
+            document.getElementById("ratAntBox").style.display = "none";
+            GAnnotationCOunter = 0;
+            if (mgtCtr == undefined) {
+                return;
+            }
+
+            let cycleNum = mgtCtr.cycleStepForward();
+            if (cycleNum < 0) {
+                return;
+            }
+            updateRSView();
+            updateRAT();
+            updateWLoad();
+            showCycle(cycleNum);
+            var IQContent = mgtCtr.getIQContent();
+            var rsContent = mgtCtr.getRSContent();
+            var fpContent = mgtCtr.getFPContent();
+            var insColors = mgtCtr.getAllInsColor();
+            showCanvas(collectUnitsSizeFromUI(), IQContent, rsContent, fpContent, insColors);
+
+            showAntCycles(mgtCtr.getInsAnnotationCount());
+
+        }
+
+        function executeStepBack() {
+            document.getElementById("wLoadAntBox").style.display = "none";
+            document.getElementById("rsAntBox").style.display = "none";
+            document.getElementById("ratAntBox").style.display = "none";
+
+
+            if (mgtCtr != undefined) {
+                let cycleNum = mgtCtr.cycleStepBack();
+                if (cycleNum < 0) {
+                    return;
+                }
+                updateRSView();
+                updateRAT();
+                updateWLoad();
+                showCycle(cycleNum);
+                var insQContent = mgtCtr.getIQContent();
+                var rsContent = mgtCtr.getRSContent();
+                var fpContent = mgtCtr.getFPContent();
+                var insColors = mgtCtr.getAllInsColor();
+                showCanvas(collectUnitsSizeFromUI(), insQContent, rsContent, fpContent, insColors);
+            }
+        }
+
+        function getOffset(el) {
+            var _x = 0;
+            var _y = 0;
+            while (el && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
+                _x += el.offsetLeft - el.scrollLeft;
+                _y += el.offsetTop;
+                el = el.offsetParent;
+            }
+            return { top: _y, left: _x };
+        }
+
+        function prepareAntBox(domElement, theCanvas, tableElem, message, rowNumber, points2Cell) {
+
+
+            var LTX = 0;
+            var LTY = 0;
+
+            LTY = (tableElem.rows[0].cells[0]).clientHeight;
+
+            var cell = (tableElem.rows[1].cells[0]);
+            var cellHeight = cell.clientHeight;
+            var cellWidth = cell.clientWidth;
+
+            var points2X = LTX + points2Cell * (cellWidth) + (cellWidth / 2);
+            var points2Y = LTY + rowNumber * (cellHeight);
+
+            var boxPosX = domElement.clientWidth * 0.25;
+            var boxPosY = LTY + (cellHeight * rowNumber) + (cellHeight * 1.5);
+
+            theCanvas.width = domElement.offsetWidth;
+            theCanvas.height = domElement.offsetHeight;
+
+
+            if (boxPosY > (domElement.offsetHeight * 0.75)) {
+                boxPosY = LTY + cellHeight;
+            }
+
+            drawAntBox(theCanvas, boxPosX, boxPosY, message, points2X, points2Y);
+            theCanvas.style.display = "block";
+            theCanvas.style.position = "absolute";
+            theCanvas.style.zIndex = 10;
+        }
+
+        var GlobalSpace = {};
+        function saveAntProperty(domElement, theCanvas, tableElem, message, rowNumber, points2Cell) {
+            GlobalSpace["domElement"] = domElement;
+            GlobalSpace["canvasElement"] = theCanvas;
+            GlobalSpace["tableElement"] = tableElem;
+            GlobalSpace["message"] = message;
+            GlobalSpace["rowNumber"] = rowNumber;
+            GlobalSpace["column"] = points2Cell;
+        }
+
+        function resetAntPropertx() {
+            GlobalSpace["domElement"] = undefined;
+            GlobalSpace["canvasElement"] = undefined;
+            GlobalSpace["tableElement"] = undefined;
+            GlobalSpace["message"] = undefined;
+            GlobalSpace["rowNumber"] = undefined;
+            GlobalSpace["column"] = undefined;
+        }
+
+        function getAntProperty() {
+            return GlobalSpace;
+        }
+
+        function execAnnotation(direction = "Forward") {
+            document.getElementById("wLoadAntBox").style.display = "none";
+            document.getElementById("rsAntBox").style.display = "none";
+            document.getElementById("ratAntBox").style.display = "none";
+
+
+            var obj;
+            if (direction == "Forward") {
+                obj = mgtCtr.forwardAnnotation();
+                if (obj == undefined || obj.ant.length == 0) {
+                    return executeStepBy();
+                }
+            }
+            else {
+                obj = mgtCtr.backwardAnnotation();
+                if (obj == undefined || obj.ant.length == 0) {
+                    return executeStepBack();
+                }
+            }
+
+            var antElem, canvasId, tableId;
+            var annotations = obj.ant;
+            var color = obj.color;
+            var rowNumber;
+            for (let indx = 0; indx < annotations.length; ++indx) {
+
+                switch (annotations[indx].resourceType) {
+                    case ResourceType.WorkLoad:
+                        antElem = document.getElementById("Workload");
+                        canvasId = document.getElementById("wLoadAntBox");
+                        tableId = document.getElementById("WLoadTable");
+                        rowNumber = annotations[indx].row;
+                        break;
+
+                    case ResourceType.RSUnits:
+                        antElem = document.getElementById("reservation");
+                        canvasId = document.getElementById("rsAntBox");
+                        tableId = document.getElementById("RSTable");
+                        rowNumber = getRSViewRowPosition(annotations[indx].row);
+                        break;
+
+                    case ResourceType.RAT:
+                        antElem = document.getElementById("rat");
+                        canvasId = document.getElementById("ratAntBox");
+                        tableId = document.getElementById("RATable");
+                        rowNumber = getRATRowPosition(annotations[indx].row);
+                        break;
+
+                    default:
+                        break;
+                }
+
+                prepareAntBox(antElem, canvasId, tableId,
+                    annotations[indx].message,
+                    rowNumber,
+                    annotations[indx].pointsTo);
+                saveAntProperty(antElem, canvasId, tableId,
+                    annotations[indx].message,
+                    rowNumber,
+                    annotations[indx].pointsTo);
+
+                hightlighAntCycle(GAnnotationCOunter);
+                GAnnotationCOunter++;
+            }
+
+            resetAntPropertx();
+
+        }
+
+        function execAntBackward() {
+            document.getElementById("AnnotationsBox").style.display = "none";
+
+            var obj = mgtCtr.backwardAnnotation();
+            if (obj == undefined || obj.ant.length == 0) {
+                return executeStepBack();
+            }
+            var antElem;
+            var annotations = obj.ant;
+            var color = obj.color;
+
+            for (let indx = 0; indx < annotations.length; ++indx) {
+
+                switch (annotations[indx].resourceType) {
+                    case ResourceType.WorkLoad:
+                        antElem = document.getElementById("cwLoadToolTip");
+                        break;
+
+                    case ResourceType.RSUnits:
+                        antElem = document.getElementById("cRSToolTip");
+                        break;
+
+                    case ResourceType.RAT:
+                        antElem = document.getElementById("cRATToolTip");
+                        break;
+
+
+                    default:
+                        break;
+                }
+
+                antElem.innerHTML = annotations[indx].message;
+                antElem.style.display = "block";
+                antElem.style.backgroundColor = color;
+            }
+
+        }
+
+
+
+    </script>
+
+
+</body>
+
+</html>

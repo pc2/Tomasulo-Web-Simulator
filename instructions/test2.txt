@@ -1,0 +1,4 @@
+div.d f0,f2,f4
+add.d f6, f0,f8
+sub.d f8 f10 f14
+mul.d f6 f10 f8
