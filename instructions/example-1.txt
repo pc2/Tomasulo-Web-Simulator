@@ -1,0 +1,8 @@
+
+add.d f1,f2,f3
+mul.d f2,f4,f5
+add.d f3,f3,f4
+mul.d f6,f6,f6
+add.d f1,f3,f5
+add.d f2,f3,f4
+s.d f3,23
