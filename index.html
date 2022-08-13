@@ -264,17 +264,17 @@
 
             <div id="ftrContainer" class="cFooterContainer">
                 <div id="actionButtonGroup" class="cActionButtonGroup">
-                    <button type="button" id='stepForward' class="cActionBtn" onclick="executeStepBack()">
+                    <button type="button" id='stepForward' class="cActionBtn" onclick="executeStepBy(1)">
                         <img src="resources/images/icons/icons8-double-left-48.png">
                     </button>
 
-                    <button type="button" id='stepForward' class="cActionBtn" onclick="execAnnotation('Backward')">
+                    <button type="button" id='stepForward' class="cActionBtn" onclick="execAnnotation(1)">
                         <img src="resources/images/icons/icons8-back-48.png">
                     </button>
-                    <button type="button" id='stepForward' class="cActionBtn" onclick="execAnnotation('Forward')">
+                    <button type="button" id='stepForward' class="cActionBtn" onclick="execAnnotation(0)">
                         <img src="resources/images/icons/icons8-forward-48.png">
                     </button>
-                    <button type="button" id='stepForward' class="cActionBtn" onclick="executeStepBy()">
+                    <button type="button" id='stepForward' class="cActionBtn" onclick="executeStepBy(0)">
                         <img src="resources/images/icons/icons8-double-right-48.png">
                     </button>
 
@@ -288,6 +288,13 @@
     </div>
 
     <script type="text/javascript">
+        const Direction = {
+           "Forward":0,
+           "Backward":1
+        };
+
+        Object.freeze(Direction);
+
         var mgtCtr = undefined;
         var GAnnotationCOunter = 0;
 
@@ -777,7 +784,7 @@
 
 
 
-        function executeStepBy() {
+        function executeStepBy(direction = Direction.Forward) {
             document.getElementById("wLoadAntBox").style.display = "none";
             document.getElementById("rsAntBox").style.display = "none";
             document.getElementById("ratAntBox").style.display = "none";
@@ -786,7 +793,14 @@
                 return;
             }
 
-            let cycleNum = mgtCtr.cycleStepForward();
+            let cycleNum = 0;
+            if (direction == Direction.Forward) {
+                cycleNum = mgtCtr.cycleStepForward();
+            }
+            else {
+                cycleNum = mgtCtr.cycleStepBack();
+            }
+
             if (cycleNum < 0) {
                 return;
             }
@@ -802,29 +816,6 @@
 
             showAntCycles(mgtCtr.getInsAnnotationCount());
 
-        }
-
-        function executeStepBack() {
-            document.getElementById("wLoadAntBox").style.display = "none";
-            document.getElementById("rsAntBox").style.display = "none";
-            document.getElementById("ratAntBox").style.display = "none";
-
-
-            if (mgtCtr != undefined) {
-                let cycleNum = mgtCtr.cycleStepBack();
-                if (cycleNum < 0) {
-                    return;
-                }
-                updateRSView();
-                updateRAT();
-                updateWLoad();
-                showCycle(cycleNum);
-                var insQContent = mgtCtr.getIQContent();
-                var rsContent = mgtCtr.getRSContent();
-                var fpContent = mgtCtr.getFPContent();
-                var insColors = mgtCtr.getAllInsColor();
-                showCanvas(collectUnitsSizeFromUI(), insQContent, rsContent, fpContent, insColors);
-            }
         }
 
         function getOffset(el) {
@@ -893,23 +884,23 @@
             return GlobalSpace;
         }
 
-        function execAnnotation(direction = "Forward") {
+        function execAnnotation(direction = Direction.Forward) {
             document.getElementById("wLoadAntBox").style.display = "none";
             document.getElementById("rsAntBox").style.display = "none";
             document.getElementById("ratAntBox").style.display = "none";
 
 
             var obj;
-            if (direction == "Forward") {
+            if (direction == Direction.Forward) {
                 obj = mgtCtr.forwardAnnotation();
                 if (obj == undefined || obj.ant.length == 0) {
-                    return executeStepBy();
+                    return executeStepBy(Direction.Forward);
                 }
             }
             else {
                 obj = mgtCtr.backwardAnnotation();
                 if (obj == undefined || obj.ant.length == 0) {
-                    return executeStepBack();
+                    return executeStepBy(Direction.Backward);
                 }
             }
 
@@ -949,58 +940,12 @@
                     annotations[indx].message,
                     rowNumber,
                     annotations[indx].pointsTo);
-                saveAntProperty(antElem, canvasId, tableId,
-                    annotations[indx].message,
-                    rowNumber,
-                    annotations[indx].pointsTo);
 
                 hightlighAntCycle(GAnnotationCOunter);
                 GAnnotationCOunter++;
             }
 
-            resetAntPropertx();
-
         }
-
-        function execAntBackward() {
-            document.getElementById("AnnotationsBox").style.display = "none";
-
-            var obj = mgtCtr.backwardAnnotation();
-            if (obj == undefined || obj.ant.length == 0) {
-                return executeStepBack();
-            }
-            var antElem;
-            var annotations = obj.ant;
-            var color = obj.color;
-
-            for (let indx = 0; indx < annotations.length; ++indx) {
-
-                switch (annotations[indx].resourceType) {
-                    case ResourceType.WorkLoad:
-                        antElem = document.getElementById("cwLoadToolTip");
-                        break;
-
-                    case ResourceType.RSUnits:
-                        antElem = document.getElementById("cRSToolTip");
-                        break;
-
-                    case ResourceType.RAT:
-                        antElem = document.getElementById("cRATToolTip");
-                        break;
-
-
-                    default:
-                        break;
-                }
-
-                antElem.innerHTML = annotations[indx].message;
-                antElem.style.display = "block";
-                antElem.style.backgroundColor = color;
-            }
-
-        }
-
-
 
     </script>
 

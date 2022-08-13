@@ -29,9 +29,6 @@ class ResourceManager {
     reinitializeWLoad() {
         var tempWLoad = [];
         var wLoad = this.workloads;
-        myArray.forEach(function (value, i) {
-            console.log('%d: %s', i, value);
-        });
         wLoad.forEach(function (insLoad, indx) {
             let ins = {
                 "OP": insLoad.getOperator(),

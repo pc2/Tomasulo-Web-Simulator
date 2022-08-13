@@ -6,6 +6,7 @@ function parseInstructions(content) {
     }
     var insList = [];
     insLines.forEach(function (line, indx) {
+        line = line.replace(/\r?\n|\r/g, "");
         let insParts = line.split(/[ ,]+/);
         if (insParts.length != 4) {
             console.log("something missing in instructions input");

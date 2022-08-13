@@ -271,6 +271,12 @@ class WriteBack extends State {
             return;
         }
 
+        if ((wLoad.getCycle(INSCycles.WriteBack) + 1) == cycle) {
+            let nextState = new Finish(wLoad, cycle);
+            nextState.moveState(cycle, resManager, insID);
+            return;
+        }
+
         let value = rat.updateRat(wLoad.getDestOperand(), wLoad.getID());
         rs.updateRSOperand(wLoad.getDestOperand(), value);
         var reqRSType = getRSType(wLoad.getOperator());
@@ -280,10 +286,6 @@ class WriteBack extends State {
 
         if (rsbuffer != undefined) {
             rs.release(rsbuffer);
-        }
-        if ((wLoad.getCycle(INSCycles.WriteBack) + 1) == cycle) {
-            let nextState = new Finish(wLoad, cycle);
-            nextState.moveState(cycle, resManager, insID);
         }
     }
 
