@@ -174,11 +174,16 @@ class Instruction {
             return 0;
         }
         var antNode = this.antTree.SearchAntNode(this.antTree.Root(), this.antKeyTrack);
-        if (antNode == undefined) {
+        var annotations = antNode.Annotation();
+        if ((antNode == undefined) || (annotations.length == 0)) {
             return 0;
         }
 
-        var annotations = antNode.Annotation();
         return annotations.length;
+    }
+
+    isAnyAnnotation(){
+        var counter = this.getAntCounter();
+        return counter!=0;
     }
 }

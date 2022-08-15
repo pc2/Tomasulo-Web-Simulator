@@ -233,7 +233,7 @@ class ProcessManager {
         let counter = 0;
         var workLoads = this.getWLoads();
         for (let indx = 0; indx < workLoads.length; ++indx) {
-            counter += workLoads[indx].getAntCounter();
+            counter += workLoads[indx].isAnyAnnotation();
         }
 
         return counter;
