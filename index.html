@@ -289,8 +289,8 @@
 
     <script type="text/javascript">
         const Direction = {
-           "Forward":0,
-           "Backward":1
+            "Forward": 0,
+            "Backward": 1
         };
 
         Object.freeze(Direction);
@@ -508,13 +508,16 @@
         function addTableRow(tBodyElem, cellsContentList, color = "", rowId = "") {
             var row = document.createElement("tr");
             row.id = rowId;
-            row.style.backgroundColor = color;
-            cellsContentList.forEach(cellcontext => {
+            cellsContentList.forEach(function (cellcontext, indx) {
                 let cell = document.createElement("td");
+                if (indx == 1) {
+                    cell.style.backgroundColor = color;
+                }
                 let cellTxt = document.createTextNode(cellcontext);
                 cell.appendChild(cellTxt);
                 row.appendChild(cell);
             });
+
             tBodyElem.appendChild(row);
         }
 
