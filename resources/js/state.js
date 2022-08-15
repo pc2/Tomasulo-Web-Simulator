@@ -62,15 +62,6 @@ class Issue extends State {
         instruction.setState(this);
     }
 
-    setRSBuffer_V2(rsbuffer, rat, instruction, antMsg = "", insNumber){
-        var rstype = rsbuffer.getType();
-        let dest = instruction.getDestOperand();
-        let src1 = instruction.getFirstOperand();
-        let src2 = instruction.getSecOperand();
-        let address = undefined;
-
-        
-    }
     setRSBuffer(rsbuffer, rat, instruction, antMsg = "", insNumber) {
 
         var rstype = rsbuffer.getType();
@@ -79,14 +70,26 @@ class Issue extends State {
         let src2 = instruction.getSecOperand();
         let address = undefined;
         let textMsg = "";
+
         if (rstype == RSType.FPLd) {
             if (isAddress(parseInt(src1)) == true) {
                 address = src1;
+
                 src1 = undefined;
             }
             else {
                 address = src2;
+                src1 = dest;
                 src2 = undefined;
+            }
+
+            if (instruction.getType() == OPType.sd) {
+                if (src1 == undefined) {
+                    src2 = dest;
+                }
+                else {
+                    src1 = dest;
+                }
             }
             rsbuffer.Address = address;
         }
@@ -111,7 +114,6 @@ class Issue extends State {
 
         }
 
-
         if (src2 != undefined && !rat.isRegType(rsbuffer.Vk)) {
             let ratCtx = rat.getRATContent(src2);
             if (!rat.isRegType(ratCtx)) {
@@ -132,6 +134,7 @@ class Issue extends State {
 
         }
 
+
         rsbuffer.Busy = RSStatusFlag.Yes;
         rsbuffer.Operator = instruction.getOperator();
         rsbuffer.dest = instruction.getDestOperand();
@@ -140,7 +143,6 @@ class Issue extends State {
         if (antMsg.length != 0) {
             instruction.insertAnnotation((antMsg + textMsg), insNumber, ResourceType.RSUnits, 1);
         }
-
 
     }
 
