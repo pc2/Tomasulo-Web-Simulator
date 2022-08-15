@@ -187,10 +187,11 @@ class ProcessManager {
                 "Name": rsbuf.name,
                 "Status": (rsbuf.Busy == 0) ? "No" : "Yes",
                 "Operator": (rsbuf.Operator == undefined) ? "" : rsbuf.Operator,
-                "Vj": (rsbuf.Vj == undefined) ? "" : rsbuf.Vj,
-                "Vk": (rsbuf.Vk == undefined) ? "" : rsbuf.Vk,
-                "Qj": (rsbuf.Qj == undefined) ? "" : rsbuf.Qj,
-                "Qk": (rsbuf.Qk == undefined) ? "" : rsbuf.Qk,
+                "Vj": (rsbuf.Vj == undefined || rsbuf.Vj == 0) ? "" : rsbuf.Vj,
+                "Vk": (rsbuf.Vk == undefined || rsbuf.Vk == 0) ? "" : rsbuf.Vk,
+                "Qj": (rsbuf.Qj == undefined || rsbuf.Qj == 0) ? "" : rsbuf.Qj,
+                "Qk": (rsbuf.Qk == undefined || rsbuf.Qk == 0) ? "" : rsbuf.Qk,
+                "Address":(rsbuf.Address == undefined) ? "" : rsbuf.Address,
                 "Color": this.getInsColor(rsbuf.insHash)
             });
         });
@@ -263,7 +264,6 @@ class ProcessManager {
                 insCurState = new Init(wLoad, this.cycle);
                 insAlreadyIssued = true;
             }
-
 
             wLoad.insertAntNode();
             insCurState.process(this.cycle, this.resourceMgt, wLoad.getID());

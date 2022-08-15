@@ -634,6 +634,7 @@
                 rowcontextList.push(rsContent.Vk);
                 rowcontextList.push(rsContent.Qj);
                 rowcontextList.push(rsContent.Qk);
+                rowcontextList.push(rsContent.Address);
                 addTableRow(tBody, rowcontextList, rsContent.Color, rsContent.Hash);
             }
 
@@ -729,7 +730,7 @@
 
         function showRSView() {
             var rsTable = document.getElementById("RSTable");
-            var hdrList = ["Time", "Name", "Busy", "OP", "Src1 Vj", "Src2 Vk", "Src2 RS Qj", "Src2 RS Qk"]
+            var hdrList = ["Time", "Name", "Busy", "OP", "Src1 Vj", "Src2 Vk", "Src2 RS Qj", "Src2 RS Qk","Address"]
             completeTableCreation("RSTable", hdrList);
         }
 

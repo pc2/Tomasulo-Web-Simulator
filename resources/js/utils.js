@@ -148,7 +148,8 @@ function getRSType(opName) {
         opType == OPType.div) {
         return RSType.FPMul;
     }
-    else if (opType == OPType.ld) {
+    else if ((opType == OPType.ld)||
+            (opType == OPType.sd)) {
         return RSType.FPLd;
     }
 }

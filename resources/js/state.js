@@ -62,6 +62,15 @@ class Issue extends State {
         instruction.setState(this);
     }
 
+    setRSBuffer_V2(rsbuffer, rat, instruction, antMsg = "", insNumber){
+        var rstype = rsbuffer.getType();
+        let dest = instruction.getDestOperand();
+        let src1 = instruction.getFirstOperand();
+        let src2 = instruction.getSecOperand();
+        let address = undefined;
+
+        
+    }
     setRSBuffer(rsbuffer, rat, instruction, antMsg = "", insNumber) {
 
         var rstype = rsbuffer.getType();
