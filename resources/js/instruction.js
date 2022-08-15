@@ -9,7 +9,7 @@ class Instruction {
 
         this.state = undefined;
 
-        this.id = Math.random().toString(36).slice(-10);
+        this.id = "id_"+Math.random().toString(36).slice(-10);
         this.reqCycle = parseInt(cycle);
         this.exeCycle = parseInt(cycle);
         this.issueCycle = 0;

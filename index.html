@@ -505,9 +505,25 @@
             }
         }
 
+        function handleMouseOver(rowId, color){
+            var elements = document.querySelectorAll(("#"+rowId));
+            elements.forEach(element => {
+                element.style.backgroundColor=color;
+            });
+        }
+
+        function handleMouseOut(rowId){
+  
+            var elements = document.querySelectorAll(("#"+rowId));
+            elements.forEach(element => {
+                element.style.backgroundColor="";
+            });
+        }
+
         function addTableRow(tBodyElem, cellsContentList, color = "", rowId = "") {
             var row = document.createElement("tr");
             row.id = rowId;
+
             cellsContentList.forEach(function (cellcontext, indx) {
                 let cell = document.createElement("td");
                 if (indx == 1) {
@@ -517,7 +533,8 @@
                 cell.appendChild(cellTxt);
                 row.appendChild(cell);
             });
-
+            row.addEventListener('mouseover', () => handleMouseOver(rowId, color));
+            row.addEventListener('mouseout', () => handleMouseOut(rowId));
             tBodyElem.appendChild(row);
         }
 
@@ -590,7 +607,7 @@
 
                 rowcontextList.push(ratContent.Name);
                 rowcontextList.push(ratContent.Qi);
-                addTableRow(tBody, rowcontextList, ratContent.Color);
+                addTableRow(tBody, rowcontextList, ratContent.Color,ratContent.Hash);
             }
 
         }
@@ -650,7 +667,7 @@
                 rowcontextList.push(CyExecStart);
                 let CyWBack = (insLoad.CyWBack == 0) ? "" : insLoad.CyWBack;
                 rowcontextList.push(CyWBack);
-                addTableRow(tBody, rowcontextList, insLoad.Color);
+                addTableRow(tBody, rowcontextList, insLoad.Color, insLoad.Id);
             }
         }
 
