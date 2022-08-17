@@ -263,14 +263,14 @@
 
             <div id="ftrContainer" class="cFooterContainer">
                 <div id="actionButtonGroup" class="cActionButtonGroup">
-                    <button type="button" id='stepForward' class="cActionBtn" onclick="executeStepBy(1)">
+                    <button type="button" id='stepBack' class="cActionBtn" onclick="executeStepBy(1)">
                         <img src="resources/images/icons/icons8-double-left-48.png">
                     </button>
 
-                    <button type="button" id='stepForward' class="cActionBtn" onclick="execAnnotation(1)">
+                    <button type="button" id='stepAntBack' class="cActionBtn" onclick="execAnnotation(1)">
                         <img src="resources/images/icons/icons8-back-48.png">
                     </button>
-                    <button type="button" id='stepForward' class="cActionBtn" onclick="execAnnotation(0)">
+                    <button type="button" id='stepAntForward' class="cActionBtn" onclick="execAnnotation(0)">
                         <img src="resources/images/icons/icons8-forward-48.png">
                     </button>
                     <button type="button" id='stepForward' class="cActionBtn" onclick="executeStepBy(0)">
@@ -311,6 +311,21 @@
                     title: 'Welcome To Tomasulo Web Simulator',
                     intro: 'A web simulation tool to implement out-of-order dynamic scheduling algorithm',
                     position: 'right'
+                },
+                {
+                    element: document.querySelector('#stepForward'),
+                    intro:  'Execute to next instruction cycle',
+                    position: 'top'
+                },
+                {
+                    element: document.querySelector('#stepBack'),
+                    intro:  'Execute to previous instruction cycle',
+                    position: 'top'
+                },
+                {
+                    element: document.querySelector('#stepAntForward'),
+                    intro:  'Informations shows what is happening in between cycle in forward fasion',
+                    position: 'top'
                 },
                 {
                     element: document.querySelector('.cInputContainer'),
