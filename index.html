@@ -7,9 +7,6 @@
     <meta name="theme-color" content="#009578">
     <title>Tomasulo-Simulator</title>
 
-
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/6.0.0/introjs.min.css  " /> -->
-
     <link rel="stylesheet" href="resources/css/intro.css" />
 
     <link rel="stylesheet" href="resources/css/main.css" />
@@ -19,7 +16,6 @@
 
     <script src="resources/jsLibrary/loadash.js"></script>
     <script src="resources/jsLibrary/intro.js"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/6.0.0/intro.min.js"></script> -->
 
     <script src="resources/js/utils.js"></script>
     <script src="resources/js/inputs.js"></script>
@@ -309,6 +305,66 @@
             showCycle(0);
         }
 
+        introJs().setOptions({
+            steps: [
+                {
+                    title: 'Welcome To Tomasulo Web Simulator',
+                    intro: 'A web simulation tool to implement out-of-order dynamic scheduling algorithm',
+                    position: 'right'
+                },
+                {
+                    element: document.querySelector('.cInputContainer'),
+                    intro: 'Input window for instruction loading, configuration for functional units and cycle number ',
+                    position: 'right'
+                },
+                {
+                    element: document.querySelector('.cInputBody'),
+                    intro:  'RISC-V instruction can be created by clocking \'+\' icon. '+
+                            'Instruction can be deleted by clicking delete icon. At this moment '+
+                            'Add, Sub, Mul, Div, Ld, Sd operations are supported.',
+                    position: 'right'
+                },
+                {
+                    element: document.querySelector('.cInputBody'),
+                    intro:  'Load: reads input from file. '+
+                            'Test-*: predefined instruction input.   '+
+                            'Next: settings window',
+                    position: 'right'
+                },
+                {
+                    element: document.querySelector('.cDataContainer'),
+                    intro: 'This window used for many purpose. Dependency graph, loop or branching instruction also place in this window',
+                    position: 'right'
+                },
+                {
+                    element: document.querySelector('.cReservationBody'),
+                    intro:  'Algorithm execution window. '+
+                            '\"Time\": Remaining execution cycle '+
+                            '\"Busy\": Yes, if FU is occupied by an active instruction '+
+                            '\"OP\": Operation to perfume in the FU '+
+                            '\"Vj and Vk\": values of source operand '+
+                            '\"Qj and Qk\": Reservation station units that produce source values Vj and Vk '+
+                            '\"Busy\": Yes, if FU is occupied by an active instruction '+
+                            "\"Address\":  offset for load or store operation",
+                    position: 'bottom'
+                },
+                {
+                    element: document.querySelector('.cCycle'),
+                    intro:  'Cycle Number',
+                    position: 'left'
+                },
+                {
+                    element: document.querySelector('.cAntCycles'),
+                    intro:  'circle shows number of step remain till next cycle',
+                    position: 'left'
+                },
+                {
+                    element: document.querySelector('.cRatContainer'),
+                    intro:  'Register address table; value denotes which FU will write to which register ',
+                    position: 'left'
+                },]
+        }).start();
+
         function addRegSelectOption(id) {
             var selectList = document.createElement("select");
             selectList.id = id;
@@ -508,18 +564,18 @@
             }
         }
 
-        function handleMouseOver(rowId, color){
-            var elements = document.querySelectorAll(("#"+rowId));
+        function handleMouseOver(rowId, color) {
+            var elements = document.querySelectorAll(("#" + rowId));
             elements.forEach(element => {
-                element.style.backgroundColor=color;
+                element.style.backgroundColor = color;
             });
         }
 
-        function handleMouseOut(rowId){
-  
-            var elements = document.querySelectorAll(("#"+rowId));
+        function handleMouseOut(rowId) {
+
+            var elements = document.querySelectorAll(("#" + rowId));
             elements.forEach(element => {
-                element.style.backgroundColor="";
+                element.style.backgroundColor = "";
             });
         }
 
@@ -610,7 +666,7 @@
 
                 rowcontextList.push(ratContent.Name);
                 rowcontextList.push(ratContent.Qi);
-                addTableRow(tBody, rowcontextList, ratContent.Color,ratContent.Hash);
+                addTableRow(tBody, rowcontextList, ratContent.Color, ratContent.Hash);
             }
 
         }
@@ -733,7 +789,7 @@
 
         function showRSView() {
             var rsTable = document.getElementById("RSTable");
-            var hdrList = ["Time", "Name", "Busy", "OP", "Src1 Vj", "Src2 Vk", "Src2 RS Qj", "Src2 RS Qk","Address"]
+            var hdrList = ["Time", "Name", "Busy", "OP", "Src1 Vj", "Src2 Vk", "Src2 RS Qj", "Src2 RS Qk", "Address"]
             completeTableCreation("RSTable", hdrList);
         }
 
