@@ -197,10 +197,12 @@
 
                     <div class="cDataContainerTab cTab">
                         <button class="cDataContainerTabItem cTabButton cDataTab cDataTabShow"
-                            onclick="showStatistics(event,'InEditor')">PlaceHolder</button>
+                            onclick="showStatistics(event,'InEditor')">Dependency Graoh</button>
                     </div>
 
-                    <div id="statistics" class="cStatistics cDataBody"></div>
+                    <div id="statistics" class="cStatistics cDataBody">
+                        <canvas id="graphCanvas" style="display:none"></canvas>
+                    </div>
                 </div>
 
             </div> <!-- Left container end-->
@@ -314,17 +316,17 @@
                 },
                 {
                     element: document.querySelector('#stepForward'),
-                    intro:  'Execute to next instruction cycle',
+                    intro: 'Execute to next instruction cycle',
                     position: 'top'
                 },
                 {
                     element: document.querySelector('#stepBack'),
-                    intro:  'Execute to previous instruction cycle',
+                    intro: 'Execute to previous instruction cycle',
                     position: 'top'
                 },
                 {
                     element: document.querySelector('#stepAntForward'),
-                    intro:  'Information shows what is happening in between cycle in forward fasion',
+                    intro: 'Information shows what is happening in between cycle in forward fasion',
                     position: 'top'
                 },
                 {
@@ -334,16 +336,16 @@
                 },
                 {
                     element: document.querySelector('.cInputBody'),
-                    intro:  'RISC-V instruction can be created by clocking \'+\' icon. '+
-                            'Instruction can be deleted by clicking delete icon. At this moment '+
-                            'Add, Sub, Mul, Div, Ld, Sd operations are supported.',
+                    intro: 'RISC-V instruction can be created by clocking \'+\' icon. ' +
+                        'Instruction can be deleted by clicking delete icon. At this moment ' +
+                        'Add, Sub, Mul, Div, Ld, Sd operations are supported.',
                     position: 'right'
                 },
                 {
                     element: document.querySelector('.cInputBody'),
-                    intro:  'Load: reads input from file. '+
-                            'Test-*: predefined instruction input.   '+
-                            'Next: settings window',
+                    intro: 'Load: reads input from file. ' +
+                        'Test-*: predefined instruction input.   ' +
+                        'Next: settings window',
                     position: 'right'
                 },
                 {
@@ -353,32 +355,32 @@
                 },
                 {
                     element: document.querySelector('.cReservationBody'),
-                    intro:  'Algorithm execution window. '+
-                            '\"Time\": Remaining execution cycle '+
-                            '\"Busy\": Yes, if FU is occupied by an active instruction '+
-                            '\"OP\": Operation to perfume in the FU '+
-                            '\"Vj and Vk\": values of source operand '+
-                            '\"Qj and Qk\": Reservation station units that produce source values Vj and Vk '+
-                            '\"Busy\": Yes, if FU is occupied by an active instruction '+
-                            "\"Address\":  offset for load or store operation",
+                    intro: 'Algorithm execution window. ' +
+                        '\"Time\": Remaining execution cycle ' +
+                        '\"Busy\": Yes, if FU is occupied by an active instruction ' +
+                        '\"OP\": Operation to perfume in the FU ' +
+                        '\"Vj and Vk\": values of source operand ' +
+                        '\"Qj and Qk\": Reservation station units that produce source values Vj and Vk ' +
+                        '\"Busy\": Yes, if FU is occupied by an active instruction ' +
+                        "\"Address\":  offset for load or store operation",
                     position: 'bottom'
                 },
                 {
                     element: document.querySelector('.cCycle'),
-                    intro:  'Cycle Number',
+                    intro: 'Cycle Number',
                     position: 'left'
                 },
                 {
                     element: document.querySelector('.cAntCycles'),
-                    intro:  'circle shows number of step remain till next cycle',
+                    intro: 'circle shows number of step remain till next cycle',
                     position: 'left'
                 },
                 {
                     element: document.querySelector('.cRatContainer'),
-                    intro:  'Register address table; value denotes which FU will write to which register ',
+                    intro: 'Register address table; value denotes which FU will write to which register ',
                     position: 'left'
                 },]
-        }).start();
+        });//.start();
 
         function addRegSelectOption(id) {
             var selectList = document.createElement("select");
@@ -617,6 +619,21 @@
             element.textContent = contents;
         }
 
+        function drawDependencyGraph(insCounter, depInstructions) {
+            var domElement = document.getElementById("statistics");
+            var theCanvas = document.getElementById("graphCanvas");
+            //theCanvas.style.display = "none";
+
+            theCanvas.width = domElement.offsetWidth;
+            theCanvas.height = domElement.offsetHeight;
+
+
+            drawDependency(theCanvas, insCounter, depInstructions);
+            theCanvas.style.display = "block";
+            theCanvas.style.position = "absolute";
+            theCanvas.style.zIndex = 10;
+        }
+
         function generateENV(instructions, execCycles, unitsSize) {
             mgtCtr = new ProcessManager();
             mgtCtr.setProcessEnv(instructions, execCycles, unitsSize);
@@ -645,7 +662,8 @@
                 return;
             }
 
-            var dependency=calculateDependency(instructions);
+            var dependency = calculateDependency(instructions);
+            drawDependencyGraph(instructions.length, dependency);
             generateENV(instructions, execCycles, unitsSize);
             TabSelection("Workload");
             mgtCtr.getWLoadContent();

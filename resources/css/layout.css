@@ -63,6 +63,8 @@
 
 .cDataBody {
   position: relative;
+  height: 92%;
+  width: 100%;
   background-color: rgb(241, 246, 247);
   text-align: left;
 }

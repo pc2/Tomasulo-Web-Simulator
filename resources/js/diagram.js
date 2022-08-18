@@ -110,6 +110,37 @@ function canvas_arrow(context, fromx, fromy, tox, toy) {
     context.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
 }
 
+function drawDependency(theCanvas, insCounter, dependency) {
+    var context = theCanvas.getContext("2d");
+    var circleHeight = 50;
+    var ctxHeight = context.height;
+
+
+    context.clearRect(0, 0, theCanvas.width, theCanvas.height);
+
+    for (let indx = 0; indx < insCounter; ++indx) {
+        context.beginPath();
+        var startX = 200;
+        var radius = 20;
+        var startY = circleHeight + radius + (indx * 75);
+
+        context.arc(startX, startY, radius, 0, 2 * Math.PI, true);
+
+        context.lineWidth = 2;
+        context.strokeStyle = '#003300';
+        context.stroke();
+
+        context.font = '15px Roboto Slab';
+        context.fillStyle = 'black';
+        context.textAlign = 'center';
+        context.fillText(indx + 1, startX, startY + 3);
+
+    }
+
+    context.closePath();
+
+}
+
 function drawTable(context, cellSize, coordinates, nRow, nColumn, rowName = "") {
     var posX = coordinates.x;
     var posY = coordinates.y;

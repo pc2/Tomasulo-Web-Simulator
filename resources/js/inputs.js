@@ -146,7 +146,6 @@ function LoadTestCase_2() {
         { OP: 'add.d', Dest: 'f6', Src1: 'f8', Src2: 'f2' }
     ]
     showAutoSelectionTable(instructions);
-    TabSelection("FUnitsInput");
 }
 
 function LoadTestCase_1() {
@@ -157,7 +156,6 @@ function LoadTestCase_1() {
         { OP: 'mul.d', Dest: 'f6', Src1: 'f10', Src2: 'f8' }
     ]
     showAutoSelectionTable(instructions);
-    TabSelection("FUnitsInput");
 }
 
 function LoadFromFile(e) {
