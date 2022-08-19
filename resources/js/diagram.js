@@ -190,7 +190,7 @@ function drawDependency(theCanvas, dependency, dependencyType) {
     var startY = 50;
 
     var radius = 20;
-    var distance = 80;
+    var distance = 70;
 
 
     for (let indx = 0; indx < dependency.length; ++indx) {

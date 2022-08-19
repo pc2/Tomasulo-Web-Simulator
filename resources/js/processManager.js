@@ -134,11 +134,21 @@ class ProcessManager {
         }
 
         workLoads.forEach(ins => {
+            let dest, src1, src2;
+            if (ins.type == OPType.sd) {
+                dest = ins.getFirstOperand();
+                src1= ins.getDestOperand();
+            } else {
+                dest = ins.getDestOperand();
+                src1= ins.getFirstOperand();
+             }
+            src2 = ins.getSecOperand();
+
             wLoadList.push({
                 "OP": ins.getOperator(),
-                "Dest": ins.getDestOperand(),
-                "Src1": ins.getFirstOperand(),
-                "Src2": ins.getSecOperand(),
+                "Dest": dest,
+                "Src1": src1,
+                "Src2": src2,
                 "CyIS": ins.getCycle(INSCycles.Issue),
                 "CyExecStart": ins.getCycle(INSCycles.ExecStart),
                 "CyExecEnd": ins.getCycle(INSCycles.ExecEnd),
