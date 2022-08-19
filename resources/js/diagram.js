@@ -110,87 +110,101 @@ function canvas_arrow(context, fromx, fromy, tox, toy) {
     context.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
 }
 
+function drawArc(context, startX, startY, destX, destY, depType) {
+    var centerX = startX;
+    var centerY = (destY - startY) / 2 + startY;
+
+    context.lineWidth = 2;
+    context.strokeStyle = 'green';
+    var startAngle = Math.atan2(startY - centerY, startX - centerX);
+    var endAngle = Math.atan2(destY - centerY, destX - centerX);
+    var diffX = startX - centerX;
+    var diffY = startY - centerY;
+    var radius = Math.abs(Math.sqrt(diffX * diffX + diffY * diffY));
+    if (depType == "war") {
+        radius += 5;
+    }
+    if (depType == "waw") {
+        context.arc(centerX, centerY, radius, startAngle, endAngle);
+    }
+    else {
+        context.arc(centerX, centerY, radius, endAngle, startAngle);
+    }
 
 
-function drawDependency(theCanvas, insCounter, dependency){
+}
+
+function drawDepGraph(context, dependency, depType, sX, sY, radius, distanceFactor, color) {
+
+
+    for (let indx = 0; indx < dependency.length; ++indx) {
+        let pos = dependency[indx].posAt;
+        var startX = sX;
+        var startY = (pos * distanceFactor) + (radius * 3);
+
+        var depList;
+        if (depType == "raw") {
+            depList = dependency[pos].raw;
+        }
+        else if (depType == "war") {
+            depList = dependency[pos].war;
+        }
+        else if (depType == "waw") {
+            depList = dependency[pos].waw;
+        }
+
+        var posNext;
+        for (rIndx = 0; rIndx < depList.length; ++rIndx) {
+            for (let i = indx + 1; i < dependency.length; ++i) {
+                if (depList[rIndx] == dependency[i].insId) {
+                    posNext = i;
+                    break;
+                }
+            }
+
+            var destX = sX;
+            var destY = (posNext * distanceFactor) + (radius);
+
+
+            context.beginPath();
+
+            if (posNext - pos == 1 && depType == "raw") {
+                canvas_line(context, startX, startY, destX, destY);
+            } else {
+                drawArc(context, startX, startY, destX, destY, depType);
+
+            }
+            context.lineWidth = 3;
+            context.strokeStyle = color;
+            context.stroke();
+            context.closePath();
+        }
+    }
+}
+
+function drawDependency(theCanvas, dependency, dependencyType) {
     var context = theCanvas.getContext("2d");
 
     context.clearRect(0, 0, theCanvas.width, theCanvas.height);
     var startX = 200;
     var startY = 50;
-    var radius = 25;
-    var distance = 75;
 
-
-    for (let indx = 0; indx < insCounter; ++indx) {
-        context.beginPath();
-
-        startY += (radius + (indx * distance));
-        context.arc(startX, startY, radius, 0, 2 * Math.PI, true);
-
-        context.lineWidth = 2;
-        context.strokeStyle = '#003300';
-        context.stroke();
-
-        context.font = '15px Roboto Slab';
-        context.fillStyle = 'black';
-        context.textAlign = 'center';
-        context.fillText(indx + 1, startX, startY + 3);
-    }
-    context.closePath();
-
-}
-/**
- * 
-0: [1]
-1: []
-[[Prototype]]: Object
- */
-function drawRAWDepdendency(context, rawDependency, X, Y, radius, distanceFactor) {
-    var sX, sY, dX, dY;
-    var keys = Object.keys(rawDependency);
-
-    for(let indxI = 0; indxI < keys.length; ++indxI){
-        let curIns = parseInt(keys[indxI]);
-        var depInstructions = rawDependency[curIns];
-        for (let indxJ = 0; indxJ < depInstructions.length; ++indxJ) {
-            if ((depInstructions[indxJ] - indxI) == 1) {
-                sX = X ;
-                sY = Y;
-
-                dX = X ;
-                dY = sY+( distanceFactor) - (radius*2);
-                context.beginPath();
-                context.lineWidth = 2;
-                context.strokeStyle = "red";
-                canvas_arrow(context, sX, sY, dX, dY);
-                context.stroke();
-                Y = dY+radius*2;
-            }
-        }
-    }
-}
-
-function drawDependency_1(theCanvas, insCounter, dependency) {
-    var context = theCanvas.getContext("2d");
-    var circleHeight = 50;
-    var ctxHeight = context.height;
-
-    context.clearRect(0, 0, theCanvas.width, theCanvas.height);
-    var startX = 200;
     var radius = 20;
-    var distance = 75;
+    var distance = 80;
 
 
-    for (let indx = 0; indx < insCounter; ++indx) {
+    for (let indx = 0; indx < dependency.length; ++indx) {
         context.beginPath();
 
-        var startY = circleHeight + radius + (indx * distance);
+        startY = (radius + (indx * distance)) + 20;
         context.arc(startX, startY, radius, 0, 2 * Math.PI, true);
 
         context.lineWidth = 2;
         context.strokeStyle = '#003300';
         context.stroke();
+
+        context.fillStyle = dependency[indx].color;
+        context.fill();
 
         context.font = '15px Roboto Slab';
         context.fillStyle = 'black';
@@ -199,8 +213,17 @@ function drawDependency_1(theCanvas, insCounter, dependency) {
 
     }
     context.closePath();
-    var rawDependency = dependency["raw"];
-    drawRAWDepdendency(context, dependency["raw"], startX, circleHeight+(radius*2), radius, distance);
+
+    if (dependencyType == "raw" || dependencyType == "") {
+        drawDepGraph(context, dependency, "raw", startX, (70 + radius / 2), radius, distance, '#e6194B');
+    }
+    if (dependencyType == "war" || dependencyType == "") {
+        drawDepGraph(context, dependency, "war", startX, (70 + radius / 2), radius, distance, '#f58231');
+    }
+    if (dependencyType == "waw" || dependencyType == "") {
+        drawDepGraph(context, dependency, "waw", startX, (70 + radius / 2), radius, distance, '#9A6324');
+
+    }
 }
 
 function drawTable(context, cellSize, coordinates, nRow, nColumn, rowName = "") {

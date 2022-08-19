@@ -8,7 +8,6 @@
     <title>Tomasulo-Simulator</title>
 
     <link rel="stylesheet" href="resources/css/intro.css" />
-
     <link rel="stylesheet" href="resources/css/main.css" />
     <link rel="stylesheet" href="resources/css/table.css" />
     <link rel="stylesheet" href="resources/css/layout.css" />
@@ -202,6 +201,14 @@
 
                     <div id="statistics" class="cStatistics cDataBody">
                         <canvas id="graphCanvas" style="display:none"></canvas>
+                        <button class="cDependendencyBtn" style="background-color: #e6194B; "
+                            onclick="showRAW()">RAW</button>
+                        <button class="cDependendencyBtn" style="background-color: #f58231;"
+                            onclick="showWAW()">WAW</button>
+                        <button class="cDependendencyBtn" style="background-color: #9A6324;"
+                            onclick="showWAR()">WAR</button>
+
+
                     </div>
                 </div>
 
@@ -380,7 +387,7 @@
                     intro: 'Register address table; value denotes which FU will write to which register ',
                     position: 'left'
                 },]
-        });//.start();
+        }).start();
 
         function addRegSelectOption(id) {
             var selectList = document.createElement("select");
@@ -619,7 +626,25 @@
             element.textContent = contents;
         }
 
-        function drawDependencyGraph(insCounter, depInstructions) {
+        function showRAW() {
+            var wloadContent = mgtCtr.getWLoadContent();
+            var dependencyList = calculateDependency(wloadContent);
+            drawDependencyGraph(dependencyList, "raw");
+        }
+
+        function showWAW() {
+            var wloadContent = mgtCtr.getWLoadContent();
+            var dependencyList = calculateDependency(wloadContent);
+            drawDependencyGraph(dependencyList, "war");
+        }
+
+        function showWAR() {
+            var wloadContent = mgtCtr.getWLoadContent();
+            var dependencyList = calculateDependency(wloadContent);
+            drawDependencyGraph(dependencyList, "waw");
+        }
+
+        function drawDependencyGraph(dependencyList, dependencyType = "") {
             var domElement = document.getElementById("statistics");
             var theCanvas = document.getElementById("graphCanvas");
             //theCanvas.style.display = "none";
@@ -628,7 +653,7 @@
             theCanvas.height = domElement.offsetHeight;
 
 
-            drawDependency(theCanvas, insCounter, depInstructions);
+            drawDependency(theCanvas, dependencyList, dependencyType);
             theCanvas.style.display = "block";
             theCanvas.style.position = "absolute";
             theCanvas.style.zIndex = 10;
@@ -647,6 +672,11 @@
             document.getElementById("wLoadAntBox").style.display = "none";
             document.getElementById("rsAntBox").style.display = "none";
             document.getElementById("ratAntBox").style.display = "none";
+            var depBtns = document.querySelectorAll(".cDependendencyBtn");
+            depBtns.forEach(element => {
+                element.style.display = "block";
+            });
+
 
             var instructions = collectInstructionsFromUI();
             var execCycles = collectExecCycleFromUI();
@@ -662,17 +692,18 @@
                 return;
             }
 
-            
-            //drawDependencyGraph(instructions.length, dependency);
+
             generateENV(instructions, execCycles, unitsSize);
             TabSelection("Workload");
             var wloadContent = mgtCtr.getWLoadContent();
-            //var dependency = calculateDependency(instructions);
+            var dependencyList = calculateDependency(wloadContent);
+
             var unitsSize = collectUnitsSizeFromUI();
             var IQContent = mgtCtr.getIQContent();
             var rsContent = mgtCtr.getRSContent();
             var fpContent = mgtCtr.getFPContent();
             let insColors = mgtCtr.getAllInsColor();
+            drawDependencyGraph(dependencyList);
             showCanvas(unitsSize, IQContent, rsContent, fpContent, insColors);
         }
 
