@@ -78,8 +78,11 @@
   float: right;
   z-index: 10;
   display: none;
-  font: .75em sans-serif;
-  color: white;
+  color: #000102;
+  -fontfamily: "Open Sans", sans-serif;
+  font-size: 13pt;
+  font-weight: 30em;
+  line-height: 1.65;
 }
 
 .cDependendencyBtn:active {
@@ -88,7 +91,7 @@
 
 
 .cDependendencyBtn:hover {
-  border: 2px solid rgb(92, 147, 132);
+  border: 1px solid rgb(92, 147, 132);
 }
 
 .cCContainer {
