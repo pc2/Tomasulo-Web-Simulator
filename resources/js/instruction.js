@@ -1,15 +1,15 @@
 class Instruction {
     constructor(instruction, cycle, color, posAtQ) {
         this.operator = instruction.OP;
-        this.dest = instruction.Dest;
-        this.srcFirst = instruction.Src1;
-        this.srcSecond = instruction.Src2;
         this.type = getOPType(this.operator);
+        this.updateOperand(this.type, instruction);
+
         this.posAtQ = posAtQ;
 
         this.state = undefined;
 
-        this.id = "id_"+Math.random().toString(36).slice(-10);
+
+        this.id = "id_" + Math.random().toString(36).slice(-10);
         this.reqCycle = parseInt(cycle);
         this.exeCycle = parseInt(cycle);
         this.issueCycle = 0;
@@ -20,6 +20,34 @@ class Instruction {
         this.color = color;
         this.antTree = new AnnotationTree();
         this.antKeyTrack = undefined;
+    }
+
+    findIntegerOperand(operand) {
+        return Number.isInteger(
+            parseInt(operand)
+        );
+    }
+    updateOperand(type, instruction) {
+        var dest;
+        if (this.findIntegerOperand(instruction.Src1)) {
+            this.srcFirst = instruction.Src2;
+            this.srcSecond = instruction.Src1;
+        }
+        else if (this.findIntegerOperand(instruction.Src2)) {
+            this.srcFirst = instruction.Src1;
+            this.srcSecond = instruction.Src2;
+        } else {
+            this.srcFirst = instruction.Src1;
+            this.srcSecond = instruction.Src2;
+        }
+
+        if (type == OPType.sd) {
+            let tempOperand = this.srcFirst;
+            this.srcFirst = instruction.Dest;
+            this.dest = tempOperand;
+        } else {
+            this.dest = instruction.Dest;
+        }
     }
 
     resetCycles() {
@@ -182,8 +210,8 @@ class Instruction {
         return annotations.length;
     }
 
-    isAnyAnnotation(){
+    isAnyAnnotation() {
         var counter = this.getAntCounter();
-        return counter!=0;
+        return counter != 0;
     }
 }

@@ -98,11 +98,13 @@ function findAntiDependency(insList) {
  *
  */
 
-function calculateDependency(insList) {
-    var dependency = {};
-    dependency["raw"] = findRAWDependency(insList);
-    dependency["war"] = findAntiDependency(insList);
-    dependency["waw"] = findOutputDependency(insList);
+function calculateDependency(wload) {
+    var depInstructions = {};
+    
+
+    dependency["raw"] = findRAWDependency(instructions);
+    dependency["war"] = findAntiDependency(instructions);
+    dependency["waw"] = findOutputDependency(instructions);
 
     return dependency;
 }

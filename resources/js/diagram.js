@@ -110,20 +110,82 @@ function canvas_arrow(context, fromx, fromy, tox, toy) {
     context.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
 }
 
-function drawDependency(theCanvas, insCounter, dependency) {
+
+
+function drawDependency(theCanvas, insCounter, dependency){
+    var context = theCanvas.getContext("2d");
+
+    context.clearRect(0, 0, theCanvas.width, theCanvas.height);
+    var startX = 200;
+    var startY = 50;
+    var radius = 25;
+    var distance = 75;
+
+
+    for (let indx = 0; indx < insCounter; ++indx) {
+        context.beginPath();
+
+        startY += (radius + (indx * distance));
+        context.arc(startX, startY, radius, 0, 2 * Math.PI, true);
+
+        context.lineWidth = 2;
+        context.strokeStyle = '#003300';
+        context.stroke();
+
+        context.font = '15px Roboto Slab';
+        context.fillStyle = 'black';
+        context.textAlign = 'center';
+        context.fillText(indx + 1, startX, startY + 3);
+    }
+    context.closePath();
+
+}
+/**
+ * 
+0: [1]
+1: []
+[[Prototype]]: Object
+ */
+function drawRAWDepdendency(context, rawDependency, X, Y, radius, distanceFactor) {
+    var sX, sY, dX, dY;
+    var keys = Object.keys(rawDependency);
+
+    for(let indxI = 0; indxI < keys.length; ++indxI){
+        let curIns = parseInt(keys[indxI]);
+        var depInstructions = rawDependency[curIns];
+        for (let indxJ = 0; indxJ < depInstructions.length; ++indxJ) {
+            if ((depInstructions[indxJ] - indxI) == 1) {
+                sX = X ;
+                sY = Y;
+
+                dX = X ;
+                dY = sY+( distanceFactor) - (radius*2);
+                context.beginPath();
+                context.lineWidth = 2;
+                context.strokeStyle = "red";
+                canvas_arrow(context, sX, sY, dX, dY);
+                context.stroke();
+                Y = dY+radius*2;
+            }
+        }
+    }
+}
+
+function drawDependency_1(theCanvas, insCounter, dependency) {
     var context = theCanvas.getContext("2d");
     var circleHeight = 50;
     var ctxHeight = context.height;
 
-
     context.clearRect(0, 0, theCanvas.width, theCanvas.height);
+    var startX = 200;
+    var radius = 20;
+    var distance = 75;
+
 
     for (let indx = 0; indx < insCounter; ++indx) {
         context.beginPath();
-        var startX = 200;
-        var radius = 20;
-        var startY = circleHeight + radius + (indx * 75);
 
+        var startY = circleHeight + radius + (indx * distance);
         context.arc(startX, startY, radius, 0, 2 * Math.PI, true);
 
         context.lineWidth = 2;
@@ -136,9 +198,9 @@ function drawDependency(theCanvas, insCounter, dependency) {
         context.fillText(indx + 1, startX, startY + 3);
 
     }
-
     context.closePath();
-
+    var rawDependency = dependency["raw"];
+    drawRAWDepdendency(context, dependency["raw"], startX, circleHeight+(radius*2), radius, distance);
 }
 
 function drawTable(context, cellSize, coordinates, nRow, nColumn, rowName = "") {

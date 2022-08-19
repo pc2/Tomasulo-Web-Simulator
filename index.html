@@ -662,11 +662,12 @@
                 return;
             }
 
-            var dependency = calculateDependency(instructions);
-            drawDependencyGraph(instructions.length, dependency);
+            
+            //drawDependencyGraph(instructions.length, dependency);
             generateENV(instructions, execCycles, unitsSize);
             TabSelection("Workload");
-            mgtCtr.getWLoadContent();
+            var wloadContent = mgtCtr.getWLoadContent();
+            //var dependency = calculateDependency(instructions);
             var unitsSize = collectUnitsSizeFromUI();
             var IQContent = mgtCtr.getIQContent();
             var rsContent = mgtCtr.getRSContent();
@@ -895,8 +896,6 @@
 
             return indx;
         }
-
-
 
         function executeStepBy(direction = Direction.Forward) {
             document.getElementById("wLoadAntBox").style.display = "none";
