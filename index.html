@@ -47,13 +47,13 @@
                 <button onclick="closeModal()" class="close" title="Close Modal"><img class="closeBtn"
                         src="resources/images/icons/close.png"></button>
 
-                    <form class="modalFormContent">
-                        <div class="modalFormContainer" id="modalFormContainerID">
-                            <div class="modalBody" id="modalBodyID"></div>
-                            <div class="modalButtons" id="modalButtonsID"></div>
-                        </div>
-                    </form>
-                
+                <form class="modalFormContent">
+                    <div class="modalFormContainer" id="modalFormContainerID">
+                        <div class="modalBody" id="modalBodyID"></div>
+                        <div class="modalButtons" id="modalButtonsID"></div>
+                    </div>
+                </form>
+
             </div>
             <!--modal end-->
             <div id="lContainer" class="cLContainer">
@@ -417,29 +417,79 @@
             return selectList;
         }
 
-        function addRegSelectOption(id) {
+        function markInstruction(id) {
+            var elem = document.getElementById(id);
+            var value = elem.options[elem.selectedIndex].text - 1;
+            var inputTable = document.getElementById("insInputTable");
+            var tBody = inputTable.tBodies[0];
+            var rows = tBody.rows;
+
+            for (let indx = 0; indx < rows.length; ++indx) {
+                rows[indx].cells[0].style.backgroundColor = "";
+
+            }
+
+            rows[value].cells[0].style.backgroundColor = "#FF7F50";
+
+
+
+        }
+
+        function addRegSelectOption(id, opClass = "") {
+
             var selectList = document.createElement("select");
             selectList.id = id;
-            var regValue = Array(32).fill('S').map((x, y) => (x + y));
-            var regNumeric = [...Array(32).fill('F').map((x, y) => (x + y)),
-            ...Array(10).fill('+').map((x, y) => (x + (3 * y)))];
-            var regValueList = [...regNumeric, ...regValue];
+            var operandType = id.split("-")[0];
+            var regIntValue = Array(32).fill('S').map((x, y) => (x + y));
+            var regFloatValue = Array(32).fill('F').map((x, y) => (x + y));
+            var numValues = [...Array(32).fill('+').map((x, y) => (x + y)),
+            ...Array(32).fill('-').map((x, y) => (x + y))];
 
-            for (var i = 0; i < regValueList.length; i++) {
+            var insCounter = Array(128).fill().map((x, y) => y);
+            var regValueList = [...regFloatValue, ...regIntValue];
+            var regallValues = [...regValueList, ...numValues];
+
+            for (var i = 0; i < regallValues.length; i++) {
                 var option = document.createElement("option");
-                option.value = id + regValueList[i];
-                option.text = regValueList[i];
+                option.value = id + regallValues[i];
+                option.text = regallValues[i];
+
+                if (opClass == "Loader") {
+                    if ((operandType == "Src2")) {
+                        option.value = id + numValues[i];
+                        option.text = numValues[i];
+                    }
+                }
+                else if (opClass == "Branch") {
+                    if ((operandType == "Dest") || (operandType == "Src1")) {
+                        option.value = id + regIntValue[i];
+                        option.text = regIntValue[i];
+                    }
+                    else if (operandType == "Src2") {
+                        option.value = id + insCounter[i];
+                        option.text = insCounter[i];
+                        selectList.addEventListener('change', function () {
+                            markInstruction(id);
+                        }, false);
+                    }
+
+                }
+
+
                 selectList.appendChild(option);
             }
 
             return selectList;
         }
 
-        function addOPSelectOption(id) {
+        function addOPSelectOption(id, rowElem) {
 
             var selectList = document.createElement("select");
             selectList.id = id;
-            var OPList = ["Add.d", "Sub.d", "Mul.d", "Div.d", "L.d", "S.d"]
+            selectList.addEventListener('change', function () {
+                updateInputTableOperand(id, rowElem);
+            }, false);
+            var OPList = ["ADD", "SUB", "MUL", "DIV", "LD", "SD", "BNE"]
             for (var i = 0; i < OPList.length; i++) {
                 var option = document.createElement("option");
                 option.value = id + OPList[i];
@@ -461,27 +511,31 @@
             for (let indx = 0; indx < 6; ++indx) {
                 let cell = document.createElement("td");
                 let value = undefined;
+
                 switch (indx) {
                     case 0:
                         value = document.createTextNode(rIndx);
                         break;
                     case 1:
-                        value = addOPSelectOption("OP" + "-" + rIndx);
+                        value = addOPSelectOption(("OP" + "-" + rIndx), row);
                         break;
 
                     case 2:
-                        value = addRegSelectOption("Dest" + "-" + rIndx);
+
+                        value = addRegSelectOption(("Dest" + "-" + rIndx));
                         break;
 
                     case 3:
-                        value = addRegSelectOption("Src1" + "-" + rIndx);
+
+                        value = addRegSelectOption(("Src1" + "-" + rIndx));
                         break;
 
                     case 4:
-                        value = addRegSelectOption("Src2" + "-" + rIndx);
+                        value = addRegSelectOption(("Src2" + "-" + rIndx));
                         break;
 
                     case 5:
+
                         value = document.createElement("button");
                         value.id = "rowButton";
                         value.innerHTML = '<img src="resources/images/icons/delete.png">';
@@ -491,10 +545,10 @@
                         break;
                 }
 
-               
-                
-                    cell.appendChild(value);
-                
+
+
+                cell.appendChild(value);
+
 
 
                 row.appendChild(cell);
@@ -539,6 +593,22 @@
             }
         }
 
+        function updateInputTableOperand(id, rowElem) {
+            var elem = document.getElementById(id);
+            var opName = elem.options[elem.selectedIndex].text;
+            var opClass = getOPClass(opName);
+            for (let indx = 0; indx < 3; ++indx) {
+                var cell = rowElem.cells[2 + indx];
+                var childNode = cell.childNodes[0];
+                var operandID = childNode.id;
+                cell.removeChild(childNode);
+                var optionsElem = addRegSelectOption(operandID, opClass);
+                cell.appendChild(optionsElem);
+
+            }
+
+            // selectOptionInCell(elem, opName);
+        }
         function showAutoSelectionTable(instructions) {
             var inputTable = document.getElementById("insInputTable");
             var tBody = inputTable.tBodies[0];
@@ -554,13 +624,13 @@
                 let cells = row.cells;
                 let elem = undefined;
                 let id = undefined;
-
+                let opName = getUniqueOPName(ins.OP);
                 for (let indx = 0; indx < 4; ++indx) {
                     switch (indx) {
                         case 0:
                             id = cells[1].childNodes[0].id;
                             elem = document.getElementById(id);
-                            selectOptionInCell(elem, ins.OP);
+                            selectOptionInCell(elem, opName);
                             break;
 
                         case 1:
@@ -703,10 +773,10 @@
         }
 
 
-        function getOperandValue(instruction){
-            var src1=instruction.Src1;
+        function getOperandValue(instruction) {
+            var src1 = instruction.Src1;
             var src2 = instruction.Src2;
-            
+
         }
 
 
@@ -719,11 +789,13 @@
             document.getElementById("rsAntBox").style.display = "none";
             document.getElementById("ratAntBox").style.display = "none";
             var depBtns = document.querySelectorAll(".cDependendencyBtn");
-
+            depBtns.forEach(element => {
+                element.style.display = "block";
+            });
             var instructions = collectInstructionsFromUI();
 
             var branchIndx = checkForBranch(instructions);
-            if(branchIndx){
+            if (branchIndx) {
                 getOperandValue(instructions[branchIndx]);
             }
 
@@ -736,12 +808,12 @@
                 ||
                 ((unitsSize == undefined) || (unitsSize.length == 0))
             ) {
-               
-                document.getElementById('modalTop').style.display="block";
+
+                document.getElementById('modalTop').style.display = "block";
                 document.querySelector(".modalFormContent").style.display = "block";
-                
+
                 var modalBody = document.querySelector(".modalBody");
-                modalBody.innerHTML="";
+                modalBody.innerHTML = "";
                 var textNode = document.createTextNode("Can not proceed because of input instruction or configuration empty");
                 modalBody.appendChild(textNode);
                 return;

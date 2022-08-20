@@ -11,9 +11,9 @@ OPDictionary = {
     "div": ["div.d", "div", "divd", "ddiv"],
     "ld": ["ld.d", "ld", "l.d", "ldd", "dld"],
     "sd": ["sd.d", "sd", "sdd", "dsd", "s.d"],
-    "bne":["BNEQ"],
-    "beqz":["BEQZ"],
-    "bnez":["BNEZ"]
+    "bne": ["BNEQ", "bne"],
+    "beqz": ["BEQZ", "beqz"],
+    "bnez": ["BNEZ", "bnez"]
 }
 Object.freeze(OPDictionary);
 
@@ -24,9 +24,9 @@ const OPType = {
     "div": 3,
     "ld": 4,
     "sd": 5,
-    "bne":6,
-    "beqz":7,
-    "bnez":8
+    "bne": 6,
+    "beqz": 7,
+    "bnez": 8
 };
 Object.freeze(OPType);
 
@@ -34,7 +34,7 @@ const OPClass = {
     "Integer": [OPType.add, OPType.sub],
     "Multiplier": [OPType.mul, OPType.div],
     "Loader": [OPType.ld, OPType.sd],
-    "Branch":[OPType.bne, OPType.beqz, OPType.bnez]
+    "Branch": [OPType.bne, OPType.beqz, OPType.bnez]
 };
 Object.freeze(OPClass);
 
@@ -46,9 +46,9 @@ OP2RSName = {
     "div": "FPMul",
     "ld": "FPLd",
     "sd": "FPLd",
-    "bne":"Branch",
-    "beqz":"Branch",
-    "bnez":"Branch"
+    "bne": "Branch",
+    "beqz": "Branch",
+    "bnez": "Branch"
 }
 Object.freeze(OP2RSName);
 
@@ -158,10 +158,26 @@ function getRSType(opName) {
         opType == OPType.div) {
         return RSType.FPMul;
     }
-    else if ((opType == OPType.ld)||
-            (opType == OPType.sd)) {
+    else if ((opType == OPType.ld) ||
+        (opType == OPType.sd)) {
         return RSType.FPLd;
     }
+}
+
+function getOPClass(opName) {
+    let opType = getOPType(opName);
+    var keys = Object.keys(OPClass);
+
+    for (let i = 0; i < keys.length; i++) {
+        let values = OPClass[keys[i]];
+        for (let j = 0; j < values.length; ++j) {
+            if (values[j] == opType) {
+                return keys[i];
+            }
+        }
+    }
+
+    return undefined;
 }
 
 
