@@ -154,6 +154,9 @@ function collectInstructionsFromUI() {
         let row = tBody.rows[rIndx];
         let ins = {};
         for (let cIndx = 1; cIndx < row.cells.length - 1; ++cIndx) {
+            if(!row.cells[cIndx].hasChildNodes()){
+                continue;
+            }
             let id = row.cells[cIndx].childNodes[0].id;
             let elem = document.getElementById(id);
             let val = elem.options[elem.selectedIndex].text;

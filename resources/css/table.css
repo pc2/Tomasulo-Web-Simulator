@@ -16,7 +16,7 @@ table th {
 }
 
 table td {
-  width: 10%;
+  width: 70%;
   padding: .2%;
   text-align: center;
   font-family: "Lucida Console", "Courier New", monospace;
@@ -33,4 +33,8 @@ table tr {
 
 #FUnitsCycleTable td {
   height: 40%;
+}
+
+#rowButton{
+  margin-left: 40%;
 }

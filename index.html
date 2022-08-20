@@ -458,7 +458,7 @@
 
             let row = document.createElement("tr");
             let rIndx = rowCount;
-            for (let indx = 0; indx < 7; ++indx) {
+            for (let indx = 0; indx < 6; ++indx) {
                 let cell = document.createElement("td");
                 let value = undefined;
                 switch (indx) {
@@ -480,10 +480,8 @@
                     case 4:
                         value = addRegSelectOption("Src2" + "-" + rIndx);
                         break;
+
                     case 5:
-                        value = addLevelOption("Level" + "-" + rIndx);
-                        break;
-                    case 6:
                         value = document.createElement("button");
                         value.id = "rowButton";
                         value.innerHTML = '<img src="resources/images/icons/delete.png">';
@@ -493,7 +491,10 @@
                         break;
                 }
 
-                cell.appendChild(value);
+               
+                
+                    cell.appendChild(value);
+                
 
 
                 row.appendChild(cell);
@@ -507,7 +508,7 @@
 
             let cell;
             let row = document.createElement("tr");
-            for (let indx = 0; indx < 6; ++indx) {
+            for (let indx = 0; indx < 5; ++indx) {
                 cell = document.createElement("td");
                 row.appendChild(cell);
             }
@@ -921,7 +922,7 @@
         function showInputTable() {
             var inputTable = document.getElementById("insInputTable");
             var tBody = inputTable.tBodies[0];
-            var hdrList = ["#", "OP", "Dest", "Src1", "Src2", "", ""];
+            var hdrList = ["#", "OP", "Dest", "Src1", "Src2", ""];
             completeTableCreation("insInputTable", hdrList);
             createBtnsRow(tBody);
         }
