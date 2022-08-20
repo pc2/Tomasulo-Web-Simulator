@@ -105,6 +105,43 @@ function LoadFromFile(e) {
 
 }
 
+
+function getLoopBodyOnly(instruction){
+
+   var loopLevel=undefined;
+   var loopBranchLevel= undefined;
+
+
+    for(let indx=0; indx < instruction.length; ++indx){
+        
+        if(instruction.Level.length != 0){
+            loopLevel = instruction.Level;  
+        }
+        
+        if(getOp2RSName(instruction.OP) ==OPClass.Branch){
+            loopBranchLevel=instruction.Level;
+            var levelName = loopBranchLevel.split("_")[1];
+            if(levelName == loopLevel){
+                break;
+            }
+            else{
+                continue;
+            }
+        }
+    }
+
+}
+
+
+function checkForBranch(instruction){
+    for(let indx=1; indx < instruction.length; ++indx){
+        if(getOp2RSName(instruction.OP) ==OPClass.Branch){
+            return indx;
+        }
+    }
+    return false;
+}
+
 function collectInstructionsFromUI() {
 
     var inputTable = document.getElementById("insInputTable");
@@ -123,8 +160,6 @@ function collectInstructionsFromUI() {
         }
         instructions.push(ins);
     }
-
-
 
     return instructions;
 

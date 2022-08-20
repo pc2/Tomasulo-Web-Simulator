@@ -395,7 +395,7 @@
 
             var selectList = document.createElement("select");
             selectList.id = id;
-            var OPList = ["", "L_1", "L_2", "L_3", "Jmp_L1", "Jmp_L2", "Jmp_L3"]
+            var OPList = ["", "L1", "L2", "L3", "Jmp_L1", "Jmp_L2", "Jmp_L3"]
             for (var i = 0; i < OPList.length; i++) {
                 var option = document.createElement("option");
                 option.value = id + OPList[i];
@@ -470,7 +470,7 @@
                         value = addRegSelectOption("Src2" + "-" + rIndx);
                         break;
                     case 5:
-                        value = addLevelOption("Loop" + "-" + rIndx);
+                        value = addLevelOption("Level" + "-" + rIndx);
                         break;
                     case 6:
                         value = document.createElement("button");
@@ -690,6 +690,12 @@
             showCycle(0);
         }
 
+        function getOperandValue(instruction){
+            var src1=instruction.Src1;
+            var src2 = instruction.Src2;
+            
+        }
+
         function submitInput() {
             document.getElementById("wLoadAntBox").style.display = "none";
             document.getElementById("rsAntBox").style.display = "none";
@@ -701,6 +707,10 @@
 
 
             var instructions = collectInstructionsFromUI();
+            var branchIndx = checkForBranch(instructions);
+            if(branchIndx){
+                getOperandValue(instructions[branchIndx]);
+            }
             var execCycles = collectExecCycleFromUI();
             var unitsSize = collectUnitsSizeFromUI();
 
