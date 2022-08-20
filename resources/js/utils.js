@@ -10,7 +10,10 @@ OPDictionary = {
     "mul": ["mul.d", "mul", "muld", "dmul"],
     "div": ["div.d", "div", "divd", "ddiv"],
     "ld": ["ld.d", "ld", "l.d", "ldd", "dld"],
-    "sd": ["sd.d", "sd", "sdd", "dsd", "s.d"]
+    "sd": ["sd.d", "sd", "sdd", "dsd", "s.d"],
+    "bne":["BNEQ"],
+    "beqz":["BEQZ"],
+    "bnez":["BNEZ"]
 }
 Object.freeze(OPDictionary);
 
@@ -20,14 +23,18 @@ const OPType = {
     "mul": 2,
     "div": 3,
     "ld": 4,
-    "sd": 5
+    "sd": 5,
+    "bne":6,
+    "beqz":7,
+    "bnez":8
 };
 Object.freeze(OPType);
 
 const OPClass = {
     "Integer": [OPType.add, OPType.sub],
     "Multiplier": [OPType.mul, OPType.div],
-    "Loader": [OPType.ld, OPType.sd]
+    "Loader": [OPType.ld, OPType.sd],
+    "Branch":[OPType.bne, OPType.beqz, OPType.bnez]
 };
 Object.freeze(OPClass);
 
@@ -38,7 +45,10 @@ OP2RSName = {
     "mul": "FPMul",
     "div": "FPMul",
     "ld": "FPLd",
-    "sd": "FPLd"
+    "sd": "FPLd",
+    "bne":"Branch",
+    "beqz":"Branch",
+    "bnez":"Branch"
 }
 Object.freeze(OP2RSName);
 
