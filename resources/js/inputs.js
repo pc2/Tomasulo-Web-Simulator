@@ -90,6 +90,7 @@ function LoadFromFile(e) {
         reader.onload = function (progressEvent) {
             console.log(reader.result);
             let instructions = parseInstructions(reader.result);
+            //validate(instructions);
             if (instructions != undefined) {
                 showAutoSelectionTable(instructions);
                 //generateENV(instructions);
