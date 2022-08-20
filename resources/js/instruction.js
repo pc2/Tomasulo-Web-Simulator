@@ -48,6 +48,7 @@ class Instruction {
         } else {
             this.dest = instruction.Dest;
         }
+
     }
 
     resetCycles() {

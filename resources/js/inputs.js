@@ -90,6 +90,7 @@ function LoadFromFile(e) {
         reader.onload = function (progressEvent) {
             console.log(reader.result);
             let instructions = parseInstructions(reader.result);
+            //validate(instructions);
             if (instructions != undefined) {
                 showAutoSelectionTable(instructions);
                 //generateENV(instructions);
@@ -135,7 +136,7 @@ function getLoopBodyOnly(instruction){
 
 function checkForBranch(instruction){
     for(let indx=1; indx < instruction.length; ++indx){
-        if(getOp2RSName(instruction.OP) ==OPClass.Branch){
+        if(getOp2RSName(instruction[indx].OP) ==OPClass.Branch){
             return indx;
         }
     }

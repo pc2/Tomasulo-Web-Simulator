@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="resources/css/main.css" />
     <link rel="stylesheet" href="resources/css/table.css" />
     <link rel="stylesheet" href="resources/css/layout.css" />
+    <link rel="stylesheet" href="resources/css/modal.css" />
     <link rel="stylesheet" href="resources/css/inputWindow.css" />
 
     <script src="resources/jsLibrary/loadash.js"></script>
@@ -42,6 +43,19 @@
                 <h2>Tomasulo-Simulator</h2>
             </div>
 
+            <div id="modalTop" class="modal">
+                <button onclick="closeModal()" class="close" title="Close Modal"><img class="closeBtn"
+                        src="resources/images/icons/close.png"></button>
+
+                    <form class="modalFormContent">
+                        <div class="modalFormContainer" id="modalFormContainerID">
+                            <div class="modalBody" id="modalBodyID"></div>
+                            <div class="modalButtons" id="modalButtonsID"></div>
+                        </div>
+                    </form>
+                
+            </div>
+            <!--modal end-->
             <div id="lContainer" class="cLContainer">
 
                 <div id="inputContainer" class="cInputContainer">
@@ -289,9 +303,6 @@
 
                 </div>
             </div>
-
-
-
         </div>
     </div>
 
@@ -690,10 +701,16 @@
             showCycle(0);
         }
 
+
         function getOperandValue(instruction){
             var src1=instruction.Src1;
             var src2 = instruction.Src2;
             
+        }
+
+
+        function closeModal() {
+            document.getElementById('modalTop').style.display = 'none';
         }
 
         function submitInput() {
@@ -701,16 +718,14 @@
             document.getElementById("rsAntBox").style.display = "none";
             document.getElementById("ratAntBox").style.display = "none";
             var depBtns = document.querySelectorAll(".cDependendencyBtn");
-            depBtns.forEach(element => {
-                element.style.display = "block";
-            });
-
 
             var instructions = collectInstructionsFromUI();
+
             var branchIndx = checkForBranch(instructions);
             if(branchIndx){
                 getOperandValue(instructions[branchIndx]);
             }
+
             var execCycles = collectExecCycleFromUI();
             var unitsSize = collectUnitsSizeFromUI();
 
@@ -720,7 +735,14 @@
                 ||
                 ((unitsSize == undefined) || (unitsSize.length == 0))
             ) {
-                console.error("Can not proceed because of input configuration empty");
+               
+                document.getElementById('modalTop').style.display="block";
+                document.querySelector(".modalFormContent").style.display = "block";
+                
+                var modalBody = document.querySelector(".modalBody");
+                modalBody.innerHTML="";
+                var textNode = document.createTextNode("Can not proceed because of input instruction or configuration empty");
+                modalBody.appendChild(textNode);
                 return;
             }
 

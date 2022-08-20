@@ -1,0 +1,127 @@
+button:hover {
+  opacity: 1;
+}
+
+#modalTop {
+  display: none;
+  /* Hidden by default */
+  position: fixed;
+  /* Stay in place */
+  z-index: 1;
+  /* Sit on top */
+  top: 16%;
+  left: 34%;
+  width: 35%;
+  height: 23%;
+  border: 2px solid rgb(18, 122, 114);
+  overflow: hidden;
+  overflow-y: scroll;
+  background-color: rgb(177, 203, 198);
+}
+
+/* Modal Content/Box */
+.modalFormContent {
+  position: relative;
+  background-color: #e9f6f6;
+ 
+
+}
+
+/* Add padding and center-align text to the container */
+.modalFormContainer {
+  /* padding: 16px; */
+  text-align: center;
+  overflow: hidden;
+}
+
+/* The Modal Close Button (x) */
+
+.close {
+  z-index: 100;
+  position: relative;
+  width: 3vw;
+  height: 3vw;
+  left: 91%;
+  border-radius: 50%;
+  border: 3px solid rgb(207, 21, 21);
+
+
+  opacity: .5;
+}
+
+.close .closeBtn {
+  position: relative;
+  float: right;
+  height: 100%;
+  width: 100%;
+  margin: auto;
+
+
+}
+
+.modal .close .closeBtn::after {
+  border: none;
+  border-bottom: 2px solid steelblue;
+  box-shadow: 0px 1px 5px grey;
+  background: linear-gradient(#55480f, #6f8315);
+  color: #FFF;
+}
+
+
+
+.close:hover,
+.close:focus {
+  color: #f44336;
+  cursor: pointer;
+}
+
+.close:active {
+  border: none;
+  border-bottom: 2px solid steelblue;
+  box-shadow: 0px 1px 5px grey;
+  background: linear-gradient(#8f124c, #a31035);
+  color: #FFF;
+}
+
+/*    */
+
+
+/* The modal back button (<<) */
+
+.modal .back {
+  z-index: 100;
+  position: fixed;
+  left: 1vw;
+  top: 1vw;
+  width: 5vw;
+  height: 5vw;
+  background-color: white;
+  border-radius: 50%;
+  border: 1px solid black;
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  filter: alpha(opacity=50);
+  opacity: .5;
+}
+
+.modal .back .backBtn {
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  margin: auto;
+  padding: 25%;
+}
+
+.back:hover,
+.back:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+  filter: alpha(opacity=70);
+  opacity: .7;
+}
+
+/* */
