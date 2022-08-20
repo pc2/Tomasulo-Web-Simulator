@@ -23,25 +23,20 @@ button:hover {
 .modalFormContent {
   position: relative;
   background-color: #e9f6f6;
- 
-
-}
-
-/* Add padding and center-align text to the container */
-.modalFormContainer {
-  /* padding: 16px; */
-  text-align: center;
   overflow: hidden;
+  float: left;
+
 }
+
 
 /* The Modal Close Button (x) */
 
 .close {
   z-index: 100;
   position: relative;
-  width: 3vw;
-  height: 3vw;
-  left: 91%;
+  width: 2vw;
+  height: 2vw;
+  left: 93%;
   border-radius: 50%;
   border: 3px solid rgb(207, 21, 21);
 
@@ -122,6 +117,19 @@ button:hover {
   cursor: pointer;
   filter: alpha(opacity=70);
   opacity: .7;
+}
+
+.modalFormContent .srcValue{
+  position: relative;
+  width: 30%;
+  background-color: red;
+  padding:10px;
+  margin:10px 0;
+  float: left; 
+}
+
+#input4Reg{
+  left: 30%
 }
 
 /* */

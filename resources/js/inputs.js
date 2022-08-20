@@ -28,6 +28,15 @@ function getSrc(ins, OperandNumber = 1) {
     return src;
 }
 
+function isScalerRegister(reg){
+    if( (reg.startsWith("S") ||
+    reg.startsWith("+") || 
+    reg.startsWith("-")) ){
+            return true;
+    }
+    return false;
+}
+
 function parseInstructions(content) {
     var insLines = content.split("\n");
 
@@ -105,6 +114,36 @@ function LoadFromFile(e) {
     input.click();
 
 }
+
+function getLoopBodyOnly(instruction){
+
+   var loopLevel=undefined;
+   var loopBranchLevel= undefined;
+
+
+    for(let indx=0; indx < instruction.length; ++indx){
+        
+        if(instruction.Level.length != 0){
+            loopLevel = instruction.Level;  
+        }
+        
+        if(getOp2RSName(instruction.OP) ==OPClass.Branch){
+            loopBranchLevel=instruction.Level;
+            var levelName = loopBranchLevel.split("_")[1];
+            if(levelName == loopLevel){
+                break;
+            }
+            else{
+                continue;
+            }
+        }
+    }
+
+}
+
+
+
+
 
 function collectInstructionsFromUI() {
 

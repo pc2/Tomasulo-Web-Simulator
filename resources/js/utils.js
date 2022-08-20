@@ -10,7 +10,10 @@ OPDictionary = {
     "mul": ["mul.d", "mul", "muld", "dmul"],
     "div": ["div.d", "div", "divd", "ddiv"],
     "ld": ["ld.d", "ld", "l.d", "ldd", "dld"],
-    "sd": ["sd.d", "sd", "sdd", "dsd", "s.d"]
+    "sd": ["sd.d", "sd", "sdd", "dsd", "s.d"],
+    "bne":["BNEQ","bne"],
+    "beqz":["BEQZ","beqz"],
+    "bnez":["BNEZ","bnez"]
 }
 Object.freeze(OPDictionary);
 
@@ -45,7 +48,7 @@ Object.freeze(OP2RSName);
 const RSType = {
     "FPLd": 0,
     "FPAdd": 1,
-    "FPMul": 2,
+    "FPMul": 2
 };
 Object.freeze(RSType);
 
