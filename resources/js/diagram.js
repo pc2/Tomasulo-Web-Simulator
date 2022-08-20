@@ -218,10 +218,10 @@ function drawDependency(theCanvas, dependency, dependencyType) {
         drawDepGraph(context, dependency, "raw", startX, (70 + radius / 2), radius, distance, '#e6194B');
     }
     if (dependencyType == "war" || dependencyType == "") {
-        drawDepGraph(context, dependency, "war", startX, (70 + radius / 2), radius, distance, '#f58231');
+        drawDepGraph(context, dependency, "war", startX, (70 + radius / 2), radius, distance, '#c2da2c');
     }
     if (dependencyType == "waw" || dependencyType == "") {
-        drawDepGraph(context, dependency, "waw", startX, (70 + radius / 2), radius, distance, '#9A6324');
+        drawDepGraph(context, dependency, "waw", startX, (70 + radius / 2), radius, distance, '#e49d6a');
 
     }
 }

@@ -137,11 +137,11 @@ class ProcessManager {
             let dest, src1, src2;
             if (ins.type == OPType.sd) {
                 dest = ins.getFirstOperand();
-                src1= ins.getDestOperand();
+                src1 = ins.getDestOperand();
             } else {
                 dest = ins.getDestOperand();
-                src1= ins.getFirstOperand();
-             }
+                src1 = ins.getFirstOperand();
+            }
             src2 = ins.getSecOperand();
 
             wLoadList.push({
@@ -201,7 +201,7 @@ class ProcessManager {
                 "Vk": (rsbuf.Vk == undefined || rsbuf.Vk == 0) ? "" : rsbuf.Vk,
                 "Qj": (rsbuf.Qj == undefined || rsbuf.Qj == 0) ? "" : rsbuf.Qj,
                 "Qk": (rsbuf.Qk == undefined || rsbuf.Qk == 0) ? "" : rsbuf.Qk,
-                "Address":(rsbuf.Address == undefined) ? "" : rsbuf.Address,
+                "Address": (rsbuf.Address == undefined) ? "" : rsbuf.Address,
                 "Color": this.getInsColor(rsbuf.insHash)
             });
         });
@@ -238,6 +238,85 @@ class ProcessManager {
 
     hasInstruction(opTypes) {
         return this.resourceMgt.hasInstruction(opTypes);
+    }
+
+
+    findRAWDependency(wload, curIndx) {
+        var rawDep = [];
+
+        for (let indx = curIndx + 1; indx < wload.length; ++indx) {
+            if (
+                (wload[curIndx].dest == wload[indx].srcFirst) ||
+                (wload[curIndx].dest == wload[indx].srcSecond)
+            ) {
+                rawDep.push(wload[indx].getID());
+            }
+        }
+
+        return rawDep;
+    }
+
+    findOutputDependency(wload, curIndx) {
+        var wawDep = [];
+
+        for (let indx = curIndx + 1; indx < wload.length; ++indx) {
+            if (wload[curIndx].dest == wload[indx].dest) {
+                wawDep.push(wload[indx].getID());
+            }
+        }
+        return wawDep;
+
+    }
+
+    findAntiDependency(wload, curIndx) {
+        var warDep = [];
+
+        for (let indx = curIndx + 1; indx < wload.length; ++indx) {
+            if ((wload[curIndx].srcFirst == wload[indx].dest) ||
+                (wload[curIndx].srcSecond == wload[indx].dest)) {
+                warDep.push(wload[indx].getID());
+            }
+        }
+
+        return warDep;
+    }
+    /**
+     * {
+     *  ins_id_0 : [ins_id_1, ins_id_2, ins_id_3]
+     *  ins_id_2 : [ins_id_1, ins_id_2, ins_id_3]
+     * }
+     *[
+        ins_id_0:{
+        raw: id_2
+        waw: id_3,
+        war:0
+        },
+        
+        ins_id_0:{
+        raw: id_2
+        waw: id_3,
+        war:0
+        }
+     }
+     */
+
+    calculateDependency() {
+        var dependencyList = [];
+        var wLoads = this.resourceMgt.getWLoads();
+
+
+        wLoads.forEach(function (element, indx) {
+            let dependencyforId = {
+                "posAt": indx,
+                "insId": element.getID(),
+                "color": element.color,
+                "raw": this.findRAWDependency(wLoads, indx),
+                "war": this.findAntiDependency(wLoads, indx),
+                "waw": this.findOutputDependency(wLoads, indx)
+            }
+            dependencyList.push(dependencyforId)
+        }, this);
+        return dependencyList;
     }
 
     getInsAnnotationCount() {

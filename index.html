@@ -205,7 +205,7 @@
                             onclick="showRAW()">RAW</button>
                         <button class="cDependendencyBtn" style="background-color: #e49d6a;"
                             onclick="showWAW()">WAW</button>
-                        <button class="cDependendencyBtn" style="background-color: #e8b983;"
+                        <button class="cDependendencyBtn" style="background-color: #c2da2c;"
                             onclick="showWAR()">WAR</button>
 
 
@@ -387,14 +387,31 @@
                     intro: 'Register address table; value denotes which FU will write to which register ',
                     position: 'left'
                 },]
-        }).start();
+        });//.start();
+
+
+
+        function addLevelOption(id) {
+
+            var selectList = document.createElement("select");
+            selectList.id = id;
+            var OPList = ["", "L_1", "L_2", "L_3", "Jmp_L1", "Jmp_L2", "Jmp_L3"]
+            for (var i = 0; i < OPList.length; i++) {
+                var option = document.createElement("option");
+                option.value = id + OPList[i];
+                option.text = OPList[i];
+                selectList.appendChild(option);
+            }
+
+            return selectList;
+        }
 
         function addRegSelectOption(id) {
             var selectList = document.createElement("select");
             selectList.id = id;
-            var regValue = Array(15).fill('S').map((x, y) => (x + y));
-            var regNumeric = [...Array(15).fill('F').map((x, y) => (x + y)),
-            ...Array(10).fill('+').map((x, y) => (x + (3 * y + 30)))];
+            var regValue = Array(32).fill('S').map((x, y) => (x + y));
+            var regNumeric = [...Array(32).fill('F').map((x, y) => (x + y)),
+            ...Array(10).fill('+').map((x, y) => (x + (3 * y)))];
             var regValueList = [...regNumeric, ...regValue];
 
             for (var i = 0; i < regValueList.length; i++) {
@@ -430,7 +447,7 @@
 
             let row = document.createElement("tr");
             let rIndx = rowCount;
-            for (let indx = 0; indx < 6; ++indx) {
+            for (let indx = 0; indx < 7; ++indx) {
                 let cell = document.createElement("td");
                 let value = undefined;
                 switch (indx) {
@@ -453,6 +470,9 @@
                         value = addRegSelectOption("Src2" + "-" + rIndx);
                         break;
                     case 5:
+                        value = addLevelOption("Loop" + "-" + rIndx);
+                        break;
+                    case 6:
                         value = document.createElement("button");
                         value.id = "rowButton";
                         value.innerHTML = '<img src="resources/images/icons/delete.png">';
@@ -463,6 +483,8 @@
                 }
 
                 cell.appendChild(value);
+
+
                 row.appendChild(cell);
             }
             tableElem.appendChild(row);
@@ -474,7 +496,7 @@
 
             let cell;
             let row = document.createElement("tr");
-            for (let indx = 0; indx < 5; ++indx) {
+            for (let indx = 0; indx < 6; ++indx) {
                 cell = document.createElement("td");
                 row.appendChild(cell);
             }
@@ -628,20 +650,20 @@
 
         function showRAW() {
             var wloadContent = mgtCtr.getWLoadContent();
-            var dependencyList = calculateDependency(wloadContent);
+            var dependencyList = mgtCtr.calculateDependency();
             drawDependencyGraph(dependencyList, "raw");
         }
 
         function showWAW() {
             var wloadContent = mgtCtr.getWLoadContent();
-            var dependencyList = calculateDependency(wloadContent);
-            drawDependencyGraph(dependencyList, "war");
+            var dependencyList = mgtCtr.calculateDependency();
+            drawDependencyGraph(dependencyList, "waw");
         }
 
         function showWAR() {
             var wloadContent = mgtCtr.getWLoadContent();
-            var dependencyList = calculateDependency(wloadContent);
-            drawDependencyGraph(dependencyList, "waw");
+            var dependencyList = mgtCtr.calculateDependency();
+            drawDependencyGraph(dependencyList, "war");
         }
 
         function drawDependencyGraph(dependencyList, dependencyType = "") {
@@ -695,15 +717,14 @@
 
             generateENV(instructions, execCycles, unitsSize);
             TabSelection("Workload");
-            var wloadContent = mgtCtr.getWLoadContent();
-            var dependencyList = calculateDependency(wloadContent);
-
+            var dependencyList = mgtCtr.calculateDependency();
+            drawDependencyGraph(dependencyList);
             var unitsSize = collectUnitsSizeFromUI();
             var IQContent = mgtCtr.getIQContent();
             var rsContent = mgtCtr.getRSContent();
             var fpContent = mgtCtr.getFPContent();
             let insColors = mgtCtr.getAllInsColor();
-            drawDependencyGraph(dependencyList);
+
             showCanvas(unitsSize, IQContent, rsContent, fpContent, insColors);
         }
 
@@ -868,7 +889,7 @@
         function showInputTable() {
             var inputTable = document.getElementById("insInputTable");
             var tBody = inputTable.tBodies[0];
-            var hdrList = ["#", "OP", "Dest", "Src1", "Src2", ""];
+            var hdrList = ["#", "OP", "Dest", "Src1", "Src2", "", ""];
             completeTableCreation("insInputTable", hdrList);
             createBtnsRow(tBody);
         }
