@@ -24,11 +24,11 @@ class Register {
 
 
 class RAT {
-    constructor(number, type=RegType.Float) {
-        if(type == RegType.Scaler){
+    constructor(number, type = RegType.Float) {
+        if (type == RegType.Scaler) {
             this.rtTable = Array(number).fill('S').map((x, y) => new Register(x + y, y));
         }
-        else{
+        else {
             this.rtTable = Array(number).fill('F').map((x, y) => new Register(x + y, 'M' + y));
         }
     }
@@ -94,21 +94,13 @@ class RAT {
             "type": type,
             "value": ret
         }
-    }    
+    }
 
-    updateScalerRat(reg, value){
+    updateScalerRat(reg, value) {
         for (let i = 0; i < this.rtTable.length; ++i) {
             if (this.rtTable[i].name == reg) {
-                if (value != 0) {
-                    this.rtTable[i].Qi = value;
-                    return this.rtTable[i].Qi;
-
-                }
-                else {
-                    this.rtTable[i].Qi = this.rtTable[i].valueReg;
-                    return this.rtTable[i].Qi;
-
-                }
+                this.rtTable[i].Qi = value;
+                return this.rtTable[i].Qi;
             }
         }
     }

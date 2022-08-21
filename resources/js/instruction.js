@@ -28,7 +28,15 @@ class Instruction {
         );
     }
     updateOperand(type, instruction) {
-        var dest;
+        
+        if(type == OPType.sd &&
+            instruction.Dest.startsWith("S") && 
+            instruction.Src1.startsWith("F")) {
+                this.srcFirst = instruction.Src1;
+                this.srcSecond = instruction.Src2;
+                this.dest = instruction.Dest;
+                return;
+        }
         if (this.findIntegerOperand(instruction.Src1)) {
             this.srcFirst = instruction.Src2;
             this.srcSecond = instruction.Src1;

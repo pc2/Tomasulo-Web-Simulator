@@ -1,32 +1,32 @@
 
-function getDest(ins) {
-    var dest;
-    if (getOPType(ins.OP) == OPType.sd) {
-        dest = Number.isInteger(
-            parseInt(ins.Src1)
-        ) ? ins.Src2 : ins.Src1;
-    } else {
-        dest = ins.Dest;
-    }
+// function getDest(ins) {
+//     var dest;
+//     if (getOPType(ins.OP) == OPType.sd) {
+//         dest = Number.isInteger(
+//             parseInt(ins.Src1)
+//         ) ? ins.Src2 : ins.Src1;
+//     } else {
+//         dest = ins.Dest;
+//     }
 
-    return dest;
-}
+//     return dest;
+// }
 
-function getSrc(ins, OperandNumber = 1) {
-    var src;
-    if (getOPType(ins.OP) == OPType.sd) {
-        src = ins.Dest;
-    } else {
-        if (OperandNumber == 1) {
-            src = ins.Src1;
-        }
-        else {
-            src = ins.Src2;
-        }
-    }
+// function getSrc(ins, OperandNumber = 1) {
+//     var src;
+//     if (getOPType(ins.OP) == OPType.sd) {
+//         src = ins.Dest;
+//     } else {
+//         if (OperandNumber == 1) {
+//             src = ins.Src1;
+//         }
+//         else {
+//             src = ins.Src2;
+//         }
+//     }
 
-    return src;
-}
+//     return src;
+// }
 
 function isScalerRegister(reg) {
     if ((reg.startsWith("S") ||
@@ -66,10 +66,32 @@ function parseInstructions(content) {
     return insList;
 }
 
+
+function LoopTestCase_1() {
+    var instructions = [
+        { OP: 'l.d', Dest: 'f0', Src1: '0', Src2: 's1' },
+        { OP: 'mul.d', Dest: 'f4', Src1: 'f0', Src2: 'f2' },
+        { OP: 's.d', Dest: 'f4', Src1: '0', Src2: 's1' },
+        { OP: 'add.d', Dest: 's1', Src1: 's1', Src2: '-8' },
+        { OP: 'bneq', Dest: 's1', Src1: 's2', Src2: '1' },
+    ]
+    showAutoSelectionTable(instructions);
+}
+function LoadTestCase_1() {
+    var instructions = [
+        { OP: 'l.d', Dest: 'f6', Src1: '+4', Src2: 's2' },
+        { OP: 'l.d', Dest: 'f2', Src1: '+5', Src2: 's3' },
+        { OP: 'mul.d', Dest: 'f0', Src1: 'f2', Src2: 'f4' },
+        { OP: 'sub.d', Dest: 'f8', Src1: 'f6', Src2: 'f2' },
+        { OP: 'add.d', Dest: 's1', Src1: 's1', Src2: '-8' },
+        { OP: 'bneq', Dest: 's1', Src1: 's2', Src2: '1' }
+    ]
+    showAutoSelectionTable(instructions);
+}
 function LoadTestCase_2() {
     var instructions = [
-        { OP: 'l.d', Dest: 'f6', Src1: '34+', Src2: 's2' },
-        { OP: 'l.d', Dest: 'f2', Src1: '45+', Src2: 's3' },
+        { OP: 'l.d', Dest: 'f6', Src1: '+4', Src2: 's2' },
+        { OP: 'l.d', Dest: 'f2', Src1: '+5', Src2: 's3' },
         { OP: 'mul.d', Dest: 'f0', Src1: 'f2', Src2: 'f4' },
         { OP: 'sub.d', Dest: 'f8', Src1: 'f6', Src2: 'f2' },
         { OP: 'div.d', Dest: 'f10', Src1: 'f0', Src2: 'f6' },
@@ -78,7 +100,7 @@ function LoadTestCase_2() {
     showAutoSelectionTable(instructions);
 }
 
-function LoadTestCase_1() {
+function LoadTestCase_3() {
     var instructions = [
         { OP: 'div.d', Dest: 'f0', Src1: 'f2', Src2: 'f4' },
         { OP: 'add.d', Dest: 'f6', Src1: 'f0', Src2: 'f8' },

@@ -11,7 +11,7 @@ OPDictionary = {
     "div": ["div.d", "div", "divd", "ddiv"],
     "ld": ["ld.d", "ld", "l.d", "ldd", "dld"],
     "sd": ["sd.d", "sd", "sdd", "dsd", "s.d"],
-    "bne": ["BNEQ", "bne"],
+    "bneq": ["BNEQ", "bneq"],
     "beqz": ["BEQZ", "beqz"],
     "bnez": ["BNEZ", "bnez"]
 
@@ -25,7 +25,7 @@ const OPType = {
     "div": 3,
     "ld": 4,
     "sd": 5,
-    "bne": 6,
+    "bneq": 6,
     "beqz": 7,
     "bnez": 8
 };
@@ -35,7 +35,7 @@ const OPClass = {
     "Integer": [OPType.add, OPType.sub],
     "Multiplier": [OPType.mul, OPType.div],
     "Loader": [OPType.ld, OPType.sd],
-    "Branch": [OPType.bne, OPType.beqz, OPType.bnez]
+    "Branch": [OPType.bneq, OPType.beqz, OPType.bnez]
 };
 Object.freeze(OPClass);
 
@@ -47,7 +47,7 @@ OP2RSName = {
     "div": "FPMul",
     "ld": "FPLd",
     "sd": "FPLd",
-    "bne": "Branch",
+    "bneq": "Branch",
     "beqz": "Branch",
     "bnez": "Branch"
 }
@@ -201,7 +201,10 @@ function getStateName(type) {
 
 function isAddress(operand) {
     return !isNaN(operand) && isFinite(operand);
+}
 
+function isNumber(operand) {
+    return isAddress(operand);
 }
 
 function getRandomColor(insNumber) {

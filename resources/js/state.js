@@ -74,23 +74,13 @@ class Issue extends State {
         if (rstype == RSType.FPLd) {
             if (isAddress(parseInt(src1)) == true) {
                 address = src1;
-
                 src1 = undefined;
             }
             else {
                 address = src2;
-                src1 = dest;
                 src2 = undefined;
             }
 
-            if (instruction.getType() == OPType.sd) {
-                if (src1 == undefined) {
-                    src2 = dest;
-                }
-                else {
-                    src1 = dest;
-                }
-            }
             rsbuffer.Address = address;
         }
 

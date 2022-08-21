@@ -2,8 +2,10 @@ class ResourceManager {
     constructor() {
         this.rs = new RSUnits();
         this.rat = new RAT(32);
-        this.scalerRAT = new RAT(32,RegType.Scaler)
+        this.scalerRAT = new RAT(32, RegType.Scaler)
         this.workloads = [];
+        this.loopBodyloads = [];
+        this.branchLoads = [];
     }
 
     initializeRS(unitsSize) {
@@ -17,14 +19,100 @@ class ResourceManager {
             return undefined;
         }
 
-        for (let index = 0; index < instructions.length; ++index) {
-            var color = getRandomColor(index);
-            var newIns = new Instruction(instructions[index],
-                execCycles[getUniqueOPName(instructions[index].OP)], color, index + 1);
+        let indx = 0;
+        for (indx = 0; indx < instructions.length; ++indx) {
+            var color = getRandomColor(indx);
+            if (getOPClass(instructions[indx].OP) == "Branch") {
+                break;
+            }
+
+            var newIns = new Instruction(instructions[indx],
+                execCycles[getUniqueOPName(
+                    instructions[indx].OP)], color, indx + 1);
             this.workloads.push(newIns);
         }
 
+        if (indx != instructions.length) {
+            this.workloads.pop();
+            this.loopBodyloads = _.cloneDeep(this.workloads);
+            --indx;
+            if (getOPClass(instructions[indx].OP) != "Integer") {
+                console.error("Instruction should be integer");
+                return;
+            }
+
+
+            var color = getRandomColor(indx);
+            var newIns = new Instruction(instructions[indx], 1, color, indx + 1);
+            this.branchLoads.push(newIns);
+
+            ++indx;
+            color = getRandomColor(indx);
+            newIns = new Instruction(instructions[indx], 1, color, indx + 1);
+            this.branchLoads.push(newIns);
+        }
+
         return 0;
+    }
+
+    expandWorkLoad() {
+        if (this.loopBodyloads.length == 0) {
+            return;
+        }
+        var loopIns = this.branchLoads[0];
+        var branchIns = this.branchLoads[1];
+
+        var src1 = loopIns.getFirstOperand();
+        var src1Value = parseInt(this.scalerRAT.getRATContent(src1));
+
+        if (!isNumber(src1Value)) {
+            src1Value = 0;
+        }
+
+        var src2Value = parseInt(loopIns.getSecOperand());
+        if (!isNumber(src2Value)) {
+            src2Value = 0;
+        }
+        var ratValue = src1Value + src2Value;
+        this.scalerRAT.updateScalerRat(src1, ratValue);
+        if (ratValue) {
+            console.log("increment or decrement operator value is negative");
+        }
+
+        var branchRegSrc1 = branchIns.getDestOperand();
+        var branchRegSrc2 = branchIns.getFirstOperand();
+        var level = branchIns.getSecOperand();
+
+        var branchRegValue = 0;
+        if (src1 == branchRegSrc1) {
+            branchRegValue = parseInt(this.scalerRAT.getRATContent(branchRegSrc2));
+        }
+        else if (src1 == branchRegSrc2) {
+            branchRegValue = parseInt(this.scalerRAT.getRATContent(branchRegSrc1));
+        }
+        var expandFlag = false;
+        if (branchIns.type == OPType.bneq) {
+            expandFlag = true;
+        }
+
+        var tempWorkLoad = _.cloneDeep(this.loopBodyloads);
+        var instructionLen = this.workloads.length;
+        if (expandFlag) {
+            for (let indx = 0; indx < tempWorkLoad.length; ++indx) {
+                let rawIns = {
+                    OP: tempWorkLoad[indx].getOperator(),
+                    Dest: tempWorkLoad[indx].getDestOperand(),
+                    Src1: tempWorkLoad[indx].getFirstOperand(),
+                    Src2: tempWorkLoad[indx].getSecOperand()
+                };
+
+                let insCycle = tempWorkLoad[indx].getCycle(INSCycles.ExecCycle);
+                let newInsLen = indx + instructionLen + 1;
+                let color = getRandomColor(newInsLen);
+                var newInstruction = new Instruction(rawIns, insCycle, color, newInsLen);
+                this.workloads.push(newInstruction);
+            }
+        }
     }
 
     reinitializeWLoad() {
@@ -52,7 +140,7 @@ class ResourceManager {
 
     reInitializeResource() {
         this.rat = new RAT(15);
-        this.scalerRAT = new RAT(5,RegType.Scaler);
+        this.scalerRAT = new RAT(5, RegType.Scaler);
         this.rs.resetRSUnits();
         this.reinitializeWLoad();
     }
@@ -74,10 +162,10 @@ class ResourceManager {
         return wLoad;
     }
 
-    getRAT(type=RegType.Float) {
-        if(type == RegType.Float){
+    getRAT(type = RegType.Float) {
+        if (type == RegType.Float) {
             return this.rat;
-        }else if(type == RegType.Scaler){
+        } else if (type == RegType.Scaler) {
             return this.scalerRAT;
         }
     }

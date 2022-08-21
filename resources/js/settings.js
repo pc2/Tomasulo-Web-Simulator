@@ -28,7 +28,7 @@ class Architecture {
 
     }
 
-    verifyInstruction(instruction){
+    verifyInstruction(instruction) {
         return true;
     }
 

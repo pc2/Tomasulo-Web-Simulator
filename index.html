@@ -79,7 +79,7 @@
                                 onclick="ShowFunitSettings()">Next</button>
 
                             <button class="cInstructionActionButton cLeftInputButton"
-                                onclick="LoadTestCase_1()">Test-01</button>
+                                onclick="LoopTestCase_1()">Test-01</button>
                             <button class="cInstructionActionButton cLeftInputButton"
                                 onclick="LoadTestCase_2()">Test-02</button>
 
@@ -452,8 +452,9 @@
 
             var insCounter = Array(128).fill().map((x, y) => y);
             var regValueList = [...regFloatValue, ...regIntValue];
-            var regallValues = [...regValueList, ...numValues];
-            var RegIntAndNumber = [...regIntValue, ...numValues, ...insCounter]
+            var RegIntAndNumber = [...regIntValue, ...numValues];
+            var regallValues = [...regValueList, ...numValues, ...insCounter];
+
 
             for (var i = 0; i < regallValues.length; i++) {
                 var option = document.createElement("option");
@@ -462,8 +463,8 @@
 
                 if (opClass == "Loader") {
                     if ((operandType == "Src2")) {
-                        option.value = id + numValues[i];
-                        option.text = numValues[i];
+                        option.value = id + RegIntAndNumber[i];
+                        option.text = RegIntAndNumber[i];
                     }
                 }
                 else if (opClass == "Branch") {
@@ -496,7 +497,7 @@
             selectList.addEventListener('change', function () {
                 updateInputTableOperand(id, rowElem);
             }, false);
-            var OPList = ["ADD", "SUB", "MUL", "DIV", "LD", "SD", "BNE"]
+            var OPList = ["ADD", "SUB", "MUL", "DIV", "LD", "SD", "BNEQ"]
 
             for (var i = 0; i < OPList.length; i++) {
                 var option = document.createElement("option");
@@ -588,9 +589,6 @@
 
         function selectOptionInCell(elem, value) {
             let options = elem.childNodes;
-            if (isAddress(parseInt(value)) == true) {
-                value = "+45";
-            }
             for (let indx = 0; indx < options.length; ++indx) {
 
                 if (options[indx].innerHTML.toLowerCase() == value) {
@@ -700,6 +698,10 @@
         }
 
         function handleMouseOver(rowId, color) {
+            console.log(rowId);
+            if (rowId.length == 0) {
+                return;
+            }
             var elements = document.querySelectorAll(("#" + rowId));
             elements.forEach(element => {
                 element.style.backgroundColor = color;
@@ -707,6 +709,9 @@
         }
 
         function handleMouseOut(rowId) {
+            if (rowId.length == 0) {
+                return;
+            }
 
             var elements = document.querySelectorAll(("#" + rowId));
             elements.forEach(element => {
@@ -730,6 +735,8 @@
             row.addEventListener('mouseover', () => handleMouseOver(rowId, color));
             row.addEventListener('mouseout', () => handleMouseOut(rowId));
             tBodyElem.appendChild(row);
+
+            return row;
         }
 
         function displayContents(contents) {
@@ -806,14 +813,14 @@
                 let src1 = document.getElementById("scalerRegSrc_1");
                 let src2 = document.getElementById("scalerRegSrc_2");
                 getScalerOperandValue([src1.getAttribute("name"), src1.value], [src2.getAttribute("name"), src2.value]);
-            
+
             });
 
             // Create an input element for Full Name
             var elemSrc1 = document.createElement("input");
             elemSrc1.id = "scalerRegSrc_1";
             elemSrc1.className = "scalerRegister";
-            elemSrc1.setAttribute("name",src1);
+            elemSrc1.setAttribute("name", src1);
             elemSrc1.setAttribute("type", "text");
             elemSrc1.setAttribute("placeholder", src1);
 
@@ -821,7 +828,7 @@
             var elemSrc2 = document.createElement("input");
             elemSrc2.setAttribute("id", "scalerRegSrc_2");
             elemSrc2.className = "scalerRegister";
-            elemSrc2.setAttribute("name",src2);
+            elemSrc2.setAttribute("name", src2);
             elemSrc2.setAttribute("type", "text");
             elemSrc2.setAttribute("placeholder", src2);
 
@@ -863,7 +870,7 @@
             return 0;
         }
 
-        
+
         function submitInput() {
             document.getElementById("wLoadAntBox").style.display = "none";
             document.getElementById("rsAntBox").style.display = "none";
@@ -988,6 +995,13 @@
 
         }
 
+        function highlighIssueInsOnly(rows, targetRow, color) {
+            for (let indx = 0; indx < rows.length; ++indx) {
+                rows[indx].style.backgroundColor = "";
+            }
+            targetRow.style.backgroundColor = color;
+        }
+
         function updateWLoad() {
 
             var tableElem = document.getElementById("WLoadTable");
@@ -1005,7 +1019,8 @@
 
                 rowcontextList.push(indx + 1);
                 rowcontextList.push(insLoad.OP);
-                rowcontextList.push(insLoad.CyExecution);
+                let exeCycle = (isFinite(insLoad.CyExecution)) ? insLoad.CyExecution : "";
+                rowcontextList.push(exeCycle);
                 rowcontextList.push(insLoad.Dest);
                 rowcontextList.push(insLoad.Src1);
                 rowcontextList.push(insLoad.Src2);
@@ -1016,7 +1031,11 @@
                 rowcontextList.push(CyExecStart);
                 let CyWBack = (insLoad.CyWBack == 0) ? "" : insLoad.CyWBack;
                 rowcontextList.push(CyWBack);
-                addTableRow(tBody, rowcontextList, insLoad.Color, insLoad.Id);
+
+                var row = addTableRow(tBody, rowcontextList, insLoad.Color, insLoad.Id);
+                if (insLoad.StateType == StateType.Issue) {
+                    highlighIssueInsOnly(tBody.rows, row, insLoad.Color);
+                }
             }
         }
 
@@ -1173,6 +1192,7 @@
             }
             updateRSView();
             updateRAT();
+            updateScalerRAT();
             updateWLoad();
             showCycle(cycleNum);
             var IQContent = mgtCtr.getIQContent();

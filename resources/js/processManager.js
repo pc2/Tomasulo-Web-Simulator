@@ -5,6 +5,7 @@ class ProcessManager {
         this.architecture = new Architecture();
         this.cycle = 0;
         this.antInsturctionCnt = 0;
+        this.expandCycle = -1;
     }
 
     initializeResource() {
@@ -209,8 +210,9 @@ class ProcessManager {
         return rsContents;
     }
 
-    updateScalerReg(key, value){
+    updateScalerReg(key, value) {
         var rat = this.getRAT(RegType.Scaler);
+        value = (value == "") ? 0 : value;
         rat.updateScalerRat(key, value);
     }
     getRATContent(type) {
@@ -333,6 +335,10 @@ class ProcessManager {
         return counter;
     }
 
+    expandWorkLoad() {
+        this.resourceMgt.expandWorkLoad();
+    }
+
     cycleStepForward() {
         var workLoads = this.getWLoads();
         this.antInsturctionCnt = workLoads.length - 1;
@@ -345,6 +351,14 @@ class ProcessManager {
         }
 
         ++this.cycle;
+
+        if (this.expandCycle == (this.cycle - 1)) {
+            this.expandWorkLoad();
+            this.expandCycle = -1;
+            return this.cycle;;
+        }
+
+
         var insAlreadyIssued = false;
         var exDoneCounter = 0;
         for (let indx = 0; indx < workLoads.length
@@ -356,6 +370,9 @@ class ProcessManager {
             if (insCurState == undefined) {
                 insCurState = new Init(wLoad, this.cycle);
                 insAlreadyIssued = true;
+                if (indx == (workLoads.length - 1)) {
+                    this.expandCycle = this.cycle + 1;
+                }
             }
 
             wLoad.insertAntNode();
