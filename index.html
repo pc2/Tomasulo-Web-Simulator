@@ -47,8 +47,8 @@
                 <button onclick="closeModal()" class="close" title="Close Modal"><img class="closeBtn"
                         src="resources/images/icons/close.png"></button>
 
-                <form class="modalFormContent">
-                </form>
+                <div class="modalFormContent">
+                </div>
 
             </div>
             <!--modal end-->
@@ -770,8 +770,9 @@
             showCycle(0);
         }
 
-        function getScalerOperandValue(src1, src2){
-
+        function getScalerOperandValue(src1, src2) {
+            closeModal();
+            TabSelection("Workload");
         }
 
         function popupForScalerRegister(instruction) {
@@ -790,6 +791,7 @@
                 let src1 = document.getElementById("scalerRegSrc_1");
                 let src2 = document.getElementById("scalerRegSrc_2");
                 getScalerOperandValue(src1.value, src2.value);
+            
             });
 
             // Create an input element for Full Name
@@ -809,7 +811,7 @@
             document.getElementById('modalTop').style.display = "block";
             var modalForm = document.querySelector(".modalFormContent");
             modalForm.style.display = "block";
-            modalForm.innerHTML="";
+            modalForm.innerHTML = "";
             modalForm.appendChild(elemSrc1);
             modalForm.appendChild(elemSrc2);
             modalForm.appendChild(submitBtn);
@@ -844,6 +846,7 @@
             return 0;
         }
 
+        
         function submitInput() {
             document.getElementById("wLoadAntBox").style.display = "none";
             document.getElementById("rsAntBox").style.display = "none";
