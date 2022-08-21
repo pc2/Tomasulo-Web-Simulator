@@ -1,7 +1,8 @@
 class ResourceManager {
     constructor() {
         this.rs = new RSUnits();
-        this.rat = new RAT();
+        this.rat = new RAT(15);
+        this.scalerRAT = new RAT(5)
         this.workloads = [];
     }
 
@@ -50,7 +51,8 @@ class ResourceManager {
     }
 
     reInitializeResource() {
-        this.rat = new RAT();
+        this.rat = new RAT(15);
+        this.scalerRAT = new RAT(5);
         this.rs.resetRSUnits();
         this.reinitializeWLoad();
     }

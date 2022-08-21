@@ -48,10 +48,6 @@
                         src="resources/images/icons/close.png"></button>
 
                 <form class="modalFormContent">
-                    <div class="modalFormContainer" id="modalFormContainerID">
-                        <div class="modalBody" id="modalBodyID"></div>
-                        <div class="modalButtons" id="modalButtonsID"></div>
-                    </div>
                 </form>
 
             </div>
@@ -448,6 +444,7 @@
             var insCounter = Array(128).fill().map((x, y) => y);
             var regValueList = [...regFloatValue, ...regIntValue];
             var regallValues = [...regValueList, ...numValues];
+            var RegIntAndNumber = [...regIntValue, ...numValues, ...insCounter]
 
             for (var i = 0; i < regallValues.length; i++) {
                 var option = document.createElement("option");
@@ -462,8 +459,8 @@
                 }
                 else if (opClass == "Branch") {
                     if ((operandType == "Dest") || (operandType == "Src1")) {
-                        option.value = id + regIntValue[i];
-                        option.text = regIntValue[i];
+                        option.value = id + RegIntAndNumber[i];
+                        option.text = RegIntAndNumber[i];
                     }
                     else if (operandType == "Src2") {
                         option.value = id + insCounter[i];
@@ -486,10 +483,12 @@
 
             var selectList = document.createElement("select");
             selectList.id = id;
+
             selectList.addEventListener('change', function () {
                 updateInputTableOperand(id, rowElem);
             }, false);
             var OPList = ["ADD", "SUB", "MUL", "DIV", "LD", "SD", "BNE"]
+
             for (var i = 0; i < OPList.length; i++) {
                 var option = document.createElement("option");
                 option.value = id + OPList[i];
@@ -548,13 +547,12 @@
 
 
                 cell.appendChild(value);
-
-
-
                 row.appendChild(cell);
+
             }
             tableElem.appendChild(row);
             createBtnsRow(tableElem);
+
             return row;
         }
 
@@ -772,16 +770,78 @@
             showCycle(0);
         }
 
+        function getScalerOperandValue(src1, src2){
 
-        function getOperandValue(instruction) {
-            var src1 = instruction.Src1;
-            var src2 = instruction.Src2;
+        }
 
+        function popupForScalerRegister(instruction) {
+            var src1 = instruction.Dest;
+            var src2 = instruction.Src1;
+            if (!isScalerRegister(src1) || !isScalerRegister(src2)) {
+                popupModal(("No Scaler register or value for operands : " + src1 + " Or  " + src2));
+                return 0;
+            }
+
+            // Create a form dynamically
+            var submitBtn = document.createElement("button");
+            submitBtn.id = "input4Reg";
+            submitBtn.innerHTML = "submit";
+            submitBtn.addEventListener("click", (event) => {
+                let src1 = document.getElementById("scalerRegSrc_1");
+                let src2 = document.getElementById("scalerRegSrc_2");
+                getScalerOperandValue(src1.value, src2.value);
+            });
+
+            // Create an input element for Full Name
+            var elemSrc1 = document.createElement("input");
+            elemSrc1.id = "scalerRegSrc_1";
+            elemSrc1.className = "scalerRegister";
+            elemSrc1.setAttribute("type", "text");
+            elemSrc1.setAttribute("placeholder", src1);
+
+
+            var elemSrc2 = document.createElement("input");
+            elemSrc2.setAttribute("id", "scalerRegSrc_2");
+            elemSrc2.className = "scalerRegister";
+            elemSrc2.setAttribute("type", "text");
+            elemSrc2.setAttribute("placeholder", src2);
+
+            document.getElementById('modalTop').style.display = "block";
+            var modalForm = document.querySelector(".modalFormContent");
+            modalForm.style.display = "block";
+            modalForm.innerHTML="";
+            modalForm.appendChild(elemSrc1);
+            modalForm.appendChild(elemSrc2);
+            modalForm.appendChild(submitBtn);
+
+        }
+
+        function popupModal(text) {
+            document.getElementById('modalTop').style.display = "block";
+
+            var modalForm = document.querySelector(".modalFormContent");
+            modalForm.style.display = "block";
+            modalForm.innerHTML = "";
+            var textNode = document.createTextNode(text);
+            modalForm.appendChild(textNode);
         }
 
 
         function closeModal() {
             document.getElementById('modalTop').style.display = 'none';
+        }
+
+        function checkForBranch(instruction) {
+
+            for (let indx = 0; indx < instruction.length; ++indx) {
+                if (getOPClass(instruction[indx].OP) == "Branch") {
+                    if (indx == 0) {
+                        popupModal("First Instruction can not be branch");
+                    }
+                    return indx;
+                }
+            }
+            return 0;
         }
 
         function submitInput() {
@@ -792,12 +852,15 @@
             depBtns.forEach(element => {
                 element.style.display = "block";
             });
+
             var instructions = collectInstructionsFromUI();
 
             var branchIndx = checkForBranch(instructions);
+
             if (branchIndx) {
-                getOperandValue(instructions[branchIndx]);
+                popupForScalerRegister(instructions[branchIndx]);
             }
+
 
             var execCycles = collectExecCycleFromUI();
             var unitsSize = collectUnitsSizeFromUI();
@@ -808,14 +871,7 @@
                 ||
                 ((unitsSize == undefined) || (unitsSize.length == 0))
             ) {
-
-                document.getElementById('modalTop').style.display = "block";
-                document.querySelector(".modalFormContent").style.display = "block";
-
-                var modalBody = document.querySelector(".modalBody");
-                modalBody.innerHTML = "";
-                var textNode = document.createTextNode("Can not proceed because of input instruction or configuration empty");
-                modalBody.appendChild(textNode);
+                popupModal("Can not proceed because of input instruction or configuration empty");
                 return;
             }
 

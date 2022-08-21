@@ -23,8 +23,8 @@ class Register {
 }
 
 class RAT {
-    constructor() {
-        this.rtTable = Array(15).fill('F').map((x, y) => new Register(x + y, 'M' + y));
+    constructor(number) {
+        this.rtTable = Array(number).fill('F').map((x, y) => new Register(x + y, 'M' + y));
     }
 
     checkInRat(srcReg) {
@@ -89,8 +89,6 @@ class RAT {
             "value": ret
         }
     }
-
-
 
     updateRat(reg, insId, value = 0) {
 

@@ -28,6 +28,15 @@ function getSrc(ins, OperandNumber = 1) {
     return src;
 }
 
+function isScalerRegister(reg) {
+    if ((reg.startsWith("S") ||
+        reg.startsWith("+") ||
+        reg.startsWith("-"))) {
+        return true;
+    }
+    return false;
+}
+
 function parseInstructions(content) {
     var insLines = content.split("\n");
 
@@ -106,26 +115,25 @@ function LoadFromFile(e) {
 
 }
 
+function getLoopBodyOnly(instruction) {
 
-function getLoopBodyOnly(instruction){
-
-   var loopLevel=undefined;
-   var loopBranchLevel= undefined;
+    var loopLevel = undefined;
+    var loopBranchLevel = undefined;
 
 
-    for(let indx=0; indx < instruction.length; ++indx){
-        
-        if(instruction.Level.length != 0){
-            loopLevel = instruction.Level;  
+    for (let indx = 0; indx < instruction.length; ++indx) {
+
+        if (instruction.Level.length != 0) {
+            loopLevel = instruction.Level;
         }
-        
-        if(getOp2RSName(instruction.OP) ==OPClass.Branch){
-            loopBranchLevel=instruction.Level;
+
+        if (getOp2RSName(instruction.OP) == OPClass.Branch) {
+            loopBranchLevel = instruction.Level;
             var levelName = loopBranchLevel.split("_")[1];
-            if(levelName == loopLevel){
+            if (levelName == loopLevel) {
                 break;
             }
-            else{
+            else {
                 continue;
             }
         }
@@ -134,14 +142,10 @@ function getLoopBodyOnly(instruction){
 }
 
 
-function checkForBranch(instruction){
-    for(let indx=1; indx < instruction.length; ++indx){
-        if(getOp2RSName(instruction[indx].OP) ==OPClass.Branch){
-            return indx;
-        }
-    }
-    return false;
-}
+
+
+
+
 
 function collectInstructionsFromUI() {
 
@@ -154,7 +158,7 @@ function collectInstructionsFromUI() {
         let row = tBody.rows[rIndx];
         let ins = {};
         for (let cIndx = 1; cIndx < row.cells.length - 1; ++cIndx) {
-            if(!row.cells[cIndx].hasChildNodes()){
+            if (!row.cells[cIndx].hasChildNodes()) {
                 continue;
             }
             let id = row.cells[cIndx].childNodes[0].id;

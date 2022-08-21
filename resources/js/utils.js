@@ -14,6 +14,7 @@ OPDictionary = {
     "bne": ["BNEQ", "bne"],
     "beqz": ["BEQZ", "beqz"],
     "bnez": ["BNEZ", "bnez"]
+
 }
 Object.freeze(OPDictionary);
 
@@ -55,7 +56,7 @@ Object.freeze(OP2RSName);
 const RSType = {
     "FPLd": 0,
     "FPAdd": 1,
-    "FPMul": 2,
+    "FPMul": 2
 };
 Object.freeze(RSType);
 

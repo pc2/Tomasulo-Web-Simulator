@@ -8,6 +8,8 @@ button:hover {
   position: fixed;
   /* Stay in place */
   z-index: 1;
+  justify-content: center;
+  align-items: center;
   /* Sit on top */
   top: 16%;
   left: 34%;
@@ -22,26 +24,22 @@ button:hover {
 /* Modal Content/Box */
 .modalFormContent {
   position: relative;
-  background-color: #e9f6f6;
- 
-
-}
-
-/* Add padding and center-align text to the container */
-.modalFormContainer {
-  /* padding: 16px; */
-  text-align: center;
+  left: 10%;
   overflow: hidden;
+  float: left;
+  font-size: 1.5em;
+
 }
+
 
 /* The Modal Close Button (x) */
 
 .close {
   z-index: 100;
   position: relative;
-  width: 3vw;
-  height: 3vw;
-  left: 91%;
+  width: 2vw;
+  height: 2vw;
+  left: 93%;
   border-radius: 50%;
   border: 3px solid rgb(207, 21, 21);
 
@@ -83,45 +81,33 @@ button:hover {
   color: #FFF;
 }
 
-/*    */
 
+.modalFormContent {
+  position: relative;
 
-/* The modal back button (<<) */
-
-.modal .back {
-  z-index: 100;
-  position: fixed;
-  left: 1vw;
-  top: 1vw;
-  width: 5vw;
-  height: 5vw;
-  background-color: white;
-  border-radius: 50%;
-  border: 1px solid black;
-  display: inline-block;
-  vertical-align: middle;
-  text-align: center;
-  color: #000;
-  text-shadow: 0 1px 0 #fff;
-  filter: alpha(opacity=50);
-  opacity: .5;
-}
-
-.modal .back .backBtn {
-  display: inline-block;
-  height: 100%;
   width: 100%;
-  margin: auto;
-  padding: 25%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  float: left; 
 }
 
-.back:hover,
-.back:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-  filter: alpha(opacity=70);
-  opacity: .7;
+.modalFormContent .scalerRegister{
+  position: relative;
+  top:10%;
+  width: 20%;
+  height: 15%;
+  margin-left: 5%;
+  float: left;
 }
+
+ #input4Reg{
+  position: relative;
+  top:10%;
+  background-color: #d6d7cf;
+  height: 15%;
+  left: 5%
+ }
+
 
 /* */
