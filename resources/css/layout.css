@@ -185,16 +185,31 @@
 .cRatContainer {
   position: relative;
   margin-top: 10%;
-  height: 79.5%;
+  height: 80%;
   width: 64%;
   border: 2px solid rgb(192, 204, 211);
 }
 
 .cRatBody {
-  position: inherit;
-  height: 93%;
+  position: relative;
+  height: 70%;
   background-color: rgb(241, 246, 247);
+  border: 1px solid rgb(134, 155, 168);
+  border-bottom: 2px solid rgb(134, 155, 168);
+
   text-align: left;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+.cScalerRatBody{
+  position: relative;
+  height: 23%;
+  background-color: rgb(241, 246, 247);
+  border: 1px solid rgb(134, 155, 168);
+  text-align: left;
+  overflow-x: auto;
+  overflow-y: auto;
 }
 
 .cActionBtn img {

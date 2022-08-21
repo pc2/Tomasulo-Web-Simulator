@@ -1,8 +1,8 @@
 class ResourceManager {
     constructor() {
         this.rs = new RSUnits();
-        this.rat = new RAT(15);
-        this.scalerRAT = new RAT(5)
+        this.rat = new RAT(32);
+        this.scalerRAT = new RAT(32,RegType.Scaler)
         this.workloads = [];
     }
 
@@ -52,7 +52,7 @@ class ResourceManager {
 
     reInitializeResource() {
         this.rat = new RAT(15);
-        this.scalerRAT = new RAT(5);
+        this.scalerRAT = new RAT(5,RegType.Scaler);
         this.rs.resetRSUnits();
         this.reinitializeWLoad();
     }
@@ -74,8 +74,12 @@ class ResourceManager {
         return wLoad;
     }
 
-    getRAT() {
-        return this.rat;
+    getRAT(type=RegType.Float) {
+        if(type == RegType.Float){
+            return this.rat;
+        }else if(type == RegType.Scaler){
+            return this.scalerRAT;
+        }
     }
 
     getRSUnits(rsType) {

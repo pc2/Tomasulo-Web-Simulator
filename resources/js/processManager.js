@@ -45,8 +45,8 @@ class ProcessManager {
         return this.architecture.getInstruction();
     }
 
-    getRAT() {
-        return this.resourceMgt.getRAT();
+    getRAT(type) {
+        return this.resourceMgt.getRAT(type);
     }
 
     getRSUnits(rsType) {
@@ -209,9 +209,13 @@ class ProcessManager {
         return rsContents;
     }
 
-    getRATContent() {
+    updateScalerReg(key, value){
+        var rat = this.getRAT(RegType.Scaler);
+        rat.updateScalerRat(key, value);
+    }
+    getRATContent(type) {
         var ratContents = [];
-        var rat = this.getRAT().rtTable;
+        var rat = this.getRAT(type).rtTable;
         rat.forEach(elem => {
             ratContents.push({
                 "Hash": elem.id,

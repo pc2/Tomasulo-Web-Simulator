@@ -274,6 +274,15 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <div id="scalerRat" class="cScalerRatBody">
+                        <canvas id="scalerRatAntBox" style="display:none"></canvas>
+                        <table id="scalerRATable" class="cScalerRATable">
+                            <tbody id="scalerRATBody" class="cScalerRATBody">
+                            </tbody>
+                        </table>
+                    </div>
+
                 </div>
 
 
@@ -766,13 +775,19 @@
             mgtCtr.setProcessEnv(instructions, execCycles, unitsSize);
             updateWLoad();
             updateRAT();
+            updateScalerRAT();
             updateRSView();
             showCycle(0);
         }
 
-        function getScalerOperandValue(src1, src2) {
+        function getScalerOperandValue(src1Ctx, src2Ctx) {
             closeModal();
-            TabSelection("Workload");
+
+            mgtCtr.updateScalerReg(src1Ctx[0], src1Ctx[1]);
+            mgtCtr.updateScalerReg(src2Ctx[0], src2Ctx[1]);
+
+            updateScalerRAT();
+
         }
 
         function popupForScalerRegister(instruction) {
@@ -790,7 +805,7 @@
             submitBtn.addEventListener("click", (event) => {
                 let src1 = document.getElementById("scalerRegSrc_1");
                 let src2 = document.getElementById("scalerRegSrc_2");
-                getScalerOperandValue(src1.value, src2.value);
+                getScalerOperandValue([src1.getAttribute("name"), src1.value], [src2.getAttribute("name"), src2.value]);
             
             });
 
@@ -798,6 +813,7 @@
             var elemSrc1 = document.createElement("input");
             elemSrc1.id = "scalerRegSrc_1";
             elemSrc1.className = "scalerRegister";
+            elemSrc1.setAttribute("name",src1);
             elemSrc1.setAttribute("type", "text");
             elemSrc1.setAttribute("placeholder", src1);
 
@@ -805,6 +821,7 @@
             var elemSrc2 = document.createElement("input");
             elemSrc2.setAttribute("id", "scalerRegSrc_2");
             elemSrc2.className = "scalerRegister";
+            elemSrc2.setAttribute("name",src2);
             elemSrc2.setAttribute("type", "text");
             elemSrc2.setAttribute("placeholder", src2);
 
@@ -899,6 +916,27 @@
             while (rows.length - 1 > 1) {
                 inputTable.deleteRow(1);
             }
+        }
+
+        function updateScalerRAT() {
+            var tableElem = document.getElementById("scalerRATable");
+            var tBody = tableElem.tBodies[0];
+            var rows = tableElem.rows;
+
+            while (rows.length > 0) {
+                tableElem.deleteRow(0);
+            }
+
+            var ratContentList = mgtCtr.getRATContent(RegType.Scaler);
+            for (let indx = 0; indx < ratContentList.length; ++indx) {
+                let ratContent = ratContentList[indx];
+                let rowcontextList = [];
+
+                rowcontextList.push(ratContent.Name);
+                rowcontextList.push(ratContent.Qi);
+                addTableRow(tBody, rowcontextList, ratContent.Color, ratContent.Hash);
+            }
+
         }
 
         function updateRAT() {

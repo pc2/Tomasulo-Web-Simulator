@@ -96,6 +96,13 @@ const RSStatusFlag = {
 };
 Object.freeze(RSStatusFlag);
 
+const RegType = {
+    "Float": 0,
+    "Scaler": 1
+};
+Object.freeze(RegType);
+
+
 function getUniqueOPName(opName) {
     let ret = undefined;
     opName = opName.toLowerCase();
