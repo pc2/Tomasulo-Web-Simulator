@@ -5,7 +5,7 @@ class ProcessManager {
         this.architecture = new Architecture();
         this.cycle = 0;
         this.antInsturctionCnt = 0;
-        this.expandCycle = -1;
+        this.loopExpandCycle = -1;
     }
 
     initializeResource() {
@@ -335,8 +335,25 @@ class ProcessManager {
         return counter;
     }
 
-    expandWorkLoad() {
-        this.resourceMgt.expandWorkLoad();
+    processLoopInstructions(){
+
+        if(this.loopExpandCycle < 0){
+            this.loopExpandCycle = -1;
+        }
+        if(this.loopExpandCycle == 1){
+            this.resourceMgt.updateLoopCountInstruction();
+            this.resourceMgt.expandWorkLoad();
+        }
+
+        return --this.loopExpandCycle;
+    }
+
+    hasBranch(){
+        return this.resourceMgt.hasLoopInstruction();
+    }
+
+    setLoopProcessFlag(){
+        this.loopExpandCycle = 2;
     }
 
     cycleStepForward() {
@@ -351,13 +368,10 @@ class ProcessManager {
         }
 
         ++this.cycle;
-
-        if (this.expandCycle == (this.cycle - 1)) {
-            this.expandWorkLoad();
-            this.expandCycle = -1;
-            return this.cycle;;
+        if(this.hasBranch() && 
+            this.processLoopInstructions() >= 0){
+                return this.cycle;
         }
-
 
         var insAlreadyIssued = false;
         var exDoneCounter = 0;
@@ -371,7 +385,7 @@ class ProcessManager {
                 insCurState = new Init(wLoad, this.cycle);
                 insAlreadyIssued = true;
                 if (indx == (workLoads.length - 1)) {
-                    this.expandCycle = this.cycle + 1;
+                    this.setLoopProcessFlag();
                 }
             }
 

@@ -22,7 +22,6 @@ class Register {
     }
 }
 
-
 class RAT {
     constructor(number, type = RegType.Float) {
         if (type == RegType.Scaler) {
@@ -63,7 +62,6 @@ class RAT {
         }
 
         return ret;
-
     }
 
     isRegType(src) {

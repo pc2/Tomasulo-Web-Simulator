@@ -55,21 +55,24 @@ class ResourceManager {
         return 0;
     }
 
-    expandWorkLoad() {
-        if (this.loopBodyloads.length == 0) {
-            return;
+    hasLoopInstruction(){
+        if(this.loopBodyloads.length != 0){
+            return true;
         }
-        var loopIns = this.branchLoads[0];
-        var branchIns = this.branchLoads[1];
+        return false;
+    }
 
-        var src1 = loopIns.getFirstOperand();
+    updateLoopCountInstruction(){
+        var loopCounterIns = this.branchLoads[0];
+
+        var src1 = loopCounterIns.getFirstOperand();
         var src1Value = parseInt(this.scalerRAT.getRATContent(src1));
 
         if (!isNumber(src1Value)) {
             src1Value = 0;
         }
 
-        var src2Value = parseInt(loopIns.getSecOperand());
+        var src2Value = parseInt(loopCounterIns.getSecOperand());
         if (!isNumber(src2Value)) {
             src2Value = 0;
         }
@@ -78,6 +81,15 @@ class ResourceManager {
         if (ratValue) {
             console.log("increment or decrement operator value is negative");
         }
+
+    }
+
+    expandWorkLoad() {
+
+        var branchIns = this.branchLoads[1];
+        var loopCounterIns = this.branchLoads[0];
+
+        var src1 = loopCounterIns.getFirstOperand();
 
         var branchRegSrc1 = branchIns.getDestOperand();
         var branchRegSrc2 = branchIns.getFirstOperand();
