@@ -94,6 +94,21 @@ class RAT {
         }
     }
 
+    setInitialRegValue(){
+        for (let i = 0; i < this.rtTable.length; ++i) {
+                this.rtTable[i].Qi = this.rtTable[i].id;
+            
+        }
+    }
+    initializeScalerRAT(reg, value){
+        for (let i = 0; i < this.rtTable.length; ++i) {
+            if (this.rtTable[i].name == reg) {
+                this.rtTable[i].Qi = value;
+                this.rtTable[i].id = value;
+                return this.rtTable[i].Qi;
+            }
+        }
+    }
     updateScalerRat(reg, value) {
         for (let i = 0; i < this.rtTable.length; ++i) {
             if (this.rtTable[i].name == reg) {
@@ -102,24 +117,30 @@ class RAT {
             }
         }
     }
-    updateRat(reg, insId, value = 0) {
 
+    setRAT(reg,insId, rsName){
         for (let i = 0; i < this.rtTable.length; ++i) {
             if (this.rtTable[i].name == reg) {
-                if (value != 0) {
-                    this.rtTable[i].Qi = value;
+              
+                    this.rtTable[i].Qi = rsName;
                     this.rtTable[i].id = insId;
-                    return this.rtTable[i].Qi;
-
+                
                 }
-                else {
+        }
+    }
+
+
+    updateRat(reg,insId, rsName) {
+        for (let i = 0; i < this.rtTable.length; ++i) {
+            if (this.rtTable[i].name == reg) {
+                if(rsName == this.rtTable[i].Qi){
                     this.rtTable[i].Qi = this.rtTable[i].valueReg;
                     this.rtTable[i].id = "";
                     return this.rtTable[i].Qi;
-
                 }
             }
         }
+        return undefined;
     }
 
     getRegForRS(rsName) {

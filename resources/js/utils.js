@@ -218,7 +218,6 @@ function getRandomColor(insNumber) {
         '#a4f9f9',
         '#d8bfd8',
         '#eee8aa',
-        '#ffa07a',
         '#556b2f',
         '#008080',
         '#9acd32',

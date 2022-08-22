@@ -171,7 +171,7 @@ class ResourceManager {
 
     reInitializeResource() {
         this.rat = new RAT(15);
-        this.scalerRAT = new RAT(5, RegType.Scaler);
+        this.scalerRAT.setInitialRegValue();
         this.rs.resetRSUnits();
         this.reinitializeWLoad();
     }

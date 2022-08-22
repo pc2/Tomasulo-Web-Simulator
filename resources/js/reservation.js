@@ -32,6 +32,8 @@ class RSBuffer {
 
         this.insHash = undefined;
         this.indx = indx;
+
+        this.readyForNextCycle=false;
     }
 
     reset() {
@@ -45,6 +47,7 @@ class RSBuffer {
         this.dest = undefined;
         this.insHash = undefined;
         this.Address = undefined;
+        this.readyForNextCycle=false;
     }
 
     getRSName() {
@@ -67,6 +70,11 @@ class RSBuffer {
     }
 
     isOperandReady() {
+        if(this.readyForNextCycle){
+            this.readyForNextCycle=false;
+            return false;
+        }
+
         if (this.type == RSType.FPLd) {
             return (this.Qj == 0 || this.Qk == 0)
         }
@@ -336,39 +344,57 @@ class RSUnits {
 
     updateRSOperand(targetReg, value) {
         this.Adder.buffers.forEach(buffer => {
+            let flag = false;
             if (buffer.Qj == targetReg) {
-                buffer.Vj = value;
+                flag = true;
+                buffer.Vj = (value==undefined)?"val("+targetReg+")":value;
                 buffer.Qj = 0;
             }
 
             if (buffer.Qk == targetReg) {
-                buffer.Vk = value;
+                flag = true;
+                buffer.Vk = (value==undefined)?"val("+targetReg+")":value;
                 buffer.Qk = 0;
+            }
+            if(buffer.Qj == 0 && buffer.Qk==0 && flag){
+                buffer.readyForNextCycle=true;
             }
         });
 
         this.Multiplier.buffers.forEach(buffer => {
+            let flag = false;
             if (buffer.Qj == targetReg) {
-                buffer.Vj = value;
+                flag = true;
+                buffer.Vj = (value==undefined)?"val("+targetReg+")":value;
                 buffer.Qj = 0;
             }
 
             if (buffer.Qk == targetReg) {
-                buffer.Vk = value;
+                flag = true;
+                buffer.Vk = (value==undefined)?"val("+targetReg+")":value;
                 buffer.Qk = 0;
+            }
+            if(buffer.Qj == 0 && buffer.Qk==0&& flag){
+                buffer.readyForNextCycle=true;
             }
         });
 
 
         this.Loader.buffers.forEach(buffer => {
+            let flag = false;
             if (buffer.Qj == targetReg) {
-                buffer.Vj = value;
+                flag = true;
+                buffer.Vj = (value==undefined)?"val("+targetReg+")":value;
                 buffer.Qj = 0;
             }
 
             if (buffer.Qk == targetReg) {
-                buffer.Vk = value;
+                flag = true;
+                buffer.Vk = (value==undefined)?"val("+targetReg+")":value;
                 buffer.Qk = 0;
+            }
+            if((buffer.Qj == 0 || buffer.Qk==0)&& flag){
+                buffer.readyForNextCycle=true;
             }
         });
     }

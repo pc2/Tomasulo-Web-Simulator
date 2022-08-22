@@ -48,9 +48,8 @@ class Instruction {
         }
 
         if (type == OPType.sd) {
-            let tempOperand = this.srcFirst;
+            this.dest  = this.srcFirst;
             this.srcFirst = instruction.Dest;
-            this.dest = tempOperand;
         } else {
             this.dest = instruction.Dest;
         }

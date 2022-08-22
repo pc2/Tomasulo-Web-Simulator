@@ -213,10 +213,11 @@ class ProcessManager {
         return rsContents;
     }
 
+
     updateScalerReg(key, value) {
         var rat = this.getRAT(RegType.Scaler);
         value = (value == "") ? 0 : value;
-        rat.updateScalerRat(key, value);
+        rat.initializeScalerRAT(key, value);
     }
     getRATContent(type) {
         var ratContents = [];

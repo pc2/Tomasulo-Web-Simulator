@@ -130,7 +130,10 @@ class Issue extends State {
         rsbuffer.Operator = instruction.getOperator();
         rsbuffer.dest = instruction.getDestOperand();
         rsbuffer.insHash = instruction.getID();
-        rat.updateRat(rsbuffer.dest, rsbuffer.insHash, rsbuffer.name);
+        if(instruction.getType() == OPType.sd){
+            rsbuffer.dest = "";
+        }
+        rat.setRAT(rsbuffer.dest, rsbuffer.insHash, rsbuffer.name);
         if (antMsg.length != 0) {
             instruction.insertAnnotation((antMsg + textMsg), insNumber, ResourceType.RSUnits, 1);
         }
@@ -171,7 +174,7 @@ class Issue extends State {
             (wLoad.getType() == OPType.ld) ){
             let orgIns = resManager.getWLoadByID(wLoad.orgInsHash);
             let stateType = orgIns.getStateType();
-            if(stateType != StateType.WriteBack){
+            if(stateType < StateType.WriteBack){
                 antMsg = "Load Instruction stalls (waits for the first L1 cache miss)";
                 wLoad.insertAnnotation(antMsg, wLoad.posAtQ, ResourceType.WorkLoad, 6);
                 return;
@@ -195,7 +198,7 @@ class Issue extends State {
             let tempVal = "";
             let columnNumber = 0;
 
-            this.setRSBuffer(rsbuffer, rat, wLoad);
+            //this.setRSBuffer(rsbuffer, rat, wLoad);
 
             if (rsbuffer.Qj == 0 && rsbuffer.Qk == 0) {
                 if (tempQj != 0) {
@@ -290,21 +293,28 @@ class WriteBack extends State {
         }
 
         if ((wLoad.getCycle(INSCycles.WriteBack) + 1) == cycle) {
+           
+    
             let nextState = new Finish(wLoad, cycle);
             nextState.moveState(cycle, resManager, insID);
             return;
         }
 
-        let value = rat.updateRat(wLoad.getDestOperand(), wLoad.getID());
-        rs.updateRSOperand(wLoad.getDestOperand(), value);
+
         var reqRSType = getRSType(wLoad.getOperator());
         var rsbuffer = rs.getRSBuffer(reqRSType, wLoad.getID());
+        let value = rat.updateRat(wLoad.getDestOperand(), wLoad.getID(), rsbuffer.getRSName());
+       
+        
+        rs.updateRSOperand(rsbuffer.getRSName(), value);
         var antMsg = "Instruction " + wLoad.posAtQ + " writes back. Load buffer sends result value " + value + " and id " + rsbuffer.getRSName() + " (“come from”) over CDB";
         wLoad.insertAnnotation(antMsg, wLoad.posAtQ, ResourceType.WorkLoad, 8);
 
         if (rsbuffer != undefined) {
             rs.release(rsbuffer);
         }
+
+
     }
 
     processBack(cycle, rs, rat) {
