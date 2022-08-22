@@ -107,6 +107,10 @@ class Instruction {
         }
     }
 
+    isExpandedInstruction(){
+        return this.orgInsHash != this.id;
+    }
+
     getType() {
         return this.type;
     }

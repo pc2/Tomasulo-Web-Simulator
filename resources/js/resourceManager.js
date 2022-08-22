@@ -61,6 +61,7 @@ class ResourceManager {
         return 0;
     }
 
+
     hasLoopInstruction(){
         if(this.loopBodyloads.length != 0){
             return true;
@@ -84,7 +85,7 @@ class ResourceManager {
         }
         var ratValue = src1Value + src2Value;
         this.scalerRAT.updateScalerRat(src1, ratValue);
-        if (ratValue) {
+        if (ratValue < 0) {
             console.log("increment or decrement operator value is negative");
         }
 
@@ -125,8 +126,8 @@ class ResourceManager {
                 };
 
                 let insCycle;
-                if(getOPType(tempWorkLoad[indx].getOperator()) != OPType.ld){
-                    insCycle = execCycles[tempWorkLoad[indx].OP];
+                if(tempWorkLoad[indx].getType() != OPType.ld){
+                    insCycle = tempWorkLoad[indx].getCycle(INSCycles.ExecCycle);
                 }else{
                     insCycle = execCycles["ld_hit"];
                 }
@@ -142,6 +143,12 @@ class ResourceManager {
     reinitializeWLoad() {
         var tempWLoad = [];
         var wLoad = this.workloads;
+
+        if(this.loopBodyloads.length != 0){
+            this.workloads = _.cloneDeep(this.loopBodyloads);
+            return;
+        }
+
         wLoad.forEach(function (insLoad, indx) {
             let ins = {
                 "OP": insLoad.getOperator(),

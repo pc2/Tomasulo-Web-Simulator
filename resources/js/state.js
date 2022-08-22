@@ -46,6 +46,7 @@ class Init extends State {
             wLoad.insertAnnotation(antMsg, wLoad.posAtQ, ResourceType.WorkLoad, 0);
         }
         else {
+    
             antMsg = "Instruction " + wLoad.posAtQ + " issued at cycle " + cycle;
             wLoad.insertAnnotation(antMsg, wLoad.posAtQ, ResourceType.WorkLoad, 6);
             let nextState = new Issue(wLoad, cycle);
@@ -165,13 +166,29 @@ class Issue extends State {
 
         }
         else if (rsbuffer.isOperandReady()) {
+
+            if( wLoad.isExpandedInstruction() &&
+            (wLoad.getType() == OPType.ld) ){
+            let orgIns = resManager.getWLoadByID(wLoad.orgInsHash);
+            let stateType = orgIns.getStateType();
+            if(stateType != StateType.WriteBack){
+                antMsg = "Load Instruction stalls (waits for the first L1 cache miss)";
+                wLoad.insertAnnotation(antMsg, wLoad.posAtQ, ResourceType.WorkLoad, 6);
+                return;
+            }
+        }
+
             antMsg = "Instruction " + wLoad.posAtQ + " started execution. It takes " + wLoad.getReqCycle() + " cycles to complete: Format: \"start-end\"";
             wLoad.insertAnnotation(antMsg, wLoad.posAtQ, ResourceType.WorkLoad, 7);
 
             let nextState = new Execution(wLoad, cycle);
             nextState.moveState(cycle, resManager, insID);
         }
-        else { // update the RS
+        else { 
+            
+        
+
+            // update the RS
             let tempQj = rsbuffer.Qj;
             let tempQk = rsbuffer.Qk;
             let targetReg = "";

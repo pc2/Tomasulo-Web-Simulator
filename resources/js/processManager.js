@@ -17,6 +17,8 @@ class ProcessManager {
 
     reInitializResource() {
          var insCycles = this.architecture.getExecCycle();
+         this.antInsturctionCnt = 0;
+         this.loopExpandCycle = -1;
         this.resourceMgt.reInitializeResource();
     }
 
@@ -355,7 +357,7 @@ class ProcessManager {
     }
 
     setLoopProcessFlag(){
-        this.loopExpandCycle = 2;
+        this.loopExpandCycle = 3;
     }
 
     cycleStepForward() {
@@ -370,10 +372,6 @@ class ProcessManager {
         }
 
         ++this.cycle;
-        if(this.hasBranch() && 
-            this.processLoopInstructions() >= 0){
-                return this.cycle;
-        }
 
         var insAlreadyIssued = false;
         var exDoneCounter = 0;
@@ -402,6 +400,10 @@ class ProcessManager {
                 }
                 continue;
             }
+        }
+
+         if(this.hasBranch() ){
+            this.processLoopInstructions();
         }
 
         return this.cycle;

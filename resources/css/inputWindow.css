@@ -66,9 +66,10 @@
 
 .cCycleSettings {
     position: relative;
-    width: 45%;
+    width: 50%;
     float: left;
     padding: 2%;
+    margin-top: -5%;
 }
 
 .cFUnitSettings {
@@ -76,6 +77,7 @@
     float: right;
     width: 45%;
     padding: 2%;
+    margin-top: -5%;
 }
 
 .cIinsInputTable #insNumber {
