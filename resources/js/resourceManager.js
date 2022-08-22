@@ -6,7 +6,7 @@ class ResourceManager {
         this.workloads = [];
         this.loopBodyloads = [];
         this.branchLoads = [];
-    }
+    }   
 
     initializeRS(unitsSize) {
         this.rs.createRSUnits(unitsSize);
@@ -26,9 +26,15 @@ class ResourceManager {
                 break;
             }
 
-            var newIns = new Instruction(instructions[indx],
-                execCycles[getUniqueOPName(
-                    instructions[indx].OP)], color, indx + 1);
+            let opName = getUniqueOPName(instructions[indx].OP);
+            let insCycle;
+            if(getOPType(opName) != OPType.ld){
+                insCycle = execCycles[getUniqueOPName(instructions[indx].OP)];
+            }else{
+                insCycle = execCycles["ld_miss"];
+            }
+
+            var newIns = new Instruction(instructions[indx],insCycle, color, (indx + 1));
             this.workloads.push(newIns);
         }
 
@@ -84,7 +90,7 @@ class ResourceManager {
 
     }
 
-    expandWorkLoad() {
+    expandWorkLoad(execCycles) {
 
         var branchIns = this.branchLoads[1];
         var loopCounterIns = this.branchLoads[0];
@@ -118,10 +124,16 @@ class ResourceManager {
                     Src2: tempWorkLoad[indx].getSecOperand()
                 };
 
-                let insCycle = tempWorkLoad[indx].getCycle(INSCycles.ExecCycle);
+                let insCycle;
+                if(getOPType(tempWorkLoad[indx].getOperator()) != OPType.ld){
+                    insCycle = execCycles[tempWorkLoad[indx].OP];
+                }else{
+                    insCycle = execCycles["ld_hit"];
+                }
+
                 let newInsLen = indx + instructionLen + 1;
                 let color = getRandomColor(newInsLen);
-                var newInstruction = new Instruction(rawIns, insCycle, color, newInsLen);
+                var newInstruction = new Instruction(rawIns, insCycle, color, newInsLen, tempWorkLoad[indx].getID());
                 this.workloads.push(newInstruction);
             }
         }

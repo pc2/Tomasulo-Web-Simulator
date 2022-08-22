@@ -1,15 +1,13 @@
 class Instruction {
-    constructor(instruction, cycle, color, posAtQ) {
+    constructor(instruction, cycle, color, posAtQ, rootInsHash=undefined) {
         this.operator = instruction.OP;
         this.type = getOPType(this.operator);
         this.updateOperand(this.type, instruction);
-
         this.posAtQ = posAtQ;
-
         this.state = undefined;
 
-
         this.id = "id_" + Math.random().toString(36).slice(-10);
+        this.orgInsHash = (rootInsHash==undefined)?this.id:rootInsHash;;
         this.reqCycle = parseInt(cycle);
         this.exeCycle = parseInt(cycle);
         this.issueCycle = 0;

@@ -16,6 +16,7 @@ class ProcessManager {
     }
 
     reInitializResource() {
+         var insCycles = this.architecture.getExecCycle();
         this.resourceMgt.reInitializeResource();
     }
 
@@ -336,13 +337,14 @@ class ProcessManager {
     }
 
     processLoopInstructions(){
+        var insCycles = this.architecture.getExecCycle();
 
         if(this.loopExpandCycle < 0){
             this.loopExpandCycle = -1;
         }
         if(this.loopExpandCycle == 1){
             this.resourceMgt.updateLoopCountInstruction();
-            this.resourceMgt.expandWorkLoad();
+            this.resourceMgt.expandWorkLoad(insCycles);
         }
 
         return --this.loopExpandCycle;

@@ -107,10 +107,17 @@
 
                                 <tbody id="FUnitSettingsTableBody">
                                     <tr>
-                                        <td>Load</td>
+                                        <td>Load C.Miss</td>
 
                                         <td>
-                                            <input type="text" id="cCyclesFormText" name="ld" value="2">
+                                            <input type="text" id="cCyclesFormText" name="ld_miss" value="2">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Load C.Hit</td>
+
+                                        <td>
+                                            <input type="text" id="cCyclesFormText" name="ld_hit" value="2">
                                         </td>
                                     </tr>
                                     <tr>
@@ -184,6 +191,32 @@
                             </table>
 
                         </div>
+
+                        <!-- <div class="cCacheSettings">
+                            <table id="cacheCycleTable" class="cFUnitSettingsTable">
+                                <thead>
+                                    <tr>
+                                        <th>OP (Cache)</th>
+                                        <th>Miss Cycle</th>
+                                        <th>Hit Cycle</th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody id="CacheSettingsTableBody">
+                                    <tr>
+                                        <td>Load</td>
+                                        <td>
+                                            <input type="text" id="cCacheFormText" name="cacheMiss" value="2">
+                                        </td>
+                                        <td>
+                                            <input type="text" id="cCacheFormText" name="cacheHit" value="0">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div> -->
 
                         <div id="FUnitsInputActionButton" class="cFUnitsInputActionButton cInputActionButton">
                             <button class="cInstructionActionButton cNextButton" onclick="submitInput()">Submit</button>
