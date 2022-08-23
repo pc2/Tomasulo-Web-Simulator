@@ -132,8 +132,32 @@ class ResourceManager {
 
     }
 
+    isConditionTrue(){
+        let brSrc1 = this.branchLoads[1].getFirstOperand();
+        let brSrc2 = this.branchLoads[1].getDestOperand();
+
+        let brSrc1Value = parseInt(this.scalerRAT.getRATContent(brSrc1));
+        let brSrc2Value = parseInt(this.scalerRAT.getRATContent(brSrc2));
+
+        let brOPType = this.branchLoads[1].getType();
+
+        switch (brOPType) {
+            case OPType.beqz:
+                return brSrc1Value == 0;
+            case OPType.bneq:
+                    return brSrc1Value == 0;
+            case OPType.bnez:
+                    return brSrc1Value != 0;
+            default:
+                break;
+        }
+    }
+
     expandWorkLoad(execCycles) {
 
+        if(!this.isConditionTrue()){
+            return;
+        }
         var branchIns = this.branchLoads[1];
         var loopCounterIns = this.branchLoads[0];
 
