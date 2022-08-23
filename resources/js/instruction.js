@@ -5,6 +5,7 @@ class Instruction {
         this.updateOperand(this.type, instruction);
         this.posAtQ = posAtQ;
         this.state = undefined;
+        this.rawDep=[];
 
         this.id = "id_" + Math.random().toString(36).slice(-10);
         this.orgInsHash = (rootInsHash==undefined)?this.id:rootInsHash;;

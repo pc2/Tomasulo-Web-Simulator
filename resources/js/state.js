@@ -45,8 +45,14 @@ class Init extends State {
                 " can not be issued because there is no free RS station to issue";
             wLoad.insertAnnotation(antMsg, wLoad.posAtQ, ResourceType.WorkLoad, 0);
         }
+        else  if(!resManager.depInsIssued(wLoad)){
+            antMsg = "Instruction " + wLoad.posAtQ + " can not be issued at cycle " + cycle+ " because of previous instruction did not complete";
+            wLoad.insertAnnotation(antMsg, wLoad.posAtQ, ResourceType.WorkLoad, 6);
+            
+        }
+        
         else {
-    
+
             antMsg = "Instruction " + wLoad.posAtQ + " issued at cycle " + cycle;
             wLoad.insertAnnotation(antMsg, wLoad.posAtQ, ResourceType.WorkLoad, 6);
             let nextState = new Issue(wLoad, cycle);
@@ -186,7 +192,8 @@ class Issue extends State {
 
             let nextState = new Execution(wLoad, cycle);
             nextState.moveState(cycle, resManager, insID);
-        }
+        } 
+       
         else { 
             
         

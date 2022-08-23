@@ -382,7 +382,8 @@ class ProcessManager {
             var wLoad = workLoads[indx];
             var insCurState = wLoad.getState();
 
-            if (insCurState == undefined) {
+            if (insCurState == undefined || 
+                (wLoad.getStateType() == StateType.Pending)) {
                 insCurState = new Init(wLoad, this.cycle);
                 insAlreadyIssued = true;
                 if (indx == (workLoads.length - 1)) {

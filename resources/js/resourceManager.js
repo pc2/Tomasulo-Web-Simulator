@@ -13,6 +13,7 @@ class ResourceManager {
     }
 
     initializeWLoad(instructions, execCycles) {
+        //find the level from instruction
         if ((instructions == undefined) ||
             (instructions.length == 0)) {
             console.error("No instruction found to load");
@@ -22,43 +23,80 @@ class ResourceManager {
         let indx = 0;
         for (indx = 0; indx < instructions.length; ++indx) {
             var color = getRandomColor(indx);
-            if (getOPClass(instructions[indx].OP) == "Branch") {
+            let curInstruction = instructions[indx];
+
+            let opName = getUniqueOPName(curInstruction.OP);
+            
+            if (getOPClass(opName) == "Branch") {
                 break;
             }
 
-            let opName = getUniqueOPName(instructions[indx].OP);
             let insCycle;
             if(getOPType(opName) != OPType.ld){
-                insCycle = execCycles[getUniqueOPName(instructions[indx].OP)];
+                insCycle = execCycles[opName];
             }else{
                 insCycle = execCycles["ld_miss"];
             }
 
-            var newIns = new Instruction(instructions[indx],insCycle, color, (indx + 1));
+            var newIns = new Instruction(curInstruction,insCycle, color, (indx + 1));
             this.workloads.push(newIns);
         }
 
         if (indx != instructions.length) {
             this.workloads.pop();
-            this.loopBodyloads = _.cloneDeep(this.workloads);
+            this.loopBodyloads = _.cloneDeep(this.workloads); // loop body should collect from level to branch instruction
             --indx;
-            if (getOPClass(instructions[indx].OP) != "Integer") {
+            let curInstruction = instructions[indx];
+            let opName = getUniqueOPName(curInstruction.OP);
+            if (getOPClass(opName) != "Integer") {
                 console.error("Instruction should be integer");
                 return;
             }
 
-
             var color = getRandomColor(indx);
-            var newIns = new Instruction(instructions[indx], 1, color, indx + 1);
+            var newIns = new Instruction(curInstruction, 1, color, indx + 1);
             this.branchLoads.push(newIns);
-
             ++indx;
+
             color = getRandomColor(indx);
-            newIns = new Instruction(instructions[indx], 1, color, indx + 1);
+            curInstruction = instructions[indx];
+            newIns = new Instruction(curInstruction, 1, color, indx + 1);
             this.branchLoads.push(newIns);
         }
 
         return 0;
+    }
+
+    findRAWDependency(instructions){
+        
+        if(instructions == undefined){
+            return;
+        }
+        for(let indxI=instructions.length-1; indxI >=0; --indxI){
+            let curIns = instructions[indxI];
+            curIns.rawDep=[];
+            for(let indxJ=indxI-1; indxJ >= 0; --indxJ){
+                let prevIns = instructions[indxJ];
+        
+                if((curIns.getFirstOperand() == prevIns.getDestOperand()) ||
+                    (curIns.getSecOperand() == prevIns.getDestOperand())
+                ){
+                    curIns.rawDep.push(prevIns.getID());
+                }
+            }
+        }
+    }
+
+    depInsIssued(wload){
+        var completed=true;
+        wload.rawDep.forEach(insId => {
+            let depLoad = this.getWLoadByID(insId);
+            if(depLoad.getStateType() < StateType.Issue){
+                completed=false;
+            }
+        });
+
+        return completed;
     }
 
 
@@ -138,6 +176,7 @@ class ResourceManager {
                 this.workloads.push(newInstruction);
             }
         }
+        this.findRAWDependency(this.workloads);
     }
 
     reinitializeWLoad() {
@@ -167,6 +206,8 @@ class ResourceManager {
     initializeResource(instructions, insCycles, unitsSize) {
         this.initializeRS(unitsSize);
         this.initializeWLoad(instructions, insCycles, unitsSize);
+        this.findRAWDependency(this.workloads);
+
     }
 
     reInitializeResource() {
@@ -174,6 +215,7 @@ class ResourceManager {
         this.scalerRAT.setInitialRegValue();
         this.rs.resetRSUnits();
         this.reinitializeWLoad();
+        this.findRAWDependency(this.workLoads);
     }
 
     getWLoads() {
