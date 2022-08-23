@@ -1,33 +1,4 @@
 
-// function getDest(ins) {
-//     var dest;
-//     if (getOPType(ins.OP) == OPType.sd) {
-//         dest = Number.isInteger(
-//             parseInt(ins.Src1)
-//         ) ? ins.Src2 : ins.Src1;
-//     } else {
-//         dest = ins.Dest;
-//     }
-
-//     return dest;
-// }
-
-// function getSrc(ins, OperandNumber = 1) {
-//     var src;
-//     if (getOPType(ins.OP) == OPType.sd) {
-//         src = ins.Dest;
-//     } else {
-//         if (OperandNumber == 1) {
-//             src = ins.Src1;
-//         }
-//         else {
-//             src = ins.Src2;
-//         }
-//     }
-
-//     return src;
-// }
-
 function isScalerRegister(reg) {
     if ((reg.startsWith("S") ||
         reg.startsWith("+") ||
@@ -60,12 +31,10 @@ function parseInstructions(content) {
                 "Src2": insParts[3],
             }
         );
-
     });
 
     return insList;
 }
-
 
 function LoopTestCase_1() {
     var instructions = [
@@ -163,12 +132,6 @@ function getLoopBodyOnly(instruction) {
 
 }
 
-
-
-
-
-
-
 function collectInstructionsFromUI() {
 
     var inputTable = document.getElementById("insInputTable");
@@ -192,7 +155,6 @@ function collectInstructionsFromUI() {
     }
 
     return instructions;
-
 }
 
 function collectExecCycleFromUI() {
@@ -203,6 +165,7 @@ function collectExecCycleFromUI() {
 
         ret[elemCycles[indx].name] = elemCycles[indx].value;
     }
+
     return ret;
 }
 
@@ -213,5 +176,6 @@ function collectUnitsSizeFromUI() {
 
         ret[elemUnits[indx].name] = elemUnits[indx].value;
     }
+
     return ret;
 }

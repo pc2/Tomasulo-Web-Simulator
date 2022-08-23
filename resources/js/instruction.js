@@ -1,14 +1,13 @@
 class Instruction {
-    constructor(instruction, cycle, color, posAtQ, rootInsHash=undefined) {
-        this.operator = instruction.OP;
+    constructor(instruction, cycle, color, posAtQ, rootInsHash = undefined) {
+        this.operator = getUniqueOPName(instruction.OP);
         this.type = getOPType(this.operator);
         this.updateOperand(this.type, instruction);
         this.posAtQ = posAtQ;
-        this.state = undefined;
-        this.rawDep=[];
+        this.rawDep = [];
 
         this.id = "id_" + Math.random().toString(36).slice(-10);
-        this.orgInsHash = (rootInsHash==undefined)?this.id:rootInsHash;;
+        this.orgInsHash = (rootInsHash == undefined) ? this.id : rootInsHash;;
         this.reqCycle = parseInt(cycle);
         this.exeCycle = parseInt(cycle);
         this.issueCycle = 0;
@@ -19,28 +18,17 @@ class Instruction {
         this.color = color;
         this.antTree = new AnnotationTree();
         this.antKeyTrack = undefined;
+        this.state = new Init(this, cycle);
     }
 
-    findIntegerOperand(operand) {
-        return Number.isInteger(
-            parseInt(operand)
-        );
-    }
+
     updateOperand(type, instruction) {
-        
-        if(type == OPType.sd &&
-            instruction.Dest.startsWith("S") && 
-            instruction.Src1.startsWith("F")) {
-                this.srcFirst = instruction.Src1;
-                this.srcSecond = instruction.Src2;
-                this.dest = instruction.Dest;
-                return;
-        }
-        if (this.findIntegerOperand(instruction.Src1)) {
+
+        if (isAddress(instruction.Src1)) {
             this.srcFirst = instruction.Src2;
             this.srcSecond = instruction.Src1;
         }
-        else if (this.findIntegerOperand(instruction.Src2)) {
+        else if (isAddress(instruction.Src2)) {
             this.srcFirst = instruction.Src1;
             this.srcSecond = instruction.Src2;
         } else {
@@ -49,7 +37,7 @@ class Instruction {
         }
 
         if (type == OPType.sd) {
-            this.dest  = this.srcFirst;
+            this.dest = this.srcFirst;
             this.srcFirst = instruction.Dest;
         } else {
             this.dest = instruction.Dest;
@@ -107,7 +95,7 @@ class Instruction {
         }
     }
 
-    isExpandedInstruction(){
+    isExpandedInstruction() {
         return this.orgInsHash != this.id;
     }
 

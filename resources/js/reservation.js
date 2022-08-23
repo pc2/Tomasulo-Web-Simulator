@@ -33,7 +33,7 @@ class RSBuffer {
         this.insHash = undefined;
         this.indx = indx;
 
-        this.readyForNextCycle=false;
+        this.readyForNextCycle = false;
     }
 
     reset() {
@@ -47,7 +47,7 @@ class RSBuffer {
         this.dest = undefined;
         this.insHash = undefined;
         this.Address = undefined;
-        this.readyForNextCycle=false;
+        this.readyForNextCycle = false;
     }
 
     getRSName() {
@@ -70,8 +70,8 @@ class RSBuffer {
     }
 
     isOperandReady() {
-        if(this.readyForNextCycle){
-            this.readyForNextCycle=false;
+        if (this.readyForNextCycle) {
+            this.readyForNextCycle = false;
             return false;
         }
 
@@ -347,17 +347,17 @@ class RSUnits {
             let flag = false;
             if (buffer.Qj == targetReg) {
                 flag = true;
-                buffer.Vj = (value==undefined)?"val("+targetReg+")":value;
+                buffer.Vj = (value == undefined) ? "val(" + targetReg + ")" : value;
                 buffer.Qj = 0;
             }
 
             if (buffer.Qk == targetReg) {
                 flag = true;
-                buffer.Vk = (value==undefined)?"val("+targetReg+")":value;
+                buffer.Vk = (value == undefined) ? "val(" + targetReg + ")" : value;
                 buffer.Qk = 0;
             }
-            if(buffer.Qj == 0 && buffer.Qk==0 && flag){
-                buffer.readyForNextCycle=true;
+            if (buffer.Qj == 0 && buffer.Qk == 0 && flag) {
+                buffer.readyForNextCycle = true;
             }
         });
 
@@ -365,17 +365,17 @@ class RSUnits {
             let flag = false;
             if (buffer.Qj == targetReg) {
                 flag = true;
-                buffer.Vj = (value==undefined)?"val("+targetReg+")":value;
+                buffer.Vj = (value == undefined) ? "val(" + targetReg + ")" : value;
                 buffer.Qj = 0;
             }
 
             if (buffer.Qk == targetReg) {
                 flag = true;
-                buffer.Vk = (value==undefined)?"val("+targetReg+")":value;
+                buffer.Vk = (value == undefined) ? "val(" + targetReg + ")" : value;
                 buffer.Qk = 0;
             }
-            if(buffer.Qj == 0 && buffer.Qk==0&& flag){
-                buffer.readyForNextCycle=true;
+            if (buffer.Qj == 0 && buffer.Qk == 0 && flag) {
+                buffer.readyForNextCycle = true;
             }
         });
 
@@ -384,17 +384,17 @@ class RSUnits {
             let flag = false;
             if (buffer.Qj == targetReg) {
                 flag = true;
-                buffer.Vj = (value==undefined)?"val("+targetReg+")":value;
+                buffer.Vj = (value == undefined) ? "val(" + targetReg + ")" : value;
                 buffer.Qj = 0;
             }
 
             if (buffer.Qk == targetReg) {
                 flag = true;
-                buffer.Vk = (value==undefined)?"val("+targetReg+")":value;
+                buffer.Vk = (value == undefined) ? "val(" + targetReg + ")" : value;
                 buffer.Qk = 0;
             }
-            if((buffer.Qj == 0 || buffer.Qk==0)&& flag){
-                buffer.readyForNextCycle=true;
+            if ((buffer.Qj == 0 || buffer.Qk == 0) && flag) {
+                buffer.readyForNextCycle = true;
             }
         });
     }

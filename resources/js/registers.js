@@ -94,13 +94,13 @@ class RAT {
         }
     }
 
-    setInitialRegValue(){
+    setInitialRegValue() {
         for (let i = 0; i < this.rtTable.length; ++i) {
-                this.rtTable[i].Qi = this.rtTable[i].id;
-            
+            this.rtTable[i].Qi = this.rtTable[i].id;
+
         }
     }
-    initializeScalerRAT(reg, value){
+    initializeScalerRAT(reg, value) {
         for (let i = 0; i < this.rtTable.length; ++i) {
             if (this.rtTable[i].name == reg) {
                 this.rtTable[i].Qi = value;
@@ -118,22 +118,22 @@ class RAT {
         }
     }
 
-    setRAT(reg,insId, rsName){
+    setRAT(reg, insId, rsName) {
         for (let i = 0; i < this.rtTable.length; ++i) {
             if (this.rtTable[i].name == reg) {
-              
-                    this.rtTable[i].Qi = rsName;
-                    this.rtTable[i].id = insId;
-                
-                }
+
+                this.rtTable[i].Qi = rsName;
+                this.rtTable[i].id = insId;
+
+            }
         }
     }
 
 
-    updateRat(reg,insId, rsName) {
+    updateRat(reg, insId, rsName) {
         for (let i = 0; i < this.rtTable.length; ++i) {
             if (this.rtTable[i].name == reg) {
-                if(rsName == this.rtTable[i].Qi){
+                if (rsName == this.rtTable[i].Qi) {
                     this.rtTable[i].Qi = this.rtTable[i].valueReg;
                     this.rtTable[i].id = "";
                     return this.rtTable[i].Qi;

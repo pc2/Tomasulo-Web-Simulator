@@ -45,12 +45,12 @@ class Init extends State {
                 " can not be issued because there is no free RS station to issue";
             wLoad.insertAnnotation(antMsg, wLoad.posAtQ, ResourceType.WorkLoad, 0);
         }
-        else  if(!resManager.depInsIssued(wLoad)){
-            antMsg = "Instruction " + wLoad.posAtQ + " can not be issued at cycle " + cycle+ " because of previous instruction did not complete";
+        else if (!resManager.depInsIssued(wLoad)) {
+            antMsg = "Instruction " + wLoad.posAtQ + " can not be issued at cycle " + cycle + " because of previous instruction did not complete";
             wLoad.insertAnnotation(antMsg, wLoad.posAtQ, ResourceType.WorkLoad, 6);
-            
+
         }
-        
+
         else {
 
             antMsg = "Instruction " + wLoad.posAtQ + " issued at cycle " + cycle;
@@ -136,7 +136,7 @@ class Issue extends State {
         rsbuffer.Operator = instruction.getOperator();
         rsbuffer.dest = instruction.getDestOperand();
         rsbuffer.insHash = instruction.getID();
-        if(instruction.getType() == OPType.sd){
+        if (instruction.getType() == OPType.sd) {
             rsbuffer.dest = "";
         }
         rat.setRAT(rsbuffer.dest, rsbuffer.insHash, rsbuffer.name);
@@ -176,27 +176,27 @@ class Issue extends State {
         }
         else if (rsbuffer.isOperandReady()) {
 
-            if( wLoad.isExpandedInstruction() &&
-            (wLoad.getType() == OPType.ld) ){
-            let orgIns = resManager.getWLoadByID(wLoad.orgInsHash);
-            let stateType = orgIns.getStateType();
-            if(stateType < StateType.WriteBack){
-                antMsg = "Load Instruction stalls (waits for the first L1 cache miss)";
-                wLoad.insertAnnotation(antMsg, wLoad.posAtQ, ResourceType.WorkLoad, 6);
-                return;
+            if (wLoad.isExpandedInstruction() &&
+                (wLoad.getType() == OPType.ld)) {
+                let orgIns = resManager.getWLoadByID(wLoad.orgInsHash);
+                let stateType = orgIns.getStateType();
+                if (stateType < StateType.WriteBack) {
+                    antMsg = "Load Instruction stalls (waits for the first L1 cache miss)";
+                    wLoad.insertAnnotation(antMsg, wLoad.posAtQ, ResourceType.WorkLoad, 6);
+                    return;
+                }
             }
-        }
 
             antMsg = "Instruction " + wLoad.posAtQ + " started execution. It takes " + wLoad.getReqCycle() + " cycles to complete: Format: \"start-end\"";
             wLoad.insertAnnotation(antMsg, wLoad.posAtQ, ResourceType.WorkLoad, 7);
 
             let nextState = new Execution(wLoad, cycle);
             nextState.moveState(cycle, resManager, insID);
-        } 
-       
-        else { 
-            
-        
+        }
+
+        else {
+
+
 
             // update the RS
             let tempQj = rsbuffer.Qj;
@@ -300,8 +300,8 @@ class WriteBack extends State {
         }
 
         if ((wLoad.getCycle(INSCycles.WriteBack) + 1) == cycle) {
-           
-    
+
+
             let nextState = new Finish(wLoad, cycle);
             nextState.moveState(cycle, resManager, insID);
             return;
@@ -311,8 +311,8 @@ class WriteBack extends State {
         var reqRSType = getRSType(wLoad.getOperator());
         var rsbuffer = rs.getRSBuffer(reqRSType, wLoad.getID());
         let value = rat.updateRat(wLoad.getDestOperand(), wLoad.getID(), rsbuffer.getRSName());
-       
-        
+
+
         rs.updateRSOperand(rsbuffer.getRSName(), value);
         var antMsg = "Instruction " + wLoad.posAtQ + " writes back. Load buffer sends result value " + value + " and id " + rsbuffer.getRSName() + " (“come from”) over CDB";
         wLoad.insertAnnotation(antMsg, wLoad.posAtQ, ResourceType.WorkLoad, 8);

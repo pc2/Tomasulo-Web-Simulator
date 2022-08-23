@@ -200,7 +200,8 @@ function getStateName(type) {
 }
 
 function isAddress(operand) {
-    return !isNaN(operand) && isFinite(operand);
+    return !isNaN(operand) &&
+        isFinite(operand);
 }
 
 function isNumber(operand) {

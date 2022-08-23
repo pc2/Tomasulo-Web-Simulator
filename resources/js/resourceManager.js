@@ -6,7 +6,7 @@ class ResourceManager {
         this.workloads = [];
         this.loopBodyloads = [];
         this.branchLoads = [];
-    }   
+    }
 
     initializeRS(unitsSize) {
         this.rs.createRSUnits(unitsSize);
@@ -26,19 +26,19 @@ class ResourceManager {
             let curInstruction = instructions[indx];
 
             let opName = getUniqueOPName(curInstruction.OP);
-            
+
             if (getOPClass(opName) == "Branch") {
                 break;
             }
 
             let insCycle;
-            if(getOPType(opName) != OPType.ld){
+            if (getOPType(opName) != OPType.ld) {
                 insCycle = execCycles[opName];
-            }else{
+            } else {
                 insCycle = execCycles["ld_miss"];
             }
 
-            var newIns = new Instruction(curInstruction,insCycle, color, (indx + 1));
+            var newIns = new Instruction(curInstruction, insCycle, color, (indx + 1));
             this.workloads.push(newIns);
         }
 
@@ -67,47 +67,50 @@ class ResourceManager {
         return 0;
     }
 
-    findRAWDependency(instructions){
-        
-        if(instructions == undefined){
+    findRAWDependency(instructions) {
+
+        if (instructions == undefined) {
             return;
         }
-        for(let indxI=instructions.length-1; indxI >=0; --indxI){
+
+        for (let indxI = instructions.length - 1; indxI >= 0; --indxI) {
+
             let curIns = instructions[indxI];
-            curIns.rawDep=[];
-            for(let indxJ=indxI-1; indxJ >= 0; --indxJ){
+            curIns.rawDep = [];
+
+            for (let indxJ = indxI - 1; (indxJ >= 0) &&
+                (instructions[indxJ].OPType != OPType.sd); --indxJ) {
                 let prevIns = instructions[indxJ];
-        
-                if((curIns.getFirstOperand() == prevIns.getDestOperand()) ||
+
+                if ((curIns.getFirstOperand() == prevIns.getDestOperand()) ||
                     (curIns.getSecOperand() == prevIns.getDestOperand())
-                ){
+                ) {
                     curIns.rawDep.push(prevIns.getID());
                 }
             }
         }
     }
 
-    depInsIssued(wload){
-        var completed=true;
+    depInsIssued(wload) {
+        var completed = true;
         wload.rawDep.forEach(insId => {
             let depLoad = this.getWLoadByID(insId);
-            if(depLoad.getStateType() < StateType.Issue){
-                completed=false;
+            if (depLoad.getStateType() < StateType.Issue) {
+                completed = false;
             }
         });
 
         return completed;
     }
 
-
-    hasLoopInstruction(){
-        if(this.loopBodyloads.length != 0){
+    hasLoopInstruction() {
+        if (this.loopBodyloads.length != 0) {
             return true;
         }
         return false;
     }
 
-    updateLoopCountInstruction(){
+    updateLoopCountInstruction() {
         var loopCounterIns = this.branchLoads[0];
 
         var src1 = loopCounterIns.getFirstOperand();
@@ -164,9 +167,9 @@ class ResourceManager {
                 };
 
                 let insCycle;
-                if(tempWorkLoad[indx].getType() != OPType.ld){
+                if (tempWorkLoad[indx].getType() != OPType.ld) {
                     insCycle = tempWorkLoad[indx].getCycle(INSCycles.ExecCycle);
-                }else{
+                } else {
                     insCycle = execCycles["ld_hit"];
                 }
 
@@ -183,7 +186,7 @@ class ResourceManager {
         var tempWLoad = [];
         var wLoad = this.workloads;
 
-        if(this.loopBodyloads.length != 0){
+        if (this.loopBodyloads.length != 0) {
             this.workloads = _.cloneDeep(this.loopBodyloads);
             return;
         }
@@ -220,6 +223,10 @@ class ResourceManager {
 
     getWLoads() {
         return this.workloads;
+    }
+
+    getLoopBody() {
+        return this.loopBodyloads;
     }
 
     getWLoadByID(id) {

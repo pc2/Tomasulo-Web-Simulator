@@ -16,9 +16,9 @@ class ProcessManager {
     }
 
     reInitializResource() {
-         var insCycles = this.architecture.getExecCycle();
-         this.antInsturctionCnt = 0;
-         this.loopExpandCycle = -1;
+        var insCycles = this.architecture.getExecCycle();
+        this.antInsturctionCnt = 0;
+        this.loopExpandCycle = -1;
         this.resourceMgt.reInitializeResource();
     }
 
@@ -117,19 +117,7 @@ class ProcessManager {
     }
 
     getWLoadContent() {
-        /**
-         *  [
-         *      {
-         *          OP:
-         *          Dest:
-         *      },
-         *      {
-         *          OP:
-         *          Dest:
-         *      }
-         *  ]
- 
-         */
+
         var wLoadList = [];
         var workLoads = this.resourceMgt.getWLoads();;
         if (workLoads == undefined) {
@@ -179,12 +167,14 @@ class ProcessManager {
             }
         });
 
-        for (let indxI = 0, indxJ = insQContent.length - 1; indxI < indxJ; ++indxI, --indxJ) {
+        for (let indxI = 0, indxJ = insQContent.length - 1;
+            indxI < indxJ; ++indxI, --indxJ) {
             let temp = insQContent[indxI];
             insQContent[indxI] = insQContent[indxJ];
             insQContent[indxJ] = temp;
 
         }
+
         return insQContent;
     }
 
@@ -213,12 +203,12 @@ class ProcessManager {
         return rsContents;
     }
 
-
     updateScalerReg(key, value) {
         var rat = this.getRAT(RegType.Scaler);
         value = (value == "") ? 0 : value;
         rat.initializeScalerRAT(key, value);
     }
+
     getRATContent(type) {
         var ratContents = [];
         var rat = this.getRAT(type).rtTable;
@@ -250,12 +240,29 @@ class ProcessManager {
         return this.resourceMgt.hasInstruction(opTypes);
     }
 
+    /**
+    l.d     f0  s1  0
+    mul.d   f4  f0  f2
+    s.d     s1  f4  0
+    add.d   s1  s1  -8
+    bneq    s1  s2  1
+ */
 
     findRAWDependency(wload, curIndx) {
         var rawDep = [];
 
+        if (wload[curIndx].OPType == OPType.sd) {
+            return rawDep;
+        }
+
         for (let indx = curIndx + 1; indx < wload.length; ++indx) {
-            if (
+
+            if ((wload[indx].getType() == OPType.sd) &&
+                (wload[curIndx].dest == wload[indx].srcFirst)
+            ) {
+                rawDep.push(wload[indx].getID());
+            }
+            else if (
                 (wload[curIndx].dest == wload[indx].srcFirst) ||
                 (wload[curIndx].dest == wload[indx].srcSecond)
             ) {
@@ -269,52 +276,42 @@ class ProcessManager {
     findOutputDependency(wload, curIndx) {
         var wawDep = [];
 
+        if (wload[curIndx].OPType == OPType.sd) {
+            return rawDep;
+        }
+
         for (let indx = curIndx + 1; indx < wload.length; ++indx) {
-            if (wload[curIndx].dest == wload[indx].dest) {
+            if ((wload[indx].getType() != OPType.sd) &&
+                wload[curIndx].dest == wload[indx].dest) {
                 wawDep.push(wload[indx].getID());
             }
         }
-        return wawDep;
 
+        return wawDep;
     }
 
     findAntiDependency(wload, curIndx) {
         var warDep = [];
 
         for (let indx = curIndx + 1; indx < wload.length; ++indx) {
-            if ((wload[curIndx].srcFirst == wload[indx].dest) ||
-                (wload[curIndx].srcSecond == wload[indx].dest)) {
+            if ((wload[indx].getType() != OPType.sd) &&
+                ((wload[curIndx].srcFirst == wload[indx].dest) ||
+                    (wload[curIndx].srcSecond == wload[indx].dest))
+            ) {
                 warDep.push(wload[indx].getID());
             }
         }
 
         return warDep;
     }
-    /**
-     * {
-     *  ins_id_0 : [ins_id_1, ins_id_2, ins_id_3]
-     *  ins_id_2 : [ins_id_1, ins_id_2, ins_id_3]
-     * }
-     *[
-        ins_id_0:{
-        raw: id_2
-        waw: id_3,
-        war:0
-        },
-        
-        ins_id_0:{
-        raw: id_2
-        waw: id_3,
-        war:0
-        }
-     }
-     */
 
     calculateDependency() {
+
         var dependencyList = [];
         var wLoads = this.resourceMgt.getWLoads();
-
-
+        if (this.hasBranch()) {
+            wLoads = this.resourceMgt.getLoopBody();
+        }
         wLoads.forEach(function (element, indx) {
             let dependencyforId = {
                 "posAt": indx,
@@ -326,6 +323,7 @@ class ProcessManager {
             }
             dependencyList.push(dependencyforId)
         }, this);
+
         return dependencyList;
     }
 
@@ -339,13 +337,13 @@ class ProcessManager {
         return counter;
     }
 
-    processLoopInstructions(){
+    processLoopInstructions() {
         var insCycles = this.architecture.getExecCycle();
 
-        if(this.loopExpandCycle < 0){
+        if (this.loopExpandCycle < 0) {
             this.loopExpandCycle = -1;
         }
-        if(this.loopExpandCycle == 1){
+        if (this.loopExpandCycle == 1) {
             this.resourceMgt.updateLoopCountInstruction();
             this.resourceMgt.expandWorkLoad(insCycles);
         }
@@ -353,11 +351,11 @@ class ProcessManager {
         return --this.loopExpandCycle;
     }
 
-    hasBranch(){
+    hasBranch() {
         return this.resourceMgt.hasLoopInstruction();
     }
 
-    setLoopProcessFlag(){
+    setLoopProcessFlag() {
         this.loopExpandCycle = 3;
     }
 
@@ -373,19 +371,18 @@ class ProcessManager {
         }
 
         ++this.cycle;
-
-        var insAlreadyIssued = false;
+        var inOrderIssue = false;
         var exDoneCounter = 0;
+
         for (let indx = 0; indx < workLoads.length
-            && (insAlreadyIssued != true); ++indx) {
+            && (inOrderIssue != true); ++indx) {
 
             var wLoad = workLoads[indx];
             var insCurState = wLoad.getState();
 
-            if (insCurState == undefined || 
-                (wLoad.getStateType() == StateType.Pending)) {
+            if (wLoad.getStateType() == StateType.Pending) {
                 insCurState = new Init(wLoad, this.cycle);
-                insAlreadyIssued = true;
+                inOrderIssue = true;
                 if (indx == (workLoads.length - 1)) {
                     this.setLoopProcessFlag();
                 }
@@ -400,11 +397,10 @@ class ProcessManager {
                     console.info("All instruction execution done");
                     return 0;
                 }
-                continue;
             }
         }
 
-         if(this.hasBranch() ){
+        if (this.hasBranch()) {
             this.processLoopInstructions();
         }
 
@@ -441,7 +437,6 @@ class ProcessManager {
         }
 
         return true;
-
     }
 
     forwardAnnotation() {
