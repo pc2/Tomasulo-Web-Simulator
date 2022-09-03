@@ -6,6 +6,7 @@ class ProcessManager {
         this.cycle = 0;
         this.antInsturctionCnt = 0;
         this.loopExpandCycle = -1;
+        this.cycleCounts = 0;
     }
 
     initializeResource() {
@@ -359,6 +360,21 @@ class ProcessManager {
         this.loopExpandCycle = 3;
     }
 
+    setTotalCycle() {
+        let cycle = 1;
+        while (cycle != 0) {
+            this.cycleCounts = cycle;
+            cycle = this.cycleStepForward();
+        }
+
+        this.cycleInitStep();
+        return;
+    }
+
+    getTotalCycle() {
+        return this.cycleCounts;
+    }
+
     cycleStepForward() {
         var workLoads = this.getWLoads();
         this.antInsturctionCnt = workLoads.length - 1;
@@ -426,6 +442,12 @@ class ProcessManager {
         while (--cycle && cycle > 0) {
             this.cycleStepForward()
         }
+        return this.cycle;
+    }
+
+    cycleInitStep() {
+        this.reInitializResource();
+        this.cycle = 0;
         return this.cycle;
     }
 

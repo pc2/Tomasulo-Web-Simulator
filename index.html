@@ -292,6 +292,11 @@
                 <div id="cycle" class="cCycle">
                 </div>
 
+                <div id="jmpCycle" class="cJmpCycle">
+                    <select id="jmpCycleSelection">
+                    </select>
+                </div>
+
                 <div id="antCycles" class="cAntCycles">
                 </div>
 
@@ -361,6 +366,7 @@
             showRAT();
             showWorkLoad();
             showCycle(0);
+            showCycleSelection();
         }
 
         introJs().setOptions({
@@ -818,6 +824,8 @@
             updateScalerRAT();
             updateRSView();
             showCycle(0);
+            mgtCtr.setTotalCycle();
+            showCycleSelection();
         }
 
         function getScalerOperandValue(src1Ctx, src2Ctx) {
@@ -914,13 +922,10 @@
             });
 
             var instructions = collectInstructionsFromUI();
-
             var branchIndx = checkForBranch(instructions);
-
             if (branchIndx) {
                 popupForScalerRegister(instructions[branchIndx]);
             }
-
 
             var execCycles = collectExecCycleFromUI();
             var unitsSize = collectUnitsSizeFromUI();
@@ -1123,6 +1128,49 @@
             divElem.textContent = cycleNum;
         }
 
+        function jumpToCycle(targetCycle) {
+            targetCycle = parseInt(targetCycle);
+            targetCycle -= 1;
+            mgtCtr.cycleInitStep();
+            var indx = 0;
+            while (indx < targetCycle) {
+                mgtCtr.cycleStepForward();
+                ++indx;
+            }
+
+            executeStepBy(direction = Direction.Forward)
+
+        }
+
+        function showCycleSelection() {
+            var solutionCycle = 0;
+            if (mgtCtr != undefined) {
+                solutionCycle = mgtCtr.getTotalCycle();
+            }
+            var selectElem = document.getElementById("jmpCycleSelection");
+            selectElem.innerHTML = "";
+            var option = document.createElement("option");
+            option.value = "jmp";
+            option.text = "JUMP";
+            selectElem.appendChild(option);
+
+            var indx = 1;
+            while (indx < solutionCycle) {
+                option = document.createElement("option");
+                option.value = indx;
+                option.text = indx;
+
+                selectElem.addEventListener('change', function () {
+                    let select = document.getElementById('jmpCycleSelection');
+                    let value = select.options[select.selectedIndex].value;
+                    jumpToCycle(value);
+                }, true);
+                selectElem.appendChild(option);
+                ++indx;
+            }
+
+        }
+
         function showRAT() {
             var hdrList = ["Register", "Value"];
             completeTableCreation("RATable", hdrList);
@@ -1228,6 +1276,7 @@
             updateScalerRAT();
             updateWLoad();
             showCycle(cycleNum);
+
             var IQContent = mgtCtr.getIQContent();
             var rsContent = mgtCtr.getRSContent();
             var fpContent = mgtCtr.getFPContent();
