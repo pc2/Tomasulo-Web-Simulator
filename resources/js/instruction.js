@@ -1,13 +1,15 @@
 class Instruction {
     constructor(instruction, cycle, color, posAtQ, rootInsHash = undefined) {
+
+        this.id = "id_" + Math.random().toString(36).slice(-10);
+        this.orgInsHash = (rootInsHash == undefined) ? this.id : rootInsHash;;
+
         this.operator = getUniqueOPName(instruction.OP);
         this.type = getOPType(this.operator);
         this.updateOperand(this.type, instruction);
         this.posAtQ = posAtQ;
         this.rawDep = [];
 
-        this.id = "id_" + Math.random().toString(36).slice(-10);
-        this.orgInsHash = (rootInsHash == undefined) ? this.id : rootInsHash;;
         this.reqCycle = parseInt(cycle);
         this.exeCycle = parseInt(cycle);
         this.issueCycle = 0;
@@ -36,7 +38,7 @@ class Instruction {
             this.srcSecond = instruction.Src2;
         }
 
-        if (type == OPType.sd) {
+        if (type == OPType.sd && !this.isExpandedInstruction()) {
             this.dest = this.srcFirst;
             this.srcFirst = instruction.Dest;
         } else {
