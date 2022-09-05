@@ -210,6 +210,13 @@ class ProcessManager {
         rat.initializeScalerRAT(key, value);
     }
 
+
+    getScalerRegValue(key) {
+        var rat = this.getRAT(RegType.Scaler);
+        const regCtx = rat.rtTable.find(({ name }) => name === key);
+        return parseInt(regCtx.Qi);
+    }
+
     getRATContent(type) {
         var ratContents = [];
         var rat = this.getRAT(type).rtTable;

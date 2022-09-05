@@ -8,6 +8,12 @@ class ResourceManager {
         this.branchLoads = [];
     }
 
+    getBranchRegisters() {
+
+        var brInstruction = this.branchLoads[1];
+        return [brInstruction.dest, brInstruction.srcFirst];
+    }
+
     initializeRS(unitsSize) {
         this.rs.createRSUnits(unitsSize);
     }
@@ -125,6 +131,7 @@ class ResourceManager {
             src2Value = 0;
         }
         var ratValue = src1Value + src2Value;
+
         this.scalerRAT.updateScalerRat(src1, ratValue);
         if (ratValue < 0) {
             console.log("increment or decrement operator value is negative");
@@ -132,7 +139,7 @@ class ResourceManager {
 
     }
 
-    isConditionTrue(){
+    isConditionTrue() {
         let brSrc1 = this.branchLoads[1].getFirstOperand();
         let brSrc2 = this.branchLoads[1].getDestOperand();
 
@@ -145,9 +152,9 @@ class ResourceManager {
             case OPType.beqz:
                 return brSrc1Value == 0;
             case OPType.bneq:
-                    return brSrc1Value == 0;
+                return brSrc1Value == 0;
             case OPType.bnez:
-                    return brSrc1Value != 0;
+                return brSrc1Value != 0;
             default:
                 break;
         }
@@ -155,7 +162,7 @@ class ResourceManager {
 
     expandWorkLoad(execCycles) {
 
-        if(!this.isConditionTrue()){
+        if (!this.isConditionTrue()) {
             return;
         }
         var branchIns = this.branchLoads[1];
