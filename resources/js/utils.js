@@ -78,11 +78,11 @@ const ResourceType = {
 Object.freeze(ResourceType);
 
 const StateType = {
-    "Pending": 0,
+    "Init": 0,
     "Issue": 1,
     "Execution": 2,
     "WriteBack": 3,
-    "Done": 4
+    "Finish": 4
 };
 Object.freeze(StateType);
 

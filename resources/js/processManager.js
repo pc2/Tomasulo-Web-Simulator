@@ -162,7 +162,7 @@ class ProcessManager {
         var insQContent = [];
         var wLoadContents = this.getWLoadContent();
         wLoadContents.forEach(wLoad => {
-            if (wLoad.StateType == StateType.Pending ||
+            if (wLoad.StateType == StateType.Init ||
                 (wLoad.StateType == undefined)) {
                 insQContent.push(wLoad);
             }
@@ -403,7 +403,7 @@ class ProcessManager {
             var wLoad = workLoads[indx];
             var insCurState = wLoad.getState();
 
-            if (wLoad.getStateType() == StateType.Pending) {
+            if (wLoad.getStateType() == StateType.Init) {
                 insCurState = new Init(wLoad, this.cycle);
                 inOrderIssue = true;
                 if (indx == (workLoads.length - 1)) {
@@ -414,7 +414,7 @@ class ProcessManager {
             wLoad.insertAntNode();
             insCurState.process(this.cycle, this.resourceMgt, wLoad.getID());
 
-            if (wLoad.getStateType() == StateType.Done) {
+            if (wLoad.getStateType() == StateType.Finish) {
                 ++exDoneCounter;
                 if (exDoneCounter == (workLoads.length)) {
                     console.info("All instruction execution done");
@@ -461,7 +461,7 @@ class ProcessManager {
     checkForAnnotation(instruction) {
 
         if (instruction.getState() == undefined ||
-            instruction.getStateType() == StateType.Done) {
+            instruction.getStateType() == StateType.Finish) {
             return false;
         }
 

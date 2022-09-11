@@ -20,7 +20,7 @@ class State {
 
 class Init extends State {
     constructor(instruction, cycle = 0) {
-        super(StateType.Pending, cycle);
+        super(StateType.Init, cycle);
         instruction.setState(this);
         instruction.resetCycles();
     }
@@ -335,7 +335,7 @@ class WriteBack extends State {
 class Finish extends State {
 
     constructor(instruction, cycle = 0) {
-        super(StateType.Done, cycle);
+        super(StateType.Finish, cycle);
         instruction.setState(this);
     }
 
