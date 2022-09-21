@@ -460,8 +460,9 @@ class ProcessManager {
 
     checkForAnnotation(instruction) {
 
-        if (instruction.getState() == undefined ||
-            instruction.getStateType() == StateType.Finish) {
+        if ((instruction.getState() == undefined) ||
+            (instruction.getStateType() == StateType.Finish)||
+             !instruction.isAnyAnnotation()) {
             return false;
         }
 

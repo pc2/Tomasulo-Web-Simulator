@@ -78,10 +78,11 @@
                             <button class="cInstructionActionButton cNextButton"
                                 onclick="ShowFunitSettings()">Next</button>
 
+
                             <button class="cInstructionActionButton cLeftInputButton"
-                                onclick="LoopTestCase_1()">Test-01</button>
+                                onclick="LoadTestCase_2()">Test-01</button>
                             <button class="cInstructionActionButton cLeftInputButton"
-                                onclick="LoadTestCase_2()">Test-02</button>
+                                onclick="LoopTestCase_1()">Test-02</button>
 
                             <button type="button" for='file' class="cInstructionActionButton cLeftInputButton"
                                 onclick="LoadFromFile(this)">
@@ -442,7 +443,7 @@
                     intro: 'Register address table; value denotes which FU will write to which register ',
                     position: 'left'
                 },]
-        }).start();
+        });//.start();
 
 
 
