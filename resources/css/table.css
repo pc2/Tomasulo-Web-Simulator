@@ -28,11 +28,13 @@ table tr {
 }
 
 .cFUnitSettingsTable {
+  position: relative;
   table-layout: fixed;
 }
 
 #FUnitsCycleTable td {
   height: 40%;
+  width: 70%;
 }
 
 #rowButton{
