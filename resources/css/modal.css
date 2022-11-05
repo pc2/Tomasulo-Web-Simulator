@@ -113,5 +113,24 @@ button:hover {
   color: #f44336;
   cursor: pointer;
 }
+@keyframes blink {
+  0% {
+      opacity: 1;
+  }
+  49% {
+      opacity: 1;
+  }
+  50% {
+      opacity: 0;
+  }
+  100% {
+      opacity: 0;
+  }
+}
+
+#Instruction{
+  animation: blink 1s;
+    animation-iteration-count: 2;
+}
 
 /* */

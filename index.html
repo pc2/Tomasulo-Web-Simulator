@@ -58,12 +58,12 @@
 
 
                     <div class="cInputContainerTab cTab">
-                        <button class="cInputContainerTabItem cTabButton  cTab-red"
-                            onclick="TabSelection('InstructionsInput')">Instruction</button>
-                        <button class="cInputContainerTabItem cTabButton "
-                            onclick="TabSelection('FUnitsInput')">FUnits</button>
-                        <button class="cInputContainerTabItem cTabButton"
-                            onclick="TabSelection('Workload')">Workload</button>
+                        <button class="cInputContainerTabItem cTabButton" id="Instruction" style="background-color: rgb(235, 190, 142);"
+                            onclick="TabSelection('InstructionsInput','Instruction')">Instruction</button>
+                        <button class="cInputContainerTabItem cTabButton " id="Funits"
+                            onclick="TabSelection('FUnitsInput','Funits')">FUnits</button>
+                        <button class="cInputContainerTabItem cTabButton" id="Workloads"
+                            onclick="TabSelection('Workload','Workloads')">Workload</button>
                     </div>
 
                     <div id="InstructionsInput" class="cInstructionsInput cInputBody">
@@ -942,7 +942,7 @@
 
 
             generateENV(instructions, execCycles, unitsSize);
-            TabSelection("Workload");
+            TabSelection("Workload","Workloads");
             var dependencyList = mgtCtr.calculateDependency();
             drawDependencyGraph(dependencyList);
             var unitsSize = collectUnitsSizeFromUI();
@@ -1077,18 +1077,22 @@
             }
         }
 
-        function TabSelection(TabName) {
+        function TabSelection(TabBodyID, TabId) {
             var i, x, tablinks;
             x = document.getElementsByClassName("cInputBody");
             for (i = 0; i < x.length; i++) {
                 x[i].style.display = "none";
             }
+
             tablinks = document.getElementsByClassName("cInputContainerTabItem");
-            for (i = 0; i < x.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace("cTab-red", "");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].style.backgroundColor = "";
             }
-            var currentTab = document.getElementById(TabName);
-            currentTab.style.display = "block";
+
+            document.getElementById(TabId).style.backgroundColor="rgb(235, 190, 142)";
+
+            var currentTabBody = document.getElementById(TabBodyID);
+            currentTabBody.style.display = "block";
         }
 
         function hightlighAntCycle(cycleNumber) {
@@ -1197,7 +1201,7 @@
         }
 
         function ShowFunitSettings() {
-            TabSelection("FUnitsInput");
+            TabSelection("FUnitsInput","Funits");
         }
 
         function placeholder() {
