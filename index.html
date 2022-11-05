@@ -694,6 +694,12 @@
                             id = cells[4].childNodes[0].id;
                             elem = document.getElementById(id);
                             selectOptionInCell(elem, ins.Src2);
+                            if(getOPClass(ins.OP) == "Branch"){
+                                markInstruction(id);
+                                document.getElementById(id).addEventListener('change', function () {
+                                    markInstruction(id);
+                                }, false);
+                            }
                             break;
 
                     }
