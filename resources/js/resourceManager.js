@@ -4,6 +4,7 @@ class ResourceManager {
         this.rat = new RAT(32);
         this.scalerRAT = new RAT(32, RegType.Scaler)
         this.workloads = [];
+        this.postBranchLoads = [];
         this.loopBodyloads = [];
         this.branchLoads = [];
     }
@@ -17,6 +18,58 @@ class ResourceManager {
     initializeRS(unitsSize) {
         this.rs.createRSUnits(unitsSize);
     }
+
+    _extractLoopBody(instructions, brIndx) {
+
+        let brIns = instructions[brIndx];
+        let brStartIndx = parseInt(brIns.Src2);
+        if (brStartIndx >= (brIndx - 1)) {
+            console.log("No valid instruction selected for loop body");
+            return;
+        }
+
+        for (let indx = brStartIndx - 1; indx <= brIndx - 2; ++indx) {
+            this.loopBodyloads.push(this.workloads[indx]);
+        }
+    }
+
+    // initializeWLoad(instructions, execCycles){
+    //     if ((instructions == undefined) ||
+    //         (instructions.length == 0)) {
+    //             console.error("No instruction found to load");
+    //             return undefined;
+    //     }
+
+    //     let branchFound = false;
+    //     let indx = 0;
+    //     for (indx = 0; indx < instructions.length; ++indx) {
+    //         var color = getRandomColor(indx);
+    //         let curInstruction = instructions[indx];
+    //         let opName = getUniqueOPName(curInstruction.OP);
+
+    //         let insCycle;
+    //         if (getOPType(opName) != OPType.ld) {
+    //             insCycle = execCycles[opName];
+    //         } else {
+    //             insCycle = execCycles["ld_miss"];
+    //         }
+
+    //         var newIns = new Instruction(curInstruction, insCycle, color, (indx + 1));
+    //         if (getOPClass(opName) == "Branch") {
+    //             this.branchLoads.push(this.workloads.pop());
+    //             this.branchLoads.push(newIns);
+    //             this._extractLoopBody(instructions,indx);
+    //             branchFound=true;
+    //             continue;
+    //         }
+
+    //         if(branchFound){
+    //             this.postBranchLoads.push(newIns);
+    //         }else{
+    //             this.workloads.push(newIns);
+    //         }
+    //     }
+    // }
 
     initializeWLoad(instructions, execCycles) {
         //find the level from instruction
@@ -132,10 +185,10 @@ class ResourceManager {
         }
         var ratValue = src1Value + src2Value;
 
-        this.scalerRAT.updateScalerRat(src1, ratValue);
         if (ratValue < 0) {
             console.log("increment or decrement operator value is negative");
         }
+        this.scalerRAT.updateScalerRat(src1, ratValue);
 
     }
 
@@ -146,13 +199,16 @@ class ResourceManager {
         let brSrc1Value = parseInt(this.scalerRAT.getRATContent(brSrc1));
         let brSrc2Value = parseInt(this.scalerRAT.getRATContent(brSrc2));
 
+        if (isNaN(brSrc1Value) || isNaN(brSrc2Value)) {
+            return false;
+        }
         let brOPType = this.branchLoads[1].getType();
 
         switch (brOPType) {
             case OPType.beqz:
                 return brSrc1Value == 0;
             case OPType.bneq:
-                return brSrc1Value == 0;
+                return brSrc1Value != brSrc2Value;
             case OPType.bnez:
                 return brSrc1Value != 0;
             default:
