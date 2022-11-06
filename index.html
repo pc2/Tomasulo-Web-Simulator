@@ -58,7 +58,8 @@
 
 
                     <div class="cInputContainerTab cTab">
-                        <button class="cInputContainerTabItem cTabButton" id="Instruction" style="background-color: rgb(235, 190, 142);"
+                        <button class="cInputContainerTabItem cTabButton" id="Instruction"
+                            style="background-color: rgb(235, 190, 142);"
                             onclick="TabSelection('InstructionsInput','Instruction')">Instruction</button>
                         <button class="cInputContainerTabItem cTabButton " id="Funits"
                             onclick="TabSelection('FUnitsInput','Funits')">FUnits</button>
@@ -694,16 +695,14 @@
                             id = cells[4].childNodes[0].id;
                             elem = document.getElementById(id);
                             selectOptionInCell(elem, ins.Src2);
-                            if(getOPClass(ins.OP) == "Branch"){
+                            if (getOPClass(ins.OP) == "Branch") {
                                 markInstruction(id);
                                 document.getElementById(id).addEventListener('change', function () {
                                     markInstruction(id);
                                 }, false);
                             }
                             break;
-
                     }
-
                 }
             });
 
@@ -948,7 +947,7 @@
 
 
             generateENV(instructions, execCycles, unitsSize);
-            TabSelection("Workload","Workloads");
+            TabSelection("Workload", "Workloads");
             var dependencyList = mgtCtr.calculateDependency();
             drawDependencyGraph(dependencyList);
             var unitsSize = collectUnitsSizeFromUI();
@@ -1095,7 +1094,7 @@
                 tablinks[i].style.backgroundColor = "";
             }
 
-            document.getElementById(TabId).style.backgroundColor="rgb(235, 190, 142)";
+            document.getElementById(TabId).style.backgroundColor = "rgb(235, 190, 142)";
 
             var currentTabBody = document.getElementById(TabBodyID);
             currentTabBody.style.display = "block";
@@ -1207,7 +1206,7 @@
         }
 
         function ShowFunitSettings() {
-            TabSelection("FUnitsInput","Funits");
+            TabSelection("FUnitsInput", "Funits");
         }
 
         function placeholder() {
@@ -1308,6 +1307,14 @@
             return { top: _y, left: _x };
         }
 
+        function ScrollToElement(theElement, posY) {
+
+            var selectedPosX = 0;
+            var selectedPosY = posY;
+
+            theElement.scrollTo(selectedPosX, selectedPosY);
+        }
+
         function prepareAntBox(domElement, theCanvas, tableElem, message, rowNumber, points2Cell) {
 
 
@@ -1319,6 +1326,7 @@
             var cell = (tableElem.rows[1].cells[0]);
             var cellHeight = cell.clientHeight;
             var cellWidth = cell.clientWidth;
+            var elemVisibleRows = (domElement.offsetHeight / cell.offsetHeight) - 2;
 
             var points2X = LTX + points2Cell * (cellWidth) + (cellWidth / 2);
             var points2Y = LTY + rowNumber * (cellHeight);
@@ -1334,6 +1342,15 @@
                 boxPosY = LTY + cellHeight;
             }
 
+            if (points2Y > (elemVisibleRows * cellHeight)) {
+                var rowScrolledInPix = points2Y - (elemVisibleRows * cellHeight);
+                ScrollToElement(domElement, rowScrolledInPix);
+                points2Y = (points2Y - rowScrolledInPix);
+
+            }
+            else {
+                ScrollToElement(domElement, 0);
+            }
             drawAntBox(theCanvas, boxPosX, boxPosY, message, points2X, points2Y);
             theCanvas.style.display = "block";
             theCanvas.style.position = "absolute";
@@ -1427,7 +1444,7 @@
         }
 
     </script>
-
+    _x
 
 </body>
 

@@ -1,4 +1,5 @@
 table {
+  position: relative;
   table-layout: fixed;
   width: 100%;
 }
@@ -20,7 +21,6 @@ table td {
   padding: .2%;
   text-align: center;
   font-family: "Lucida Console", "Courier New", monospace;
-
 }
 
 table tr {
