@@ -246,12 +246,12 @@
 
                     <div id="statistics" class="cStatistics cDataBody">
                         <canvas id="graphCanvas" style="display:none"></canvas>
-                        <button class="cDependendencyBtn" style="background-color: #cc5875; "
-                            onclick="showRAW()">RAW</button>
                         <button class="cDependendencyBtn" style="background-color: #e49d6a;"
                             onclick="showWAW()">WAW</button>
                         <button class="cDependendencyBtn" style="background-color: #c2da2c;"
                             onclick="showWAR()">WAR</button>
+                        <button class="cDependendencyBtn" style="background-color: #cc5875; "
+                            onclick="showRAW()">RAW</button>
 
 
                     </div>
@@ -807,7 +807,7 @@
             drawDependencyGraph(dependencyList, "war");
         }
 
-        function drawDependencyGraph(dependencyList, dependencyType = "") {
+        function drawDependencyGraph(dependencyList, dependencyType = "raw") {
             var domElement = document.getElementById("statistics");
             var theCanvas = document.getElementById("graphCanvas");
             //theCanvas.style.display = "none";
@@ -844,15 +844,26 @@
 
         }
 
-        function popupForScalerRegister(instruction) {
-            var src1 = instruction.Dest;
-            var src2 = instruction.Src1;
-            if (!isScalerRegister(src1) || !isScalerRegister(src2)) {
-                popupModal(("No Scaler register or value for operands : " + src1 + " Or  " + src2));
-                return 0;
+        function popupModal(text) {
+            document.getElementById('modalTop').style.display = "block";
+            var modalForm = document.querySelector(".modalFormContent");
+            modalForm.style.display = "block";
+            modalForm.innerHTML = "";
+
+            var divElem = document.createElement("div");
+            divElem.setAttribute("id", "popTextDiv");
+            var textNode = document.createTextNode(text);
+            divElem.appendChild(textNode);
+            modalForm.appendChild(divElem);
+        }
+
+        function updateScalerRegister(modalForm, selectList, src1, src2) {
+            // Create a form dynamically
+            var removeElem = document.getElementById("input4Reg");
+            if (removeElem != null) {
+                removeElem.remove();
             }
 
-            // Create a form dynamically
             var submitBtn = document.createElement("button");
             submitBtn.id = "input4Reg";
             submitBtn.innerHTML = "submit";
@@ -862,42 +873,77 @@
                 getScalerOperandValue([src1.getAttribute("name"), src1.value], [src2.getAttribute("name"), src2.value]);
             });
 
+            let value = selectList.options[selectList.selectedIndex].value;
+
+            removeElem = document.getElementById("scalerRegSrc_1");
+            if (removeElem != null) {
+                removeElem.remove();
+            }
+
             // Create an input element for Full Name
             var elemSrc1 = document.createElement("input");
             elemSrc1.id = "scalerRegSrc_1";
             elemSrc1.className = "scalerRegister";
+            elemSrc1.value = 80;
             elemSrc1.setAttribute("name", src1);
             elemSrc1.setAttribute("type", "text");
             elemSrc1.setAttribute("placeholder", src1);
 
+            removeElem = document.getElementById("scalerRegSrc_2");
+            if (removeElem != null) {
+                removeElem.remove();
+            }
 
             var elemSrc2 = document.createElement("input");
             elemSrc2.setAttribute("id", "scalerRegSrc_2");
             elemSrc2.className = "scalerRegister";
+            elemSrc2.value = (80 - value * 8);
             elemSrc2.setAttribute("name", src2);
             elemSrc2.setAttribute("type", "text");
             elemSrc2.setAttribute("placeholder", src2);
 
-            document.getElementById('modalTop').style.display = "block";
-            var modalForm = document.querySelector(".modalFormContent");
-            modalForm.style.display = "block";
-            modalForm.innerHTML = "";
             modalForm.appendChild(elemSrc1);
             modalForm.appendChild(elemSrc2);
             modalForm.appendChild(submitBtn);
-
         }
 
-        function popupModal(text) {
-            document.getElementById('modalTop').style.display = "block";
+        function popupForScalerRegister(instruction) {
 
+            document.getElementById('modalTop').style.display = "block";
             var modalForm = document.querySelector(".modalFormContent");
             modalForm.style.display = "block";
             modalForm.innerHTML = "";
-            var textNode = document.createTextNode(text);
-            modalForm.appendChild(textNode);
-        }
 
+            var src1 = instruction.Dest;
+            var src2 = instruction.Src1;
+
+            if (!isScalerRegister(src1) || !isScalerRegister(src2)) {
+                popupModal(("No Scaler register or value for operands : " + src1 + " Or  " + src2));
+                return 0;
+            }
+
+            popupModal("System has detected a branch instruction. Please enter number of iteration.");
+
+            var itrLabel = document.createElement("Label");
+            itrLabel.setAttribute("for", "itrLabel");
+            itrLabel.innerHTML = "Iteration Count: ";
+            modalForm.appendChild(itrLabel);
+
+            var selectList = document.createElement("select");
+            selectList.id = "itrLabel";
+            selectList.addEventListener('change', function () {
+                updateScalerRegister(modalForm, selectList, src1, src2);
+            }, false);
+
+            for (var i = 0; i <= 10; i++) {
+                var option = document.createElement("option");
+                option.value = i;
+                option.text = i;
+                selectList.appendChild(option);
+            }
+
+            modalForm.appendChild(selectList);
+        }
 
         function closeModal() {
             document.getElementById('modalTop').style.display = 'none';

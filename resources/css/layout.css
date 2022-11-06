@@ -67,8 +67,12 @@
   width: 100%;
   background-color: rgb(241, 246, 247);
   text-align: left;
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: auto;
+
 }
+
+
 
 .cDependendencyBtn {
   position: relative;
@@ -294,4 +298,7 @@ canvas#blockCanvas {
   padding-right: 0%;
   width: 85%;
   height: 100%;
+}
+#graphCanvas{
+  position: inherit;
 }

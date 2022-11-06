@@ -165,16 +165,14 @@ function drawDepGraph(context, dependency, depType, sX, sY, radius, distanceFact
             var destX = sX;
             var destY = (posNext * distanceFactor) + (radius);
 
-
             context.beginPath();
-
             if (posNext - pos == 1 && depType == "raw") {
                 canvas_line(context, startX, startY, destX, destY);
             } else {
                 drawArc(context, startX, startY, destX, destY, depType);
-
             }
-            context.lineWidth = 3;
+
+            context.lineWidth = 2;
             context.strokeStyle = color;
             context.stroke();
             context.closePath();
@@ -210,20 +208,21 @@ function drawDependency(theCanvas, dependency, dependencyType) {
         context.fillStyle = 'black';
         context.textAlign = 'center';
         context.fillText(indx + 1, startX, startY + 3);
-
     }
+    
     context.closePath();
 
-    if (dependencyType == "raw" || dependencyType == "") {
+    if (dependencyType == "raw" ) {
         drawDepGraph(context, dependency, "raw", startX, (70 + radius / 2), radius, distance, '#e6194B');
     }
-    // if (dependencyType == "war" || dependencyType == "") {
-    //     drawDepGraph(context, dependency, "war", startX, (70 + radius / 2), radius, distance, '#c2da2c');
-    // }
-    // if (dependencyType == "waw" || dependencyType == "") {
-    //     drawDepGraph(context, dependency, "waw", startX, (70 + radius / 2), radius, distance, '#e49d6a');
+    
+    if (dependencyType == "war" ) {
+        drawDepGraph(context, dependency, "war", startX, (70 + radius / 2), radius, distance, '#c2da2c');
+    }
 
-    // }
+    if (dependencyType == "waw") {
+        drawDepGraph(context, dependency, "waw", startX, (70 + radius / 2), radius, distance, '#e49d6a');
+     }
 }
 
 function drawTable(context, cellSize, coordinates, nRow, nColumn, rowName = "") {
@@ -253,7 +252,7 @@ function drawTable(context, cellSize, coordinates, nRow, nColumn, rowName = "") 
 function arrowFPAddr2CDB(context, fpIntcoXY, cdbColor) {
     var startXY = lowerMidPoint(fpIntcoXY.sx, fpIntcoXY.sy, fpIntcoXY.ex, fpIntcoXY.ey);
     context.beginPath();
-    context.lineWidth = 2;
+    context.lineWidth = 3;
     context.strokeStyle = cdbColor;
     canvas_arrow(context, startXY.x, startXY.y, startXY.x, startXY.y + 1.5 * _height);
     context.stroke();
@@ -264,7 +263,7 @@ function arrowFPMul2CDB(context, fpMulcoXY, cdbColor) {
     var startXY = lowerMidPoint(fpMulcoXY.sx, fpMulcoXY.sy, fpMulcoXY.ex, fpMulcoXY.ey);
     context.beginPath();
     context.strokeStyle = cdbColor;
-    context.lineWidth = 2;
+    context.lineWidth = 3;
     canvas_arrow(context, startXY.x, startXY.y, startXY.x, startXY.y + 1.5 * _height);
 
     context.stroke();
@@ -276,7 +275,7 @@ function arrowCDB2SBuffer(context, sbufcoXY, cdbXY, cdbColor) {
     var endX = sbufcoXY.ex;
     var endY = (sbufcoXY.ey - sbufcoXY.sy) / 2;
     context.strokeStyle = cdbColor;
-    context.lineWidth = 2;
+    context.lineWidth = 3;
     canvas_arrow(context, cdbXY.x, endY + sbufcoXY.sy, endX, endY + sbufcoXY.sy);
     context.stroke();
     context.closePath();
@@ -287,7 +286,7 @@ function arrowCDB2Reg(context, srcXY, destXY, cdbColor) {
     var endY = (srcXY.ey - srcXY.sy) / 2;
     context.beginPath();
     context.strokeStyle = cdbColor;
-    context.lineWidth = 2;
+    context.lineWidth = 3;
     canvas_arrow(context, destXY.x, endY, endX, endY);
     context.stroke();
     context.closePath();
@@ -298,7 +297,7 @@ function arrowCDB2RS(context, dest1xy, dest2XY, srcXY, cdbColor) {
     var midDest2XY = upperMidPoint(dest2XY.sx, dest2XY.sy, dest2XY.ex, dest2XY.ey);
     context.beginPath();
     context.strokeStyle = cdbColor;
-    context.lineWidth = 2;
+    context.lineWidth = 3;
     var startX = srcXY.x;
     var startY = srcXY.y - (srcXY.y - dest2XY.ey) / 2;
     canvas_line(context, startX, startY, midDest2XY.x + (startX - midDest2XY.x) / 2, startY);
@@ -316,7 +315,7 @@ function arrowLBuf2CDB(context, lbufcoXY, cdbColor) {
     var midSrc1XY = lowerMidPoint(lbufcoXY.sx, lbufcoXY.sy, lbufcoXY.ex, lbufcoXY.ey);
     context.beginPath();
     context.strokeStyle = cdbColor;
-    context.lineWidth = 2;
+    context.lineWidth = 3;
     canvas_arrow(context, midSrc1XY.x, midSrc1XY.y, midSrc1XY.x, ey);
     context.stroke();
     context.closePath();
@@ -785,7 +784,7 @@ function drawCDB(context, cWidth, cHeight, cdbColor) {
 
     context.beginPath();
     context.strokeStyle = cdbColor;
-    context.lineWidth = 2;
+    context.lineWidth = 3;
     canvas_line(context, sx, sy, cWidth - _width, sy);
     sx = cWidth - _width;
     canvas_line(context, sx, sy, sx, _height * 3);
