@@ -331,6 +331,9 @@
 
             <div id="ftrContainer" class="cFooterContainer">
                 <div id="actionButtonGroup" class="cActionButtonGroup">
+                    <button type="button" id='intro' class="cActionBtn" onclick="ActivateIntro()">
+                        <img src="resources/images/icons/intro.png">
+                    </button>
                     <button type="button" id='stepBack' class="cActionBtn" onclick="executeStepBy(1)">
                         <img src="resources/images/icons/icons8-double-left-48.png">
                     </button>
@@ -371,7 +374,8 @@
             showCycleSelection();
         }
 
-        introJs().setOptions({
+        function ActivateIntro(){
+            introJs().setOptions({
             steps: [
                 {
                     title: 'Welcome To Tomasulo Web Simulator',
@@ -444,9 +448,11 @@
                     intro: 'Register address table; value denotes which FU will write to which register ',
                     position: 'left'
                 },]
-        });//.start();
+        }).start();
 
 
+        }
+        
 
         function addLevelOption(id) {
 
