@@ -374,85 +374,85 @@
             showCycleSelection();
         }
 
-        function ActivateIntro(){
+        function ActivateIntro() {
             introJs().setOptions({
-            steps: [
-                {
-                    title: 'Welcome To Tomasulo Web Simulator',
-                    intro: 'A web simulation tool to implement out-of-order dynamic scheduling algorithm',
-                    position: 'right'
-                },
-                {
-                    element: document.querySelector('#stepForward'),
-                    intro: 'Execute to next instruction cycle',
-                    position: 'top'
-                },
-                {
-                    element: document.querySelector('#stepBack'),
-                    intro: 'Execute to previous instruction cycle',
-                    position: 'top'
-                },
-                {
-                    element: document.querySelector('#stepAntForward'),
-                    intro: 'Information shows what is happening in between cycle in forward fasion',
-                    position: 'top'
-                },
-                {
-                    element: document.querySelector('.cInputContainer'),
-                    intro: 'Input window for instruction loading, configuration for functional units and cycle number ',
-                    position: 'right'
-                },
-                {
-                    element: document.querySelector('.cInputBody'),
-                    intro: 'RISC-V instruction can be created by clocking \'+\' icon. ' +
-                        'Instruction can be deleted by clicking delete icon. At this moment ' +
-                        'Add, Sub, Mul, Div, Ld, Sd operations are supported.',
-                    position: 'right'
-                },
-                {
-                    element: document.querySelector('.cInputBody'),
-                    intro: 'Load: reads input from file. ' +
-                        'Test-*: predefined instruction input.   ' +
-                        'Next: settings window',
-                    position: 'right'
-                },
-                {
-                    element: document.querySelector('.cDataContainer'),
-                    intro: 'This window used for many purpose. Dependency graph, loop or branching instruction also place in this window',
-                    position: 'right'
-                },
-                {
-                    element: document.querySelector('.cReservationBody'),
-                    intro: 'Algorithm execution window. ' +
-                        '\"Time\": Remaining execution cycle ' +
-                        '\"Busy\": Yes, if FU is occupied by an active instruction ' +
-                        '\"OP\": Operation to perfume in the FU ' +
-                        '\"Vj and Vk\": values of source operand ' +
-                        '\"Qj and Qk\": Reservation station units that produce source values Vj and Vk ' +
-                        '\"Busy\": Yes, if FU is occupied by an active instruction ' +
-                        "\"Address\":  offset for load or store operation",
-                    position: 'bottom'
-                },
-                {
-                    element: document.querySelector('.cCycle'),
-                    intro: 'Cycle Number',
-                    position: 'left'
-                },
-                {
-                    element: document.querySelector('.cAntCycles'),
-                    intro: 'circle shows number of step remain till next cycle',
-                    position: 'left'
-                },
-                {
-                    element: document.querySelector('.cRatContainer'),
-                    intro: 'Register address table; value denotes which FU will write to which register ',
-                    position: 'left'
-                },]
-        }).start();
+                steps: [
+                    {
+                        title: 'Welcome To Tomasulo Web Simulator',
+                        intro: 'A web simulation tool to implement out-of-order dynamic scheduling algorithm',
+                        position: 'right'
+                    },
+                    {
+                        element: document.querySelector('#stepForward'),
+                        intro: 'Execute to next instruction cycle',
+                        position: 'top'
+                    },
+                    {
+                        element: document.querySelector('#stepBack'),
+                        intro: 'Execute to previous instruction cycle',
+                        position: 'top'
+                    },
+                    {
+                        element: document.querySelector('#stepAntForward'),
+                        intro: 'Information shows what is happening in between cycle in forward fashion',
+                        position: 'top'
+                    },
+                    {
+                        element: document.querySelector('.cInputContainer'),
+                        intro: 'Input window for instruction loading, configuration for functional units and cycle number ',
+                        position: 'right'
+                    },
+                    {
+                        element: document.querySelector('.cInputBody'),
+                        intro: 'RISC-V instruction can be created by clocking \'+\' icon. ' +
+                            'Instruction can be deleted by clicking delete icon. At this moment ' +
+                            'Add, Sub, Mul, Div, Ld, Sd operations are supported.',
+                        position: 'right'
+                    },
+                    {
+                        element: document.querySelector('.cInputBody'),
+                        intro: 'Load: reads input from file. ' +
+                            'Test-*: predefined instruction input.   ' +
+                            'Next: settings window',
+                        position: 'right'
+                    },
+                    {
+                        element: document.querySelector('.cDataContainer'),
+                        intro: 'This window used for many purpose. Dependency graph, loop or branching instruction also place in this window',
+                        position: 'right'
+                    },
+                    {
+                        element: document.querySelector('.cReservationBody'),
+                        intro: 'Algorithm execution window. ' +
+                            '\"Time\": Remaining execution cycle ' +
+                            '\"Busy\": Yes, if FU is occupied by an active instruction ' +
+                            '\"OP\": Operation to perfume in the FU ' +
+                            '\"Vj and Vk\": values of source operand ' +
+                            '\"Qj and Qk\": Reservation station units that produce source values Vj and Vk ' +
+                            '\"Busy\": Yes, if FU is occupied by an active instruction ' +
+                            "\"Address\":  offset for load or store operation",
+                        position: 'bottom'
+                    },
+                    {
+                        element: document.querySelector('.cCycle'),
+                        intro: 'Cycle Number',
+                        position: 'left'
+                    },
+                    {
+                        element: document.querySelector('.cAntCycles'),
+                        intro: 'circle shows number of step remain till next cycle',
+                        position: 'left'
+                    },
+                    {
+                        element: document.querySelector('.cRatContainer'),
+                        intro: 'Register address table; value denotes which FU will write to which register ',
+                        position: 'left'
+                    },]
+            }).start();
 
 
         }
-        
+
 
         function addLevelOption(id) {
 
@@ -664,7 +664,7 @@
         function showAutoSelectionTable(instructions) {
             var inputTable = document.getElementById("insInputTable");
             var tBody = inputTable.tBodies[0];
-            createBtnsRow(tBody); //maintainance only
+            createBtnsRow(tBody); //maintenance only
 
             var rows = tBody.rows;
             while (rows.length > 1) {

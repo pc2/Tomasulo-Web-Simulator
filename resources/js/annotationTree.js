@@ -123,7 +123,7 @@ class AnnotationTree {
 
         if (this._currentAntNode == undefined) {
             if (this._rootAntNode == undefined) {
-                console.error("Command Tree is Emty: Game is not Started");
+                console.error("Command Tree is Empty: Game is not Started");
                 return;
             }
         }

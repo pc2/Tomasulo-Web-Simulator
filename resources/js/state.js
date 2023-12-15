@@ -163,7 +163,7 @@ class Issue extends State {
 
 
         if (rsbuffer.isBufferSet() == false) {
-            antMsg = "Insutruction " + wLoad.posAtQ + " occupied the RS unit " + rsName + " .";
+            antMsg = "Instruction " + wLoad.posAtQ + " occupied the RS unit " + rsName + " .";
 
 
             this.setRSBuffer(rsbuffer, rat, wLoad, antMsg, wLoad.posAtQ);
